@@ -19,9 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.akl.hashshafiles.components.boldStyled
 import com.akl.hashshafiles.components.italicStyled
 import com.akl.hashshafiles.components.lineThroughStyled
@@ -43,34 +40,6 @@ object Profile
 
 @Serializable
 object FriendsList
-
-@Composable
-fun AppNavigation() {
-    // Creates the NavController
-    val navController = rememberNavController()
-
-// Creates the NavHost with the navigation graph consisting of supplied destinations
-    NavHost(
-        navController = navController,
-        startDestination = Home
-    ) {
-        composable<Home> {
-            HomeScreen {
-                navController.navigate(Profile)
-            }
-        }
-        composable<Profile> { //backStackEntry -> val profile: Profile = backStackEntry.toRoute()
-            ProfileScreen {
-                navController.navigate(FriendsList)
-            }
-        }
-        composable<FriendsList> {
-            FriendsListScreen {
-                navController.popBackStack()
-            }
-        }
-    }
-}
 
 @Composable
 fun FriendsListScreen(onClick: () -> Unit) {

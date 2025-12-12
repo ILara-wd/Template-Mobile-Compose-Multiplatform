@@ -1,11 +1,11 @@
 package com.akl.templatemobile
 
 import androidx.compose.runtime.Composable
-import com.akl.templatemobile.nav.AppNavigation
+import com.akl.templatemobile.nav.AdvanceNavigationWrapper
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 @Preview
 fun App() {
-    AppNavigation()
+    AdvanceNavigationWrapper()
 }
