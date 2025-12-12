@@ -25,7 +25,7 @@ fun DetailScreen(id: String, navigateBack: () -> Unit) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("La ID seleccionada es: $id", fontSize = 25.sp)
+            Text("Personaje seleccionado: $id", fontSize = 25.sp)
             Spacer(Modifier.height(16.dp))
             Button(onClick = { navigateBack() }) {
                 Text("Atrás")

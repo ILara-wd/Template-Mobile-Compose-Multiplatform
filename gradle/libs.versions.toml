@@ -52,6 +52,7 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.9.0" }
 google-gson = { module = "com.google.code.gson:gson", version = "2.11.0" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version = "2.2.21" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

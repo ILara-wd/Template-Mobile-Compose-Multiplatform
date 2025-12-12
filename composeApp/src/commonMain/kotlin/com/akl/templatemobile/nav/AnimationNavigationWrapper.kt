@@ -9,11 +9,10 @@ import androidx.navigation3.ui.NavDisplay
 import androidx.savedstate.serialization.SavedStateConfiguration
 import com.akl.templatemobile.core.back
 import com.akl.templatemobile.core.navigateTo
+import com.akl.templatemobile.core.network.rememberApiClient
 import com.akl.templatemobile.nav.Routes.Detail
-import com.akl.templatemobile.nav.Routes.Error
 import com.akl.templatemobile.nav.Routes.Home
 import com.akl.templatemobile.screen.DetailScreen
-import com.akl.templatemobile.screen.HomeScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
@@ -36,9 +35,10 @@ fun AdvanceNavigationWrapper() {
         onBack = { backStack.back() },
         entryProvider = entryProvider {
             entry<Home> {
-                HomeScreen { id ->
+                rememberApiClient { id ->
                     backStack.navigateTo(Detail(id))
                 }
+                /** HomeScreen { id -> backStack.navigateTo(Detail(id)) } */
             }
             entry<Detail> { key ->
                 DetailScreen(key.id) {
@@ -46,7 +46,7 @@ fun AdvanceNavigationWrapper() {
                 }
             }
 
-            entry<Error> {
+            entry<Routes.Error> {
                 Text("Error :(")
             }
         }

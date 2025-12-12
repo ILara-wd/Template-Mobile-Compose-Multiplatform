@@ -47,6 +47,7 @@ kotlin {
             implementation(libs.jetbrains.lifecycle.viewmodel)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.google.gson)
+            implementation(libs.kotlin.reflect)
             // Ktor Client
             implementation(libs.ktor.core)
             implementation(libs.ktor.json)
