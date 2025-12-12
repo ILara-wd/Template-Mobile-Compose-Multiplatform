@@ -10,7 +10,7 @@ class DragonBallService(
 ) {
     suspend fun getAllCharacters(): RemoteResult {
         return client
-            .get("/characters?limit=60")
+            .get("/api/characters?limit=60")
             .body<RemoteResult>()
     }
 }

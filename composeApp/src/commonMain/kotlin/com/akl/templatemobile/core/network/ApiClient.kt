@@ -39,7 +39,7 @@ fun rememberApiClient(navigateToDetail: (String) -> Unit) {
             install(plugin = DefaultRequest) {
                 url {
                     protocol = URLProtocol.HTTPS
-                    host = "dragonball-api.com/api"
+                    host = "dragonball-api.com"
                     /** parameters.append("API_KEY", "API_KEY") */
                 }
             }
