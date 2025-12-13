@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.akl.templatemobile.core.network.ApiClient.clientApiHttp
 import com.akl.templatemobile.viewmodel.HomeViewModel
 import com.seiko.imageloader.rememberAsyncImagePainter
 import io.ktor.client.HttpClient
@@ -29,29 +30,28 @@ import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-object ApiClient
-
-@Composable
-fun rememberApiClient(navigateToDetail: (String) -> Unit) {
-    val client = remember {
-        HttpClient {
-            install(plugin = ContentNegotiation) {
-                json(Json {
-                    prettyPrint = true
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                })
-            }
-            install(plugin = DefaultRequest) {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = "dragonball-api.com"
-                    /** parameters.append("API_KEY", "API_KEY") */
-                }
+object ApiClient {
+    fun clientApiHttp() = HttpClient {
+        install(plugin = ContentNegotiation) {
+            json(Json {
+                prettyPrint = true
+                isLenient = true
+                ignoreUnknownKeys = true
+            })
+        }
+        install(plugin = DefaultRequest) {
+            url {
+                protocol = URLProtocol.HTTPS
+                host = "dragonball-api.com"
+                /** parameters.append("API_KEY", "API_KEY") */
             }
         }
     }
+}
 
+@Composable
+fun rememberApiClient(navigateToDetail: (Int) -> Unit) {
+    val client = remember { clientApiHttp() }
     val viewModel = viewModel { HomeViewModel(service = DragonBallService(client = client)) }
     viewModel.getGreeting()
     val items = viewModel.uiState.greeting?.items.orEmpty()
@@ -66,7 +66,7 @@ fun rememberApiClient(navigateToDetail: (String) -> Unit) {
                         .padding(start = 16.dp)
                         .fillMaxWidth()
                         .clickable {
-                            navigateToDetail(character.name)
+                            navigateToDetail(character.id)
                         }
                 ) {
                     Image(

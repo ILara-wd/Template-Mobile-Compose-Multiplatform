@@ -14,7 +14,7 @@ sealed class Routes : NavKey {
     data object Home : Routes()
 
     @Serializable
-    data class Detail(val id: String) : Routes()
+    data class Detail(val id: Int) : Routes()
 
     @Serializable
     data object Error : Routes()

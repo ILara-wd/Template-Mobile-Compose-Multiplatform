@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.akl.templatemobile.core.network.DragonBallService
 import com.akl.templatemobile.core.network.RemoteResult
+import com.akl.templatemobile.model.CharacterDBZ
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -16,6 +17,9 @@ class HomeViewModel(
     var uiState by mutableStateOf(value = UiState())
         private set
 
+    var uiStateDetail by mutableStateOf(value = UIStateDetail())
+        private set
+
     fun getGreeting() {
         viewModelScope.launch {
             val char = service.getAllCharacters()
@@ -23,8 +27,18 @@ class HomeViewModel(
         }
     }
 
+    fun getCharacterById(id: Int) {
+        viewModelScope.launch {
+            val character = service.getCharacterById(id)
+            uiStateDetail = UIStateDetail(character = character)
+        }
+    }
+
 }
 
+data class UIStateDetail(
+    val character: CharacterDBZ? = null
+)
 
 data class UiState(
     val greeting: RemoteResult? = null

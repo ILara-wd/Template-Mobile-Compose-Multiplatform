@@ -1,5 +1,6 @@
 package com.akl.templatemobile.core.network
 
+import com.akl.templatemobile.model.CharacterDBZ
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -13,6 +14,13 @@ class DragonBallService(
             .get("/api/characters?limit=60")
             .body<RemoteResult>()
     }
+
+    suspend fun getCharacterById(id: Int): CharacterDBZ {
+        return client
+            .get("/api/characters/$id")
+            .body<CharacterDBZ>()
+    }
+
 }
 
 @Serializable
