@@ -19,7 +19,8 @@ navigation3 = "1.0.0"
 # For Compose Multiplatform
 cmpNavigation3 = "1.0.0-alpha05"
 kotlin-serialization = "1.9.20"
-gson-version = "2.11.0"
+image-loader-version = "1.5.3"
+coil = "3.0.4"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -33,10 +34,13 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
+image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader-version" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+
 # For Compose Multiplatform
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "cmpNavigation3" }
 jetbrains-lifecycle-viewmodel-nav3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "androidx-lifecycle" }
-jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle"}
+jetbrains-lifecycle-viewmodel = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 
 # For native Android
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
@@ -45,8 +49,8 @@ androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", vers
 # Ktor Client
 ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor"}
-ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor"}
+ktor-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TemplateMobile</string>
+    <string name="asset_file_path">TemplateMobile</string>
 </resources>

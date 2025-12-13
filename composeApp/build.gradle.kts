@@ -53,6 +53,8 @@ kotlin {
             implementation(libs.ktor.json)
             implementation(libs.ktor.logging)
             implementation(libs.ktor.negotiation)
+            implementation(libs.image.loader)
+            implementation(libs.coil.compose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
