@@ -20,7 +20,7 @@ navigation3 = "1.0.0"
 cmpNavigation3 = "1.0.0-alpha05"
 kotlin-serialization = "1.9.20"
 image-loader-version = "1.5.3"
-coil = "3.0.4"
+coil-ktor = "3.0.0-alpha06"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -35,7 +35,8 @@ androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecyc
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
 image-loader = { module = "io.github.qdsfdhvh:image-loader", version.ref = "image-loader-version" }
-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-ktor" }
+coil-network = { module = "io.coil-kt.coil3:coil-network-ktor", version.ref = "coil-ktor" }
 
 # For Compose Multiplatform
 jetbrains-navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "cmpNavigation3" }

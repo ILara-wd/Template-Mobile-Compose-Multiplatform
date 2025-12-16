@@ -1,6 +1,5 @@
 package com.akl.templatemobile.core.network
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,9 +19,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.akl.templatemobile.components.AsyncImageComponent
+import com.akl.templatemobile.components.ImageResources
 import com.akl.templatemobile.core.network.ApiClient.clientApiHttp
 import com.akl.templatemobile.viewmodel.HomeViewModel
-import com.seiko.imageloader.rememberAsyncImagePainter
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -69,9 +69,9 @@ fun rememberApiClient(navigateToDetail: (Int) -> Unit) {
                             navigateToDetail(character.id)
                         }
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter(character.image),
-                        contentDescription = null,
+                    AsyncImageComponent(
+                        imageResources = ImageResources(url = character.image),
+                        contentDescription = character.name,
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier
                             .width(120.dp)
@@ -84,5 +84,4 @@ fun rememberApiClient(navigateToDetail: (Int) -> Unit) {
             }
         }
     }
-
 }

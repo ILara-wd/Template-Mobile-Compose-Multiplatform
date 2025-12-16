@@ -54,7 +54,9 @@ kotlin {
             implementation(libs.ktor.logging)
             implementation(libs.ktor.negotiation)
             implementation(libs.image.loader)
+            //implementation(libs.coil.compose)
             implementation(libs.coil.compose)
+            implementation(libs.coil.network)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
