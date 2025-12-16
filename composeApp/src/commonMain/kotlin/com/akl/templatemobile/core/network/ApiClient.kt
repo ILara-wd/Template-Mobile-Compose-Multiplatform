@@ -30,6 +30,7 @@ import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
+/** Singleton object to provide Ktor HttpClient configured for the Dragon Ball API */
 object ApiClient {
     fun clientApiHttp() = HttpClient {
         install(plugin = ContentNegotiation) {
@@ -49,6 +50,14 @@ object ApiClient {
     }
 }
 
+/**
+ * Componente Compose que recuerda y gestiona la instancia del cliente de API y el ViewModel asociado.
+ *
+ * Este componente obtiene los datos de personajes desde la API de Dragon Ball y los muestra en una grilla.
+ * Al hacer clic en un personaje, navega al detalle usando la función proporcionada.
+ *
+ * @param navigateToDetail función lambda que recibe el ID del personaje seleccionado para navegar al detalle.
+ */
 @Composable
 fun rememberApiClient(navigateToDetail: (Int) -> Unit) {
     val client = remember { clientApiHttp() }

@@ -16,6 +16,10 @@ import com.akl.templatemobile.screen.DetailScreen
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 
+/**
+ * Advance navigation wrapper
+ *
+ */
 @Composable
 fun AdvanceNavigationWrapper() {
     val backStack = rememberNavBackStack(
@@ -29,7 +33,6 @@ fun AdvanceNavigationWrapper() {
         },
         Home
     )
-
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.back() },
