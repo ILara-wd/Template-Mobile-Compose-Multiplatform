@@ -59,7 +59,7 @@ object ApiClient {
  * @param navigateToDetail función lambda que recibe el ID del personaje seleccionado para navegar al detalle.
  */
 @Composable
-fun rememberApiClient(navigateToDetail: (Int) -> Unit) {
+fun RememberApiClient(navigateToDetail: (Int) -> Unit) {
     val client = remember { clientApiHttp() }
     val viewModel = viewModel { HomeViewModel(service = DragonBallService(client = client)) }
     viewModel.getGreeting()

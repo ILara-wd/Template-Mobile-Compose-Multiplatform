@@ -17,6 +17,9 @@ sealed class Routes : NavKey {
     data class Detail(val id: Int) : Routes()
 
     @Serializable
+    data object Side : Routes()
+
+    @Serializable
     data object Error : Routes()
 
 }
