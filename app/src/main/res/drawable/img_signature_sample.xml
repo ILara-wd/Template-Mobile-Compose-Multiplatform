@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Firma digital simulada del cliente (Figma: SVG - Simulated client digital stroke signature). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="176dp"
+    android:height="48dp"
+    android:viewportWidth="176"
+    android:viewportHeight="48">
+    <path
+        android:pathData="M20 32C28 16 36 14.6667 44 28C52 41.3333 58.6667 37.3333 64 16C69.3333 -5.33333 76 1.33333 84 36C97.3333 20 109.333 15.4667 120 22.4C130.667 29.3333 140 28.5333 148 20C153.333 22.6667 157.333 21.3333 160 16"
+        android:strokeColor="#004AC6"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="M40 28L136 30.4"
+        android:strokeColor="#004AC6"
+        android:strokeAlpha="0.4"
+        android:strokeWidth="1.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

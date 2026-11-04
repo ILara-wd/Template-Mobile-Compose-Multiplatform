@@ -36,6 +36,8 @@ import com.invex.one.demo.ui.components.organisms.CierreProTopBar
 import com.invex.one.demo.ui.components.organisms.CpDestination
 import com.invex.one.demo.ui.screens.home.HomeScreen
 import com.invex.one.demo.ui.screens.newservice.NewServiceScreen
+import com.invex.one.demo.ui.screens.report.SampleServiceReport
+import com.invex.one.demo.ui.screens.report.ServiceReportScreen
 import com.invex.one.demo.ui.screens.newservice.SampleServiceClient
 import com.invex.one.demo.ui.screens.newservice.ServiceClientSummary
 import com.invex.one.demo.ui.theme.CpBackground
@@ -63,6 +65,7 @@ fun CierreProApp() {
     var destination by rememberSaveable { mutableStateOf(CpDestination.Inicio) }
     var showNewService by rememberSaveable { mutableStateOf(false) }
     var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
+    var showReport by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     val detailClient = detailClientId?.let { id -> SampleClients.firstOrNull { it.id == id }?.toDetail() }
 
@@ -90,6 +93,28 @@ fun CierreProApp() {
         return
     }
 
+    if (showReport) {
+        // TODO: cargar el reporte real de la orden; por ahora muestra el de ejemplo con los datos del cliente.
+        val report = detailClient?.let {
+            SampleServiceReport.copy(clientName = it.name, clientPhone = it.phone)
+        } ?: SampleServiceReport
+        BackHandler { showReport = false }
+        ServiceReportScreen(
+            report = report,
+            onBack = { showReport = false },
+            onSendWhatsApp = {
+                val text = "Hola ${report.clientName}, te comparto el reporte de servicio ${report.folio} " +
+                    "de ${report.workshopName}."
+                val phone = report.clientPhone.filter(Char::isDigit)
+                open(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$phone?text=" + Uri.encode(text))))
+            },
+            // TODO: generar el PDF y abrir la hoja de compartir del sistema.
+            onSharePdf = {},
+            onComplete = { showReport = false },
+        )
+        return
+    }
+
     if (detailClient != null) {
         BackHandler { detailClientId = null }
         ClientDetailScreen(
@@ -103,6 +128,7 @@ fun CierreProApp() {
                 open(Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + Uri.encode(detailClient.address.replace("\n", " ")))))
             },
             onNewService = { showNewService = true },
+            onViewReport = { showReport = true },
         )
         return
     }
