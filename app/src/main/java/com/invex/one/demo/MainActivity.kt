@@ -1,6 +1,8 @@
 package com.invex.one.demo
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -28,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import com.invex.one.demo.ui.screens.auth.AuthScreen
 import com.invex.one.demo.ui.screens.clientdetail.ClientDetailScreen
 import com.invex.one.demo.ui.screens.clientdetail.toDetail
 import com.invex.one.demo.ui.screens.clients.ClientsScreen
@@ -70,6 +73,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private const val AuthPrefs = "auth"
+private const val AuthPrefsAccount = "remembered_account"
 private const val FlowKeyNewService = "flow:new-service"
 private const val FlowKeyWorkLog = "flow:work-log"
 
@@ -95,6 +100,7 @@ fun CierreProApp() {
         flowState.removeState(FlowKeyWorkLog)
     }
     val context = LocalContext.current
+    var signedIn by rememberSaveable { mutableStateOf(false) }
     val detailClient = detailClientId?.let { id -> SampleClients.firstOrNull { it.id == id }?.toDetail() }
 
     fun open(intent: Intent) {
@@ -105,6 +111,26 @@ fun CierreProApp() {
         }
     }
     fun dial(phone: String) = open(Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone.filter { it.isDigit() || it == '+' })))
+
+    if (!signedIn) {
+        val prefs = remember { context.getSharedPreferences(AuthPrefs, Context.MODE_PRIVATE) }
+        AuthScreen(
+            rememberedAccount = remember { prefs.getString(AuthPrefsAccount, null) },
+            onSignedIn = { account, rememberIt ->
+                prefs.edit().apply {
+                    if (rememberIt) putString(AuthPrefsAccount, account) else remove(AuthPrefsAccount)
+                }.apply()
+                signedIn = true
+            },
+            onRegistered = { workshop, account ->
+                prefs.edit().putString(AuthPrefsAccount, account).apply()
+                profile = profile.copy(businessName = workshop)
+                signedIn = true
+            },
+            onBack = { (context as? Activity)?.finish() },
+        )
+        return
+    }
 
     if (showProfile) {
         BackHandler { showProfile = false }

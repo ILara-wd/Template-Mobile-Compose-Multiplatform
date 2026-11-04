@@ -30,7 +30,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -46,8 +48,9 @@ import com.invex.one.demo.ui.theme.CpSurfaceContainerLow
 private val FieldShape = RoundedCornerShape(8.dp)
 
 /**
- * M2. Campo con validación: etiqueta (obligatorio * u "(opcional)"), input de
- * 48dp con icono leading opcional y texto auxiliar o de error.
+ * M2. Campo con validación: etiqueta (obligatorio * u "(opcional)") con meta
+ * opcional a la derecha, input de 48dp con icono leading y acción trailing
+ * opcionales (p. ej. ver contraseña) y texto auxiliar o de error.
  */
 @Composable
 fun ProfileTextField(
@@ -62,28 +65,44 @@ fun ProfileTextField(
     singleLine: Boolean = true,
     error: String? = null,
     helper: (@Composable () -> Unit)? = null,
+    labelWeight: FontWeight = FontWeight.Medium,
+    labelTrailing: (@Composable () -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    trailingAction: (@Composable () -> Unit)? = null,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
 ) {
-    val labelStyle = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Medium)
-    val textStyle = MaterialTheme.typography.bodyMedium.copy(color = CpOnSurface)
+    val labelStyle = MaterialTheme.typography.labelMedium.copy(fontWeight = labelWeight)
+    val fieldTextStyle = textStyle.copy(color = CpOnSurface)
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(
-            buildAnnotatedString {
-                append(label)
-                if (required) withStyle(SpanStyle(color = CpError)) { append(" *") }
-                if (optional) {
-                    withStyle(SpanStyle(color = CpOnSurfaceVariant, fontWeight = FontWeight.Normal)) { append(" (opcional)") }
-                }
-            },
-            style = labelStyle,
-            color = CpOnSurface,
-        )
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                buildAnnotatedString {
+                    append(label)
+                    if (required) withStyle(SpanStyle(color = CpError)) { append(" *") }
+                    if (optional) {
+                        withStyle(SpanStyle(color = CpOnSurfaceVariant, fontWeight = FontWeight.Normal)) { append(" (opcional)") }
+                    }
+                },
+                style = labelStyle,
+                color = CpOnSurface,
+            )
+            labelTrailing?.invoke()
+        }
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
             singleLine = singleLine,
-            textStyle = textStyle,
+            textStyle = fieldTextStyle,
             cursorBrush = SolidColor(CpPrimaryContainer),
-            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            visualTransformation = visualTransformation,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType,
+                autoCorrectEnabled = keyboardType != KeyboardType.Password && keyboardType != KeyboardType.Email,
+            ),
             modifier = Modifier.fillMaxWidth(),
             decorationBox = { inner ->
                 Row(
@@ -92,13 +111,14 @@ fun ProfileTextField(
                         .then(if (singleLine) Modifier.height(48.dp) else Modifier.defaultMinSize(minHeight = 48.dp))
                         .clip(FieldShape)
                         .background(CpSurfaceContainerLow)
-                        .padding(start = if (leadingIcon != null) 15.67.dp else 14.dp, end = 14.dp)
+                        .padding(start = if (leadingIcon != null) 15.67.dp else 14.dp, end = if (trailingAction != null) 4.dp else 14.dp)
                         .padding(vertical = if (singleLine) 0.dp else 14.dp),
                     horizontalArrangement = Arrangement.spacedBy(11.67.dp),
                     verticalAlignment = if (singleLine) Alignment.CenterVertically else Alignment.Top,
                 ) {
                     leadingIcon?.let { CpIcon(it) }
                     Box(Modifier.weight(1f)) { inner() }
+                    trailingAction?.invoke()
                 }
             },
         )

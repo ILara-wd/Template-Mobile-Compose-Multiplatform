@@ -316,7 +316,7 @@ fun WorkLogScreen(
                         value = observations,
                         onValueChange = { observations = it },
                         trailing = { Text("Datos de operación", style = MaterialTheme.typography.labelSmall, color = CpOutline) },
-                        minHeight = 101.dp,
+                        minHeight = 89.dp,
                     )
                     NoteField(
                         label = "Recomendaciones para el cliente",
@@ -599,7 +599,7 @@ private fun NoteField(
     value: String,
     onValueChange: (String) -> Unit,
     trailing: @Composable () -> Unit,
-    minHeight: Dp = 81.dp,
+    minHeight: Dp = 69.dp,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {

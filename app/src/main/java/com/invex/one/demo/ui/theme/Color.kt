@@ -20,6 +20,7 @@ val CpTextSecondary = Color(0xFF505F76)
 val CpTextMuted = Color(0xFF54647A)
 val CpOutline = Color(0xFF737686)
 val CpOnSecondaryContainer = Color(0xFF38485D)
+val CpOnSecondaryFixed = Color(0xFF0B1C30) // badge "Versión profesional"
 val CpInverseSurface = Color(0xFF2D3133) // badge "ANTES" / degradado de foto
 val CpInverseOnSurface = Color(0xFFEFF1F3)
 

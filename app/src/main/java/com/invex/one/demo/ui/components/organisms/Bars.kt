@@ -44,7 +44,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.invex.one.demo.R
 import com.invex.one.demo.ui.components.atoms.CpIcon
+import com.invex.one.demo.ui.components.atoms.StatusBadge
+import com.invex.one.demo.ui.theme.CpBackground
 import com.invex.one.demo.ui.theme.CpBarScrim
+import com.invex.one.demo.ui.theme.CpSecondaryContainer
+import com.invex.one.demo.ui.theme.CpTextMuted
 import com.invex.one.demo.ui.theme.CpOnSurface
 import com.invex.one.demo.ui.theme.CpOnSurfaceVariant
 import com.invex.one.demo.ui.theme.CpPrimary
@@ -191,6 +195,63 @@ fun CierreProDetailTopBar(
                 }
             }
             ProfileButton(onProfileClick)
+        }
+    }
+}
+
+/** Top Bar de acceso: regreso, escudo + "CIERREPRO", sello de cifrado y perfil. */
+@Composable
+fun CierreProAuthTopBar(
+    onBack: () -> Unit,
+    onProfileClick: () -> Unit,
+    securityLabel: String = "FIPS 140-3",
+) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 4.dp,
+                ambientColor = Color.Black.copy(alpha = 0.04f),
+                spotColor = Color.Black.copy(alpha = 0.04f),
+            )
+            .background(CpBackground.copy(alpha = 0.8f))
+            .statusBarsPadding(),
+    ) {
+        Row(
+            Modifier.fillMaxWidth().height(64.dp).padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .clickable(role = Role.Button, onClickLabel = "Volver", onClick = onBack),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CpIcon(R.drawable.ic_arrow_back_auth)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
+                    CpIcon(R.drawable.ic_shield_brand)
+                    Text(
+                        "CIERREPRO",
+                        style = MaterialTheme.typography.titleMedium.copy(letterSpacing = (-0.4).sp),
+                        color = CpOnSurface,
+                        modifier = Modifier.semantics { heading() },
+                    )
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                StatusBadge(
+                    text = securityLabel.uppercase(),
+                    containerColor = CpSecondaryContainer,
+                    contentColor = CpTextMuted,
+                    leading = { CpIcon(R.drawable.ic_lock_small) },
+                    modifier = Modifier,
+                )
+                ProfileButton(onProfileClick)
+            }
         }
     }
 }
