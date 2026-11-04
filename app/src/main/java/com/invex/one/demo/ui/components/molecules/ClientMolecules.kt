@@ -32,6 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.invex.one.demo.R
@@ -124,14 +126,21 @@ fun FilterChip(
     }
 }
 
-/** Avatar circular de 44dp con iniciales. */
+/** Avatar circular con iniciales (44dp en listas, 56dp en ficha de cliente). */
 @Composable
-fun InitialsAvatar(initials: String, containerColor: Color, contentColor: Color) {
+fun InitialsAvatar(
+    initials: String,
+    containerColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+    size: Dp = 44.dp,
+    textStyle: TextStyle = MaterialTheme.typography.titleMedium,
+) {
     Box(
-        Modifier.size(44.dp).background(containerColor, CircleShape),
+        modifier.size(size).background(containerColor, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
-        Text(initials, style = MaterialTheme.typography.titleMedium, color = contentColor)
+        Text(initials, style = textStyle, color = contentColor)
     }
 }
 

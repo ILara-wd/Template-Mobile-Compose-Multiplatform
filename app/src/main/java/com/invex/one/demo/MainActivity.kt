@@ -1,5 +1,6 @@
 package com.invex.one.demo
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -25,13 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import com.invex.one.demo.ui.screens.clientdetail.ClientDetailScreen
+import com.invex.one.demo.ui.screens.clientdetail.toDetail
 import com.invex.one.demo.ui.screens.clients.ClientsScreen
+import com.invex.one.demo.ui.screens.clients.SampleClients
 import androidx.compose.ui.tooling.preview.Preview
 import com.invex.one.demo.ui.components.organisms.CierreProBottomBar
 import com.invex.one.demo.ui.components.organisms.CierreProTopBar
 import com.invex.one.demo.ui.components.organisms.CpDestination
 import com.invex.one.demo.ui.screens.home.HomeScreen
 import com.invex.one.demo.ui.screens.newservice.NewServiceScreen
+import com.invex.one.demo.ui.screens.newservice.SampleServiceClient
+import com.invex.one.demo.ui.screens.newservice.ServiceClientSummary
 import com.invex.one.demo.ui.theme.CpBackground
 import com.invex.one.demo.ui.theme.CpTextSecondary
 import com.invex.one.demo.ui.theme.DemoTheme
@@ -56,7 +62,18 @@ class MainActivity : ComponentActivity() {
 fun CierreProApp() {
     var destination by rememberSaveable { mutableStateOf(CpDestination.Inicio) }
     var showNewService by rememberSaveable { mutableStateOf(false) }
+    var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
     val context = LocalContext.current
+    val detailClient = detailClientId?.let { id -> SampleClients.firstOrNull { it.id == id }?.toDetail() }
+
+    fun open(intent: Intent) {
+        try {
+            context.startActivity(intent)
+        } catch (_: ActivityNotFoundException) {
+            // Sin app que atienda la acción (p. ej. WhatsApp no instalado).
+        }
+    }
+    fun dial(phone: String) = open(Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone.filter { it.isDigit() || it == '+' })))
 
     if (showNewService) {
         // Flujo de captura a pantalla completa (sin Bottom Navigation).
@@ -66,6 +83,26 @@ fun CierreProApp() {
             onCancel = { showNewService = false },
             // TODO: navegar a Paso 2 — Checklist y Evidencias.
             onContinue = {},
+            client = detailClient?.let {
+                ServiceClientSummary(it.name, it.phone, it.address.substringAfterLast(", ").trim())
+            } ?: SampleServiceClient,
+        )
+        return
+    }
+
+    if (detailClient != null) {
+        BackHandler { detailClientId = null }
+        ClientDetailScreen(
+            client = detailClient,
+            onBack = { detailClientId = null },
+            onCall = { dial(detailClient.phone) },
+            onWhatsApp = {
+                open(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/" + detailClient.phone.filter(Char::isDigit))))
+            },
+            onDirections = {
+                open(Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" + Uri.encode(detailClient.address.replace("\n", " ")))))
+            },
+            onNewService = { showNewService = true },
         )
         return
     }
@@ -82,10 +119,8 @@ fun CierreProApp() {
             )
             CpDestination.Clientes -> ClientsScreen(
                 contentPadding = innerPadding,
-                onCall = { client ->
-                    val uri = Uri.parse("tel:" + client.phone.filter { it.isDigit() || it == '+' })
-                    context.startActivity(Intent(Intent.ACTION_DIAL, uri))
-                },
+                onClientClick = { detailClientId = it.id },
+                onCall = { dial(it.phone) },
             )
             else -> PlaceholderScreen(destination.label, innerPadding)
         }

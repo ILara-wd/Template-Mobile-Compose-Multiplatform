@@ -39,6 +39,7 @@ val CpSecondaryContainer = Color(0xFFD0E1FB)
 val CpSuccessContainer = Color(0xFFECFDF5)
 val CpOnSuccessContainer = Color(0xFF047857)
 val CpWhatsApp = Color(0xFF059669)
+val CpSuccess = Color(0xFF10B981) // punto de orden finalizada
 val CpWarningContainer = Color(0xFFFEF3C7)
 val CpOnWarningContainer = Color(0xFF92400E)
 val CpWarning = Color(0xFFB45309)
