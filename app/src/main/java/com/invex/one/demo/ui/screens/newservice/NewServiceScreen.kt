@@ -2,6 +2,11 @@ package com.invex.one.demo.ui.screens.newservice
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -112,6 +117,7 @@ fun NewServiceScreen(
     var notes by rememberSaveable { mutableStateOf("Instalado en 2do piso, acceso por azotea") }
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
     var showTimePicker by rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     Scaffold(
         modifier = modifier,
@@ -132,6 +138,9 @@ fun NewServiceScreen(
         Column(
             Modifier
                 .fillMaxSize()
+                .consumeWindowInsets(innerPadding)
+                .imePadding()
+                .pointerInput(Unit) { detectTapGestures { focusManager.clearFocus() } }
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
                 .padding(bottom = 24.dp),

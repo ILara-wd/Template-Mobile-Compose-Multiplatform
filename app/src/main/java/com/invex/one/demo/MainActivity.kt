@@ -37,6 +37,9 @@ import com.invex.one.demo.ui.components.organisms.CpDestination
 import com.invex.one.demo.ui.screens.followups.FollowUpsScreen
 import com.invex.one.demo.ui.screens.home.HomeScreen
 import com.invex.one.demo.ui.screens.newservice.NewServiceScreen
+import com.invex.one.demo.ui.screens.profile.BusinessProfile
+import com.invex.one.demo.ui.screens.profile.BusinessProfileScreen
+import com.invex.one.demo.ui.screens.profile.SampleBusinessProfile
 import com.invex.one.demo.ui.screens.report.SampleServiceReport
 import com.invex.one.demo.ui.screens.report.ServiceReportScreen
 import com.invex.one.demo.ui.screens.newservice.SampleServiceClient
@@ -67,6 +70,8 @@ fun CierreProApp() {
     var showNewService by rememberSaveable { mutableStateOf(false) }
     var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
     var showReport by rememberSaveable { mutableStateOf(false) }
+    var showProfile by rememberSaveable { mutableStateOf(false) }
+    var profile by rememberSaveable(stateSaver = BusinessProfile.Saver) { mutableStateOf(SampleBusinessProfile) }
     val context = LocalContext.current
     val detailClient = detailClientId?.let { id -> SampleClients.firstOrNull { it.id == id }?.toDetail() }
 
@@ -79,10 +84,22 @@ fun CierreProApp() {
     }
     fun dial(phone: String) = open(Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone.filter { it.isDigit() || it == '+' })))
 
+    if (showProfile) {
+        BackHandler { showProfile = false }
+        BusinessProfileScreen(
+            saved = profile,
+            onSave = { profile = it },
+            onBack = { showProfile = false },
+        )
+        return
+    }
+    val openProfile = { showProfile = true }
+
     if (showNewService) {
         // Flujo de captura a pantalla completa (sin Bottom Navigation).
         BackHandler { showNewService = false }
         NewServiceScreen(
+            onProfileClick = openProfile,
             onBack = { showNewService = false },
             onCancel = { showNewService = false },
             // TODO: navegar a Paso 2 — Checklist y Evidencias.
@@ -99,13 +116,14 @@ fun CierreProApp() {
         val report = detailClient?.let {
             SampleServiceReport.copy(clientName = it.name, clientPhone = it.phone)
         } ?: SampleServiceReport
+        val reportWithProfile = report.copy(workshopName = profile.businessName)
         BackHandler { showReport = false }
         ServiceReportScreen(
-            report = report,
+            report = reportWithProfile,
+            onProfileClick = openProfile,
             onBack = { showReport = false },
             onSendWhatsApp = {
-                val text = "Hola ${report.clientName}, te comparto el reporte de servicio ${report.folio} " +
-                    "de ${report.workshopName}."
+                val text = "${profile.reportMessage}\n\nFolio: ${report.folio} — ${profile.businessName}"
                 val phone = report.clientPhone.filter(Char::isDigit)
                 open(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$phone?text=" + Uri.encode(text))))
             },
@@ -120,6 +138,7 @@ fun CierreProApp() {
         BackHandler { detailClientId = null }
         ClientDetailScreen(
             client = detailClient,
+            onProfileClick = openProfile,
             onBack = { detailClientId = null },
             onCall = { dial(detailClient.phone) },
             onWhatsApp = {
@@ -136,7 +155,7 @@ fun CierreProApp() {
 
     Scaffold(
         containerColor = CpBackground,
-        topBar = { CierreProTopBar(sectionTitle = destination.label, onProfileClick = {}) },
+        topBar = { CierreProTopBar(sectionTitle = destination.label, onProfileClick = openProfile) },
         bottomBar = { CierreProBottomBar(selected = destination, onSelect = { destination = it }) },
     ) { innerPadding ->
         when (destination) {
@@ -152,7 +171,7 @@ fun CierreProApp() {
             CpDestination.Seguimientos -> FollowUpsScreen(
                 contentPadding = innerPadding,
                 onWhatsApp = { f ->
-                    val text = "Hola ${f.clientName}, te contactamos de ClimaExpress para programar: ${f.reasonTitle}."
+                    val text = "Hola ${f.clientName}, te contactamos de ${profile.businessName} para programar: ${f.reasonTitle}."
                     open(
                         Intent(
                             Intent.ACTION_VIEW,
