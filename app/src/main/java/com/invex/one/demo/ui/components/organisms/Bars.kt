@@ -35,6 +35,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.invex.one.demo.R
@@ -45,37 +50,41 @@ import com.invex.one.demo.ui.theme.CpOnSurfaceVariant
 import com.invex.one.demo.ui.theme.CpPrimary
 import com.invex.one.demo.ui.theme.CpPrimaryContainer
 
-/** Logo CierrePro 32×32: wordmark de fondo + isotipo recortado encima (según Figma). */
+/**
+ * Logo CierrePro: wordmark de fondo + isotipo recortado encima (según Figma).
+ * El isotipo vive en un contenedor [markSize] desplazado 1dp hacia abajo y se
+ * escala al 147.54% × 155.17% con desfase (-24.12%, -27.37%).
+ */
 @Composable
-fun CierreProLogo(modifier: Modifier = Modifier) {
-    Box(modifier.size(32.dp).clipToBounds()) {
+fun CierreProLogo(
+    modifier: Modifier = Modifier,
+    size: Dp = 32.dp,
+    markSize: DpSize = DpSize(32.dp, 30.dp),
+) {
+    Box(modifier.size(size).clipToBounds()) {
         Image(
             painter = painterResource(R.drawable.logo_cierrepro_wordmark),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize(),
         )
-        // Contenedor 32×30 en y=1; imagen al 147.54% × 155.17% desplazada (-24.12%, -27.37%).
-        Box(Modifier.offset(y = 1.dp).size(32.dp, 30.dp).clipToBounds()) {
+        Box(Modifier.offset(y = 1.dp).size(markSize).clipToBounds()) {
             Image(
                 painter = painterResource(R.drawable.logo_cierrepro_mark),
                 contentDescription = "CierrePro",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .wrapContentSize(Alignment.TopStart, unbounded = true)
-                    .offset(x = (-7.718).dp, y = (-8.211).dp)
-                    .requiredSize(47.213.dp, 46.551.dp),
+                    .offset(x = markSize.width * -0.2412f, y = markSize.height * -0.2737f)
+                    .requiredSize(markSize.width * 1.4754f, markSize.height * 1.5517f),
             )
         }
     }
 }
 
-/** O1. Top Bar de aplicación (blanco 90% con sombra suave). */
+/** Contenedor común de las Top Bars: blanco 90% con sombra suave y status bar. */
 @Composable
-fun CierreProTopBar(
-    sectionTitle: String,
-    onProfileClick: () -> Unit,
-) {
+private fun TopBarSurface(content: @Composable () -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -86,7 +95,31 @@ fun CierreProTopBar(
             )
             .background(CpBarScrim)
             .statusBarsPadding(),
+    ) { content() }
+}
+
+/** Avatar de acceso a "Mi Negocio" (32dp, primario). */
+@Composable
+private fun ProfileButton(onClick: () -> Unit) {
+    Box(
+        Modifier
+            .size(32.dp)
+            .clip(CircleShape)
+            .background(CpPrimary)
+            .clickable(role = Role.Button, onClickLabel = "Mi Negocio", onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
+        CpIcon(R.drawable.ic_profile)
+    }
+}
+
+/** O1. Top Bar de aplicación (blanco 90% con sombra suave). */
+@Composable
+fun CierreProTopBar(
+    sectionTitle: String,
+    onProfileClick: () -> Unit,
+) {
+    TopBarSurface {
         Row(
             Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -110,16 +143,54 @@ fun CierreProTopBar(
                     )
                 }
             }
-            Box(
-                Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(CpPrimary)
-                    .clickable(role = Role.Button, onClickLabel = "Mi Negocio", onClick = onProfileClick),
-                contentAlignment = Alignment.Center,
+            ProfileButton(onProfileClick)
+        }
+    }
+}
+
+/** O1b. Top Bar de detalle: botón de regreso, logo 28dp y título de pantalla. */
+@Composable
+fun CierreProDetailTopBar(
+    title: String,
+    onBack: () -> Unit,
+    onProfileClick: () -> Unit,
+) {
+    TopBarSurface {
+        Row(
+            Modifier.fillMaxWidth().height(56.dp).padding(horizontal = 12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                Modifier.weight(1f, fill = false),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                CpIcon(R.drawable.ic_profile)
+                Box(
+                    Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .clickable(role = Role.Button, onClickLabel = "Regresar", onClick = onBack),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CpIcon(R.drawable.ic_arrow_back)
+                }
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    CierreProLogo(size = 28.dp, markSize = DpSize(27.dp, 25.dp))
+                    Text(
+                        title,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = CpOnSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.semantics { heading() },
+                    )
+                }
             }
+            ProfileButton(onProfileClick)
         }
     }
 }

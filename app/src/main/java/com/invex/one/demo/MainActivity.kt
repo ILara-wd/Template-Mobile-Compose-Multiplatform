@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import com.invex.one.demo.ui.components.organisms.CierreProBottomBar
 import com.invex.one.demo.ui.components.organisms.CierreProTopBar
 import com.invex.one.demo.ui.components.organisms.CpDestination
 import com.invex.one.demo.ui.screens.home.HomeScreen
+import com.invex.one.demo.ui.screens.newservice.NewServiceScreen
 import com.invex.one.demo.ui.theme.CpBackground
 import com.invex.one.demo.ui.theme.CpTextSecondary
 import com.invex.one.demo.ui.theme.DemoTheme
@@ -53,7 +55,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CierreProApp() {
     var destination by rememberSaveable { mutableStateOf(CpDestination.Inicio) }
+    var showNewService by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
+
+    if (showNewService) {
+        // Flujo de captura a pantalla completa (sin Bottom Navigation).
+        BackHandler { showNewService = false }
+        NewServiceScreen(
+            onBack = { showNewService = false },
+            onCancel = { showNewService = false },
+            // TODO: navegar a Paso 2 — Checklist y Evidencias.
+            onContinue = {},
+        )
+        return
+    }
 
     Scaffold(
         containerColor = CpBackground,
@@ -61,7 +76,10 @@ fun CierreProApp() {
         bottomBar = { CierreProBottomBar(selected = destination, onSelect = { destination = it }) },
     ) { innerPadding ->
         when (destination) {
-            CpDestination.Inicio -> HomeScreen(contentPadding = innerPadding)
+            CpDestination.Inicio -> HomeScreen(
+                contentPadding = innerPadding,
+                onNewService = { showNewService = true },
+            )
             CpDestination.Clientes -> ClientsScreen(
                 contentPadding = innerPadding,
                 onCall = { client ->

@@ -10,6 +10,7 @@ val CpSurface = Color(0xFFFFFFFF)
 val CpSurfaceContainerLow = Color(0xFFF2F4F6)
 val CpSurfaceContainer = Color(0xFFECEEF0)
 val CpSurfaceContainerHigh = Color(0xFFE6E8EA)
+val CpSurfaceContainerHighest = Color(0xFFE0E3E5) // divisores / radio inactivo
 val CpBarScrim = Color(0xE6FFFFFF) // blanco 90% para Top Bar / Bottom Nav
 
 // Texto

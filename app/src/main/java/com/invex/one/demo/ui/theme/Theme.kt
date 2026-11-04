@@ -19,6 +19,7 @@ private val CierreProColorScheme = lightColorScheme(
     onSurfaceVariant = CpOnSurfaceVariant,
     surfaceContainer = CpSurfaceContainer,
     surfaceContainerHigh = CpSurfaceContainerHigh,
+    surfaceContainerHighest = CpSurfaceContainerHighest,
 )
 
 /**
