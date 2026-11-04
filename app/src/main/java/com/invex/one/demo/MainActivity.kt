@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.invex.one.demo.ui.components.organisms.CierreProBottomBar
 import com.invex.one.demo.ui.components.organisms.CierreProTopBar
 import com.invex.one.demo.ui.components.organisms.CpDestination
+import com.invex.one.demo.ui.screens.followups.FollowUpsScreen
 import com.invex.one.demo.ui.screens.home.HomeScreen
 import com.invex.one.demo.ui.screens.newservice.NewServiceScreen
 import com.invex.one.demo.ui.screens.report.SampleServiceReport
@@ -147,6 +148,18 @@ fun CierreProApp() {
                 contentPadding = innerPadding,
                 onClientClick = { detailClientId = it.id },
                 onCall = { dial(it.phone) },
+            )
+            CpDestination.Seguimientos -> FollowUpsScreen(
+                contentPadding = innerPadding,
+                onWhatsApp = { f ->
+                    val text = "Hola ${f.clientName}, te contactamos de ClimaExpress para programar: ${f.reasonTitle}."
+                    open(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://wa.me/${f.phone.filter(Char::isDigit)}?text=" + Uri.encode(text)),
+                        ),
+                    )
+                },
             )
             else -> PlaceholderScreen(destination.label, innerPadding)
         }

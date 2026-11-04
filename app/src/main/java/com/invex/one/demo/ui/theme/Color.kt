@@ -45,3 +45,5 @@ val CpSuccess = Color(0xFF10B981) // punto de orden finalizada
 val CpWarningContainer = Color(0xFFFEF3C7)
 val CpOnWarningContainer = Color(0xFF92400E)
 val CpWarning = Color(0xFFB45309)
+val CpWarningAccent = Color(0xFFF59E0B) // punto "Para hoy" / fondo 15% de pills
+val CpWarningStrong = Color(0xFFD97706) // contador "Para hoy"
