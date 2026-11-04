@@ -19,7 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +38,11 @@ import com.invex.one.demo.ui.components.organisms.CierreProTopBar
 import com.invex.one.demo.ui.components.organisms.CpDestination
 import com.invex.one.demo.ui.screens.followups.FollowUpsScreen
 import com.invex.one.demo.ui.screens.home.HomeScreen
+import com.invex.one.demo.ui.screens.newservice.NewServiceDraft
 import com.invex.one.demo.ui.screens.newservice.NewServiceScreen
+import com.invex.one.demo.ui.screens.newservice.SampleServiceEquipment
+import com.invex.one.demo.ui.screens.newservice.ServiceType
+import com.invex.one.demo.ui.screens.worklog.WorkLogScreen
 import com.invex.one.demo.ui.screens.profile.BusinessProfile
 import com.invex.one.demo.ui.screens.profile.BusinessProfileScreen
 import com.invex.one.demo.ui.screens.profile.SampleBusinessProfile
@@ -64,6 +70,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+private const val FlowKeyNewService = "flow:new-service"
+private const val FlowKeyWorkLog = "flow:work-log"
+
 @Composable
 fun CierreProApp() {
     var destination by rememberSaveable { mutableStateOf(CpDestination.Inicio) }
@@ -71,7 +80,20 @@ fun CierreProApp() {
     var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
     var showReport by rememberSaveable { mutableStateOf(false) }
     var showProfile by rememberSaveable { mutableStateOf(false) }
+    var showWorkLog by rememberSaveable { mutableStateOf(false) }
+    // Datos del Paso 1 para el resumen del Paso 2 (en memoria; si se pierden se usan los de ejemplo).
+    var serviceDraft by remember { mutableStateOf<NewServiceDraft?>(null) }
     var profile by rememberSaveable(stateSaver = BusinessProfile.Saver) { mutableStateOf(SampleBusinessProfile) }
+    // Conserva el estado de cada paso del flujo (Paso 1 / Paso 2) mientras se navega
+    // entre ellos, al reporte o al perfil; se descarta al cerrar o completar el flujo.
+    val flowState = rememberSaveableStateHolder()
+    fun endFlow() {
+        showReport = false
+        showWorkLog = false
+        showNewService = false
+        flowState.removeState(FlowKeyNewService)
+        flowState.removeState(FlowKeyWorkLog)
+    }
     val context = LocalContext.current
     val detailClient = detailClientId?.let { id -> SampleClients.firstOrNull { it.id == id }?.toDetail() }
 
@@ -95,27 +117,15 @@ fun CierreProApp() {
     }
     val openProfile = { showProfile = true }
 
-    if (showNewService) {
-        // Flujo de captura a pantalla completa (sin Bottom Navigation).
-        BackHandler { showNewService = false }
-        NewServiceScreen(
-            onProfileClick = openProfile,
-            onBack = { showNewService = false },
-            onCancel = { showNewService = false },
-            // TODO: navegar a Paso 2 — Checklist y Evidencias.
-            onContinue = {},
-            client = detailClient?.let {
-                ServiceClientSummary(it.name, it.phone, it.address.substringAfterLast(", ").trim())
-            } ?: SampleServiceClient,
-        )
-        return
-    }
-
     if (showReport) {
-        // TODO: cargar el reporte real de la orden; por ahora muestra el de ejemplo con los datos del cliente.
-        val report = detailClient?.let {
-            SampleServiceReport.copy(clientName = it.name, clientPhone = it.phone)
-        } ?: SampleServiceReport
+        // TODO: cargar el reporte real de la orden; por ahora muestra el de ejemplo con los datos del cliente
+        // (el del flujo en curso, o el de la ficha desde donde se abrió).
+        val flowClient = serviceDraft?.client?.takeIf { showWorkLog }
+        val report = when {
+            flowClient != null -> SampleServiceReport.copy(clientName = flowClient.name, clientPhone = flowClient.phone)
+            detailClient != null -> SampleServiceReport.copy(clientName = detailClient.name, clientPhone = detailClient.phone)
+            else -> SampleServiceReport
+        }
         val reportWithProfile = report.copy(workshopName = profile.businessName)
         BackHandler { showReport = false }
         ServiceReportScreen(
@@ -129,8 +139,47 @@ fun CierreProApp() {
             },
             // TODO: generar el PDF y abrir la hoja de compartir del sistema.
             onSharePdf = {},
-            onComplete = { showReport = false },
+            onComplete = { endFlow() },
         )
+        return
+    }
+
+    if (showWorkLog) {
+        BackHandler { showWorkLog = false }
+        val draft = serviceDraft
+        flowState.SaveableStateProvider(FlowKeyWorkLog) {
+            WorkLogScreen(
+                clientName = draft?.client?.name ?: SampleServiceClient.name,
+                equipmentName = draft?.equipment?.name ?: SampleServiceEquipment.name,
+                serviceType = (draft?.type ?: ServiceType.Mantenimiento).let {
+                    if (it == ServiceType.Mantenimiento) "Mantenimiento Preventivo" else it.label
+                },
+                onProfileClick = openProfile,
+                onBack = { showWorkLog = false },
+                // TODO: alimentar el reporte con el checklist, fotos y notas capturados.
+                onContinue = { showReport = true },
+            )
+        }
+        return
+    }
+
+    if (showNewService) {
+        // Flujo de captura a pantalla completa (sin Bottom Navigation).
+        BackHandler { endFlow() }
+        flowState.SaveableStateProvider(FlowKeyNewService) {
+            NewServiceScreen(
+                onProfileClick = openProfile,
+                onBack = { endFlow() },
+                onCancel = { endFlow() },
+                onContinue = { draft ->
+                    serviceDraft = draft
+                    showWorkLog = true
+                },
+                client = detailClient?.let {
+                    ServiceClientSummary(it.name, it.phone, it.address.substringAfterLast(", ").trim())
+                } ?: SampleServiceClient,
+            )
+        }
         return
     }
 

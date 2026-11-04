@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
@@ -41,10 +42,18 @@ fun Modifier.cpCard(shape: Shape = CpCardShape): Modifier = this
     )
     .background(CpSurface, shape)
 
-/** Icono estático del kit: respeta tamaño y color nativos del asset. */
+/**
+ * Icono estático del kit: respeta tamaño y color nativos del asset. [tint]
+ * recolorea la misma geometría cuando el diseño la usa en otro color.
+ */
 @Composable
-fun CpIcon(@DrawableRes id: Int, modifier: Modifier = Modifier) {
-    Image(painter = painterResource(id), contentDescription = null, modifier = modifier)
+fun CpIcon(@DrawableRes id: Int, modifier: Modifier = Modifier, tint: Color? = null) {
+    Image(
+        painter = painterResource(id),
+        contentDescription = null,
+        modifier = modifier,
+        colorFilter = tint?.let { ColorFilter.tint(it) },
+    )
 }
 
 /** Badge de estado tipo pill (En curso, Completado, 1 Prioritario…). */

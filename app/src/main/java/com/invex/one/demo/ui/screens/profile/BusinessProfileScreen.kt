@@ -1,9 +1,5 @@
 package com.invex.one.demo.ui.screens.profile
 
-import android.content.Context
-import android.graphics.BitmapFactory
-import android.net.Uri
-import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -32,8 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,10 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -63,6 +54,8 @@ import com.invex.one.demo.ui.components.atoms.CpButton
 import com.invex.one.demo.ui.components.atoms.CpIcon
 import com.invex.one.demo.ui.components.atoms.StatusBadge
 import com.invex.one.demo.ui.components.atoms.cpCard
+import com.invex.one.demo.ui.components.atoms.rememberUriPainter
+import com.invex.one.demo.ui.components.atoms.uriFileSize
 import com.invex.one.demo.ui.components.molecules.CpSectionShape
 import com.invex.one.demo.ui.components.molecules.FieldHint
 import com.invex.one.demo.ui.components.molecules.LogoThumbnail
@@ -82,8 +75,6 @@ import com.invex.one.demo.ui.theme.CpTextMuted
 import com.invex.one.demo.ui.theme.CpWarning
 import com.invex.one.demo.ui.theme.CpWarningContainer
 import com.invex.one.demo.ui.theme.DemoTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 // ---------- Modelo ----------
 
@@ -138,7 +129,7 @@ fun BusinessProfileScreen(
 
     val pickLogo = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
-        val size = fileSize(context, uri)
+        val size = uriFileSize(context, uri)
         if (size != null && size > MaxLogoBytes) {
             Toast.makeText(context, "El logotipo supera 5MB", Toast.LENGTH_SHORT).show()
         } else {
@@ -489,32 +480,10 @@ private fun SaveCard(dirty: Boolean, onSave: () -> Unit) {
 
 // ---------- Logotipo ----------
 
-/** Resuelve el logotipo: recurso de muestra, imagen elegida (decodificada en IO) o null. */
+/** Resuelve el logotipo: recurso de muestra, imagen elegida o null (sin logotipo). */
 @Composable
-fun rememberLogoPainter(logoUri: String?): Painter? {
-    if (logoUri == BusinessProfile.SampleLogo) return painterResource(R.drawable.img_business_logo_sample)
-    if (logoUri == null) return null
-    val context = LocalContext.current
-    val bitmap by produceState<ImageBitmap?>(null, logoUri) {
-        value = withContext(Dispatchers.IO) { decodeSampled(context, Uri.parse(logoUri), 512) }
-    }
-    return bitmap?.let { remember(it) { BitmapPainter(it) } }
-}
-
-private fun decodeSampled(context: Context, uri: Uri, maxSide: Int): ImageBitmap? = runCatching {
-    val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-    context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, bounds) }
-    var sample = 1
-    while (bounds.outWidth / (sample * 2) >= maxSide && bounds.outHeight / (sample * 2) >= maxSide) sample *= 2
-    val opts = BitmapFactory.Options().apply { inSampleSize = sample }
-    context.contentResolver.openInputStream(uri)?.use { BitmapFactory.decodeStream(it, null, opts) }?.asImageBitmap()
-}.getOrNull()
-
-private fun fileSize(context: Context, uri: Uri): Long? = runCatching {
-    context.contentResolver.query(uri, arrayOf(OpenableColumns.SIZE), null, null, null)?.use { c ->
-        if (c.moveToFirst() && !c.isNull(0)) c.getLong(0) else null
-    }
-}.getOrNull()
+fun rememberLogoPainter(logoUri: String?): Painter? =
+    if (logoUri == BusinessProfile.SampleLogo) painterResource(R.drawable.img_business_logo_sample) else rememberUriPainter(logoUri)
 
 @Preview(showBackground = true, widthDp = 375, heightDp = 1500)
 @Composable
