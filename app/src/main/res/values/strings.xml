@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Template</string>
+    <string name="app_name">Vuelve +</string>
 
     <!-- Login (Figma 87:2049) -->
     <string name="login_title">Sign In</string>
