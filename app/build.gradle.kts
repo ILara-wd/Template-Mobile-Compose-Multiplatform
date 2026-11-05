@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.invex.one.demo"
+    namespace = "com.invex.one.template"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.invex.one.demo"
+        applicationId = "com.invex.one.template"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
