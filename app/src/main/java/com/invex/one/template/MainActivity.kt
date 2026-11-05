@@ -1,6 +1,7 @@
 package com.invex.one.template
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -17,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.invex.one.template.ui.clients.ClientsScreen
@@ -32,6 +34,7 @@ import com.invex.one.template.ui.components.VuelveMainScaffold
 import com.invex.one.template.ui.home.HomeScreen
 import com.invex.one.template.ui.home.SampleHomeUiState
 import com.invex.one.template.ui.login.LoginScreen
+import com.invex.one.template.ui.newclient.NewClientScreen
 import com.invex.one.template.ui.register.RegisterScreen
 import com.invex.one.template.ui.theme.TemplateTheme
 import com.invex.one.template.ui.theme.VuelveOnSurfaceVariant
@@ -57,6 +60,8 @@ private fun VuelveApp(onExit: () -> Unit) {
     var tab by rememberSaveable { mutableStateOf(MainTab.Home) }
     var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
     var showBusiness by rememberSaveable { mutableStateOf(false) }
+    var showNewClient by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
     val openBusiness = { showBusiness = true }
     // Only the Figma sample client has detail data for now; other rows are not navigable yet.
     val openDetail: (String) -> Unit = { id -> if (sampleClientDetail(id) != null) detailClientId = id }
@@ -76,6 +81,18 @@ private fun VuelveApp(onExit: () -> Unit) {
             )
         }
         AppDestination.Main -> {
+            if (showNewClient) {
+                BackHandler { showNewClient = false }
+                NewClientScreen(
+                    onBack = { showNewClient = false },
+                    onSave = { _, _ ->
+                        // No persistence yet: confirm and return to the directory.
+                        Toast.makeText(context, R.string.newclient_saved, Toast.LENGTH_SHORT).show()
+                        showNewClient = false
+                    },
+                )
+                return
+            }
             if (showBusiness) {
                 BackHandler { showBusiness = false }
                 BusinessScreen(state = SampleBusinessUiState, onBack = { showBusiness = false })
@@ -104,6 +121,7 @@ private fun VuelveApp(onExit: () -> Unit) {
                     onTabSelected = { tab = it },
                     onClientClick = { openDetail(it.id) },
                     onAccountClick = openBusiness,
+                    onNewClient = { showNewClient = true },
                 )
                 MainTab.FollowUps -> FollowUpsScreen(
                     state = SampleFollowUpsUiState,

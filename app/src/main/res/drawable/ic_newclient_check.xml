@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exported from Figma: Prototipo-Demo-UiKit, "Nuevo cliente recurrente" (96:3729) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="12.225dp"
+    android:height="9.01875dp"
+    android:viewportWidth="12.225"
+    android:viewportHeight="9.01875">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M4.275 9.01875L0 4.74375L1.06875 3.675L4.275 6.88125L11.1562 0L12.225 1.06875L4.275 9.01875V9.01875" />
+</vector>
