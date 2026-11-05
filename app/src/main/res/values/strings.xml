@@ -187,4 +187,36 @@
     <string name="followups_goal_banner_title">¡Mantén el ritmo del día!</string>
     <string name="followups_goal_banner_body">Todo al día: cuando completes los seguimientos, aquí verás la confirmación de meta cumplida.</string>
     <string name="followups_goal_banner_benefit">Aumenta hasta 35% el regreso de clientes</string>
+
+    <!-- Detalle del cliente (Figma 93:3217) -->
+    <string name="detail_title">Detalle Cliente</string>
+    <string name="detail_vip">Cliente VIP</string>
+    <string name="detail_pet_age">• %1$s (%2$s)</string>
+    <string name="detail_edit">Editar</string>
+    <string name="detail_more_options">Más opciones</string>
+    <string name="detail_phone_label">Teléfono móvil</string>
+    <string name="detail_call">Llamar</string>
+    <string name="detail_contact_today">Corresponde contactar hoy</string>
+    <string name="detail_on_time_frequency">Frecuencia puntual</string>
+    <string name="detail_last_contact_label">"Último contacto: "</string>
+    <string name="detail_whatsapp_title">Contactar por WhatsApp</string>
+    <string name="detail_whatsapp_subtitle">Preparar mensaje sugerido para %1$s</string>
+    <string name="detail_frequency_label">Frecuencia habitual</string>
+    <string name="detail_visits_label">Visitas totales</string>
+    <plurals name="detail_visits_value">
+        <item quantity="one">%1$d registrada</item>
+        <item quantity="other">%1$d registradas</item>
+    </plurals>
+    <string name="detail_history_title">Historial de visitas</string>
+    <plurals name="detail_history_recent">
+        <item quantity="one">%1$d reciente</item>
+        <item quantity="other">%1$d recientes</item>
+    </plurals>
+    <string name="detail_register_visit">Registrar visita</string>
+    <string name="detail_latest_badge">Última</string>
+    <string name="detail_currency">MXN</string>
+    <string name="detail_new_visit">Nueva visita</string>
+    <string name="detail_whatsapp_short">WhatsApp</string>
+    <string name="detail_retention_summary">Cumplió %1$s desde su último %2$s. Su frecuencia habitual es %3$s.</string>
+    <string name="detail_price">$%1$s</string>
 </resources>

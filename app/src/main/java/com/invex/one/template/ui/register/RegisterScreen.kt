@@ -259,7 +259,7 @@ fun RegisterContent(
                             style = MaterialTheme.typography.labelLarge,
                         )
                         Image(
-                            painter = painterResource(R.drawable.ic_register_arrow_forward),
+                            painter = painterResource(R.drawable.ic_vuelve_arrow_forward_md),
                             contentDescription = null,
                         )
                     }
@@ -653,7 +653,7 @@ private fun MessagePreviewCard() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Image(painter = painterResource(R.drawable.ic_register_check_circle), contentDescription = null)
+                Image(painter = painterResource(R.drawable.ic_vuelve_check_circle_small), contentDescription = null)
                 Text(
                     text = stringResource(R.string.register_preview_channel),
                     style = MaterialTheme.typography.labelSmall,

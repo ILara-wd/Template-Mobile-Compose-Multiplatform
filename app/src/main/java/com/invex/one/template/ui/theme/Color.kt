@@ -62,3 +62,7 @@ val VuelveWhatsAppDeep = Color(0xFF006329) // WhatsApp CTA inside follow-up card
 val VuelveOnBlue = Color(0xFFEEEFFF) // text on VuelveBlue600 pills
 val VuelveOutlineSoft = Color(0xFFC3C6D7) // neutral "Próximos días" dot
 val FollowUpCardShadow = Color(0x0F131B2E) // rgba(19,27,46,.06)
+
+// Added with "Detalle del cliente — María y Luna" (93:3217)
+val VuelveMintPale = Color(0xFFC7FFCA) // dot inside "Corresponde contactar hoy" pill
+val VuelveOnSuccessContainer = Color(0xFF005322) // "Última" visit badge text

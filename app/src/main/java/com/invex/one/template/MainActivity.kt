@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import com.invex.one.template.ui.clients.ClientsScreen
 import com.invex.one.template.ui.clients.SampleClientsUiState
 import com.invex.one.template.ui.components.MainTab
+import com.invex.one.template.ui.detail.ClientDetailScreen
+import com.invex.one.template.ui.detail.sampleClientDetail
 import com.invex.one.template.ui.followups.FollowUpsScreen
 import com.invex.one.template.ui.followups.SampleFollowUpsUiState
 import com.invex.one.template.ui.components.VuelveMainScaffold
@@ -51,6 +53,9 @@ private enum class AppDestination { Login, Register, Main }
 private fun VuelveApp(onExit: () -> Unit) {
     var destination by rememberSaveable { mutableStateOf(AppDestination.Login) }
     var tab by rememberSaveable { mutableStateOf(MainTab.Home) }
+    var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
+    // Only the Figma sample client has detail data for now; other rows are not navigable yet.
+    val openDetail: (String) -> Unit = { id -> if (sampleClientDetail(id) != null) detailClientId = id }
 
     when (destination) {
         AppDestination.Login -> LoginScreen(
@@ -67,6 +72,12 @@ private fun VuelveApp(onExit: () -> Unit) {
             )
         }
         AppDestination.Main -> {
+            val detail = detailClientId?.let(::sampleClientDetail)
+            if (detail != null) {
+                BackHandler { detailClientId = null }
+                ClientDetailScreen(state = detail, onBack = { detailClientId = null })
+                return
+            }
             BackHandler(enabled = tab != MainTab.Home) { tab = MainTab.Home }
             when (tab) {
                 MainTab.Home -> HomeScreen(
@@ -76,14 +87,17 @@ private fun VuelveApp(onExit: () -> Unit) {
                     onSeeAllPriority = { tab = MainTab.FollowUps },
                     onMetrics = { tab = MainTab.Results },
                     onClientList = { tab = MainTab.Clients },
+                    onClientClick = { openDetail(it.id) },
                 )
                 MainTab.Clients -> ClientsScreen(
                     state = SampleClientsUiState,
                     onTabSelected = { tab = it },
+                    onClientClick = { openDetail(it.id) },
                 )
                 MainTab.FollowUps -> FollowUpsScreen(
                     state = SampleFollowUpsUiState,
                     onTabSelected = { tab = it },
+                    onViewProfile = { openDetail(it.id) },
                 )
                 else -> ComingSoonScreen(tab = tab, onTabSelected = { tab = it })
             }

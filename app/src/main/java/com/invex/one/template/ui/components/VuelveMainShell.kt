@@ -209,3 +209,73 @@ fun VuelveBottomBar(selected: MainTab, onSelect: (MainTab) -> Unit, modifier: Mo
         }
     }
 }
+
+/** O2 — Detail top bar: back, Vuelve logo, screen title and account avatar (no tab bar below). */
+@Composable
+fun VuelveDetailTopBar(
+    title: String,
+    accountAvatar: Painter,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 4.dp,
+                ambientColor = Color.Black.copy(alpha = 0.04f),
+                spotColor = Color.Black.copy(alpha = 0.04f),
+            )
+            .background(BarBackground)
+            .statusBarsPadding(),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(
+                modifier = Modifier.weight(1f, fill = false),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(CircleShape)
+                        .clickable(onClick = onBack, role = Role.Button),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_vuelve_arrow_back),
+                        contentDescription = stringResource(R.string.vuelve_back),
+                    )
+                }
+                Image(
+                    painter = painterResource(R.drawable.img_vuelve_logo),
+                    contentDescription = null,
+                    modifier = Modifier.size(32.dp),
+                )
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge.copy(letterSpacing = (-0.18).sp),
+                    color = VuelveOnSurface,
+                    maxLines = 1,
+                    modifier = Modifier.padding(start = 4.dp),
+                )
+            }
+            Image(
+                painter = accountAvatar,
+                contentDescription = stringResource(R.string.vuelve_account_menu),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .padding(end = 4.dp)
+                    .size(32.dp)
+                    .clip(CircleShape),
+            )
+        }
+    }
+}
