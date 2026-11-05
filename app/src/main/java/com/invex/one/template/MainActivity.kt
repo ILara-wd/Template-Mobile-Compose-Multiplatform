@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.invex.one.template.ui.clients.ClientsScreen
 import com.invex.one.template.ui.clients.SampleClientsUiState
+import com.invex.one.template.ui.business.BusinessScreen
+import com.invex.one.template.ui.business.SampleBusinessUiState
 import com.invex.one.template.ui.components.MainTab
 import com.invex.one.template.ui.detail.ClientDetailScreen
 import com.invex.one.template.ui.detail.sampleClientDetail
@@ -54,6 +56,8 @@ private fun VuelveApp(onExit: () -> Unit) {
     var destination by rememberSaveable { mutableStateOf(AppDestination.Login) }
     var tab by rememberSaveable { mutableStateOf(MainTab.Home) }
     var detailClientId by rememberSaveable { mutableStateOf<String?>(null) }
+    var showBusiness by rememberSaveable { mutableStateOf(false) }
+    val openBusiness = { showBusiness = true }
     // Only the Figma sample client has detail data for now; other rows are not navigable yet.
     val openDetail: (String) -> Unit = { id -> if (sampleClientDetail(id) != null) detailClientId = id }
 
@@ -72,6 +76,11 @@ private fun VuelveApp(onExit: () -> Unit) {
             )
         }
         AppDestination.Main -> {
+            if (showBusiness) {
+                BackHandler { showBusiness = false }
+                BusinessScreen(state = SampleBusinessUiState, onBack = { showBusiness = false })
+                return
+            }
             val detail = detailClientId?.let(::sampleClientDetail)
             if (detail != null) {
                 BackHandler { detailClientId = null }
@@ -88,18 +97,21 @@ private fun VuelveApp(onExit: () -> Unit) {
                     onMetrics = { tab = MainTab.Results },
                     onClientList = { tab = MainTab.Clients },
                     onClientClick = { openDetail(it.id) },
+                    onAccountClick = openBusiness,
                 )
                 MainTab.Clients -> ClientsScreen(
                     state = SampleClientsUiState,
                     onTabSelected = { tab = it },
                     onClientClick = { openDetail(it.id) },
+                    onAccountClick = openBusiness,
                 )
                 MainTab.FollowUps -> FollowUpsScreen(
                     state = SampleFollowUpsUiState,
                     onTabSelected = { tab = it },
                     onViewProfile = { openDetail(it.id) },
+                    onAccountClick = openBusiness,
                 )
-                else -> ComingSoonScreen(tab = tab, onTabSelected = { tab = it })
+                else -> ComingSoonScreen(tab = tab, onTabSelected = { tab = it }, onAccountClick = openBusiness)
             }
         }
     }
@@ -107,13 +119,13 @@ private fun VuelveApp(onExit: () -> Unit) {
 
 /** Placeholder for tabs whose Figma screens are not implemented yet. */
 @Composable
-private fun ComingSoonScreen(tab: MainTab, onTabSelected: (MainTab) -> Unit) {
+private fun ComingSoonScreen(tab: MainTab, onTabSelected: (MainTab) -> Unit, onAccountClick: () -> Unit) {
     VuelveMainScaffold(
         title = stringResource(tab.label),
         selectedTab = tab,
         onTabSelected = onTabSelected,
         accountAvatar = painterResource(R.drawable.img_sample_profile),
-        onAccountClick = {},
+        onAccountClick = onAccountClick,
     ) { innerPadding ->
         Box(
             modifier = Modifier

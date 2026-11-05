@@ -219,4 +219,45 @@
     <string name="detail_whatsapp_short">WhatsApp</string>
     <string name="detail_retention_summary">Cumplió %1$s desde su último %2$s. Su frecuencia habitual es %3$s.</string>
     <string name="detail_price">$%1$s</string>
+
+    <!-- Mi Negocio (Figma 95:3425) -->
+    <string name="business_title">Mi negocio</string>
+    <string name="business_heading">Mi Negocio</string>
+    <string name="business_plan_active">Plan Pro Activo</string>
+    <string name="business_subtitle">Gestión de fidelización y recurrencia</string>
+    <string name="business_settings">Ajustes y cuenta</string>
+    <string name="business_change_photo">Cambiar foto</string>
+    <string name="business_verified">Negocio verificado</string>
+    <string name="business_whatsapp_connected">WhatsApp Conectado</string>
+    <string name="business_reminder_line">(Línea de recordatorios)</string>
+    <string name="business_edit">Editar datos del negocio</string>
+    <string name="business_share">Compartir perfil</string>
+    <string name="business_balance_title">Balance e Ingresos</string>
+    <string name="business_balance_subtitle">Rendimiento comercial de %1$s</string>
+    <string name="business_period_current">Este mes</string>
+    <string name="business_period_previous">Anterior</string>
+    <string name="business_revenue_overline">FACTURACIÓN TOTAL DEL MES</string>
+    <string name="business_revenue_reactivations">+%1$s MXN generados por reactivaciones automáticas</string>
+    <string name="business_revenue_reactivated_share">Clientes reactivados por Vuelve (%1$d%%)</string>
+    <string name="business_revenue_organic_share">Citas orgánicas (%1$d%%)</string>
+    <string name="business_rules_title">Reglas de Retorno Inteligente</string>
+    <string name="business_rules_subtitle">Frecuencias sugeridas por servicio</string>
+    <string name="business_auto_reminders">Recordatorios Automáticos</string>
+    <string name="business_auto_reminders_subtitle">Sugiere visitas al cumplirse el ciclo</string>
+    <string name="business_frequency_overline">FRECUENCIA POR TIPO DE SERVICIO</string>
+    <string name="business_modify">Modificar</string>
+    <string name="business_send_window">Ventana horaria de envío</string>
+    <string name="business_best_conversion">Mayor conversión</string>
+    <string name="business_send_window_body">Los mensajes se preparan sugeridos entre %1$s, cuando los dueños responden %2$d%% más rápido.</string>
+    <string name="business_template_title">Plantilla activa de WhatsApp</string>
+    <string name="business_template_customize">Personalizar</string>
+    <string name="business_ops_title">Gestión y Operaciones</string>
+    <string name="business_catalog">Catálogo de servicios y precios</string>
+    <string name="business_catalog_subtitle">%1$d servicios activos • Precios desde %2$s</string>
+    <string name="business_report">Descargar reporte de ingresos y clientes</string>
+    <string name="business_report_subtitle">Archivo exportable (.PDF y Excel) para contabilidad</string>
+    <string name="business_support">Soporte y WhatsApp de ayuda</string>
+    <string name="business_support_subtitle">Respuesta en menos de 15 min por el equipo Vuelve</string>
+    <string name="business_footer_version">Vuelve Engine v2.4 • %1$s</string>
+    <string name="business_footer_sync">Datos cifrados y sincronizados con la nube</string>
 </resources>
