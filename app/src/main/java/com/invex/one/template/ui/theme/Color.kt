@@ -56,3 +56,9 @@ val StatusUpToDateDot = Color(0xFF006D2F) // "Al día" chip dot + green paw badg
 val VuelvePrimaryFixedDim = Color(0xFFB4C5FF) // strong lavender initials avatar
 val VuelveMintStrong = Color(0xFF66FF8E) // initials avatar for clients "Al día"
 val VuelveOnMintStrong = Color(0xFF002109)
+
+// Added with "Seguimientos — Prioridades diarias" (92:2885)
+val VuelveWhatsAppDeep = Color(0xFF006329) // WhatsApp CTA inside follow-up cards
+val VuelveOnBlue = Color(0xFFEEEFFF) // text on VuelveBlue600 pills
+val VuelveOutlineSoft = Color(0xFFC3C6D7) // neutral "Próximos días" dot
+val FollowUpCardShadow = Color(0x0F131B2E) // rgba(19,27,46,.06)

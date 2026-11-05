@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import com.invex.one.template.ui.clients.ClientsScreen
 import com.invex.one.template.ui.clients.SampleClientsUiState
 import com.invex.one.template.ui.components.MainTab
+import com.invex.one.template.ui.followups.FollowUpsScreen
+import com.invex.one.template.ui.followups.SampleFollowUpsUiState
 import com.invex.one.template.ui.components.VuelveMainScaffold
 import com.invex.one.template.ui.home.HomeScreen
 import com.invex.one.template.ui.home.SampleHomeUiState
@@ -77,6 +79,10 @@ private fun VuelveApp(onExit: () -> Unit) {
                 )
                 MainTab.Clients -> ClientsScreen(
                     state = SampleClientsUiState,
+                    onTabSelected = { tab = it },
+                )
+                MainTab.FollowUps -> FollowUpsScreen(
+                    state = SampleFollowUpsUiState,
                     onTabSelected = { tab = it },
                 )
                 else -> ComingSoonScreen(tab = tab, onTabSelected = { tab = it })

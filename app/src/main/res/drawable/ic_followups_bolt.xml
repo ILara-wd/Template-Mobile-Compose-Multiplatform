@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exported from Figma: Prototipo-Demo-UiKit, "Seguimientos — Prioridades diarias" (92:2885) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="12dp"
+    android:height="15dp"
+    android:viewportWidth="12"
+    android:viewportHeight="15">
+    <path
+        android:fillColor="#00174B"
+        android:pathData="M4.9125 12.15L8.79375 7.5H5.79375L6.3375 3.24375L2.86875 8.25H5.475L4.9125 12.15V12.15M3 15L3.75 9.75H0L6.75 0H8.25L7.5 6H12L4.5 15H3V15M5.83125 7.6875V7.6875V7.6875V7.6875V7.6875V7.6875V7.6875V7.6875" />
+</vector>

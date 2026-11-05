@@ -467,7 +467,7 @@ private fun PrioritySection(
                     style = MaterialTheme.typography.labelMedium,
                     color = VuelvePrimary,
                 )
-                Image(painter = painterResource(R.drawable.ic_home_chevron_right), contentDescription = null)
+                Image(painter = painterResource(R.drawable.ic_vuelve_chevron_right_small), contentDescription = null)
             }
         }
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {

@@ -292,7 +292,7 @@ private fun RegisterIntro() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Image(painter = painterResource(R.drawable.ic_register_paw_small), contentDescription = null)
+            Image(painter = painterResource(R.drawable.ic_vuelve_paw_small), contentDescription = null)
             Text(
                 text = stringResource(R.string.register_brand_badge),
                 style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.55.sp),

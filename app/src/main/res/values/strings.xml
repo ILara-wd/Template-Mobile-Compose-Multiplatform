@@ -143,4 +143,48 @@
     <string name="clients_empty_filter">No hay clientes en este filtro.</string>
     <string name="clients_tip_title">Consejo de retorno</string>
     <string name="clients_tip_body">Los recordatorios a los 28 días recuperan un 35% más de citas que esperar a los 45 días.</string>
+
+    <!-- Seguimientos — Prioridades diarias (Figma 92:2885) -->
+    <string name="followups_title">Seguimientos</string>
+    <string name="followups_live">En vivo</string>
+    <string name="followups_subtitle">%1$d clientes listos para recibir propuesta de cita</string>
+    <string name="followups_filter_all">Todos</string>
+    <string name="followups_filter_today">Para hoy</string>
+    <string name="followups_filter_overdue">Atrasados</string>
+    <string name="followups_filter_upcoming">Próximos</string>
+    <string name="followups_filter_contacted">Contactados este mes (%1$d)</string>
+    <string name="followups_goal_title">Objetivo del turno: %1$d/%2$d contactados</string>
+    <string name="followups_goal_rate">Tasa de respuesta estimada: ~%1$d%%</string>
+    <string name="followups_section_overdue">"Atrasados "</string>
+    <string name="followups_section_overdue_hint">(Atención prioritaria)</string>
+    <plurals name="followups_section_overdue_count">
+        <item quantity="one">%1$d cliente</item>
+        <item quantity="other">%1$d clientes</item>
+    </plurals>
+    <string name="followups_section_today">"Para hoy "</string>
+    <string name="followups_section_today_hint">(Recomendados)</string>
+    <plurals name="followups_section_today_count">
+        <item quantity="one">%1$d cita ideal</item>
+        <item quantity="other">%1$d citas ideales</item>
+    </plurals>
+    <string name="followups_section_upcoming">Próximos días</string>
+    <plurals name="followups_section_upcoming_count">
+        <item quantity="one">%1$d programado</item>
+        <item quantity="other">%1$d programados</item>
+    </plurals>
+    <string name="followups_days_late">%1$dd retraso</string>
+    <string name="followups_today_badge">Hoy sugerido</string>
+    <string name="followups_last_visit">"Última visita: "</string>
+    <string name="followups_suggested_return">"Retorno sugerido: "</string>
+    <string name="followups_suggested_date">"Fecha sugerida: "</string>
+    <string name="followups_reason">Motivo:</string>
+    <string name="followups_whatsapp">WhatsApp</string>
+    <string name="followups_postpone">Posponer 7d</string>
+    <string name="followups_view_profile">Ver perfil</string>
+    <string name="followups_view">Ver</string>
+    <string name="followups_loyal_client">Cliente frecuente</string>
+    <string name="followups_empty_filter">No hay seguimientos en este filtro.</string>
+    <string name="followups_goal_banner_title">¡Mantén el ritmo del día!</string>
+    <string name="followups_goal_banner_body">Todo al día: cuando completes los seguimientos, aquí verás la confirmación de meta cumplida.</string>
+    <string name="followups_goal_banner_benefit">Aumenta hasta 35% el regreso de clientes</string>
 </resources>
