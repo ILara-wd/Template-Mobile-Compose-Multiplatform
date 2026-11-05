@@ -425,7 +425,7 @@ private fun LoginFormCard(
                     .subtleShadow(RoundedCornerShape(12.dp)),
             ) {
                 Text(text = stringResource(R.string.login_submit), style = MaterialTheme.typography.labelLarge)
-                Image(painter = painterResource(R.drawable.ic_login_arrow_forward), contentDescription = null)
+                Image(painter = painterResource(R.drawable.ic_vuelve_arrow_forward), contentDescription = null)
             }
         }
 

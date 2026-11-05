@@ -32,3 +32,18 @@ val VuelveSurfaceContainerHigh = Color(0xFFE2E7FF) // country-code chip, unselec
 val VuelveSecondaryContainer = Color(0xFFDAE2FD) // "Vista previa" pill
 val VuelveMintSoft = Color(0xFF7FFC97) // preview card icon circle
 val VuelveOnMint = Color(0xFF007232) // text on mint brand badge
+
+// Added with "Inicio — Oportunidades de hoy" (90:2326)
+val VuelveWhatsApp = Color(0xFF25D366) // "Contactar" CTA on client cards
+val VuelveVisitStrip = Color(0xB3F2F3FF) // surfaceContainerLow @ 70%, last-visit strip
+
+// Retention status badges (README §5)
+val StatusDueContainer = Color(0xFFFFFBEB)
+val StatusDueDot = Color(0xFFF59E0B)
+val StatusDueText = Color(0xFF92400E)
+val StatusOverdueContainer = Color(0xFFFFDAD6)
+val StatusOverdueDot = Color(0xFFBA1A1A)
+val StatusOverdueText = Color(0xFF93000A)
+val StatusFollowUpContainer = Color(0xFFDBE1FF)
+val StatusFollowUpDot = Color(0xFF004AC6)
+val StatusFollowUpText = Color(0xFF003EA8)

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exported from Figma: Prototipo-Demo-UiKit, bottom navigation, "Inicio — Oportunidades de hoy" (90:2326) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="22dp"
+    android:viewportWidth="20"
+    android:viewportHeight="22">
+    <path
+        android:fillColor="#434655"
+        android:pathData="M14 20V18H18V18V18V8H4V12H2V4C2 3.45 2.19583 2.97917 2.5875 2.5875C2.97917 2.19583 3.45 2 4 2H5V0H7V2H15V0H17V2H18C18.55 2 19.0208 2.19583 19.4125 2.5875C19.8042 2.97917 20 3.45 20 4V18C20 18.55 19.8042 19.0208 19.4125 19.4125C19.0208 19.8042 18.55 20 18 20H14V20M7 22L5.6 20.6L8.175 18H0V16H8.175L5.6 13.4L7 12L12 17L7 22V22M4 6H18V4V4V4H4V4V4V6V6M4 6V4V4V4V4V4V4V6V6V6" />
+</vector>

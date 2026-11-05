@@ -70,4 +70,47 @@
     <string name="register_preview_badge">Vista previa</string>
     <string name="register_preview_channel">WhatsApp Automático</string>
     <string name="register_preview_message">\"¡Hola Sofía! 🐾 Ya pasaron 5 semanas desde el último corte de Rocky. ¿Agendamos su baño de esta semana con horario preferencial?\"</string>
+
+    <!-- App shell: top bar O1 + bottom navigation O3 (Figma 90:2326) -->
+    <string name="vuelve_overline">VUELVE • PET RETENTION</string>
+    <string name="vuelve_account_menu">Menú de cuenta</string>
+    <string name="nav_home">Inicio</string>
+    <string name="nav_clients">Clientes</string>
+    <string name="nav_follow_ups">Seguimientos</string>
+    <string name="nav_results">Resultados</string>
+    <string name="nav_coming_soon">Próximamente</string>
+
+    <!-- Inicio — Oportunidades de hoy (Figma 90:2326) -->
+    <string name="home_title">Inicio</string>
+    <string name="home_greeting">Buenos días, %1$s</string>
+    <string name="home_greeting_emoji">👋</string>
+    <string name="home_greeting_subtitle">Estas son tus oportunidades de hoy</string>
+    <string name="home_hero_overline">CLIENTES POR CONTACTAR HOY</string>
+    <string name="home_hero_label">Citas por reactivar</string>
+    <string name="home_hero_potential">Potencial aprox. %1$s</string>
+    <string name="home_hero_description">Clientes cuyo regreso sugerido ya corresponde esta semana para mantener su ciclo habitual de higiene y cuidado.</string>
+    <string name="home_hero_cta">Ver seguimientos (%1$d)</string>
+    <string name="home_priority_title">Clientes prioritarios</string>
+    <plurals name="home_priority_urgent">
+        <item quantity="one">%1$d urgente</item>
+        <item quantity="other">%1$d urgentes</item>
+    </plurals>
+    <string name="home_priority_see_all">Ver todos (%1$d)</string>
+    <string name="home_pet_breed">• %1$s</string>
+    <string name="home_contact">Contactar</string>
+    <string name="home_contact_description">Contactar a %1$s por WhatsApp</string>
+    <string name="home_status_due">Toca servicio</string>
+    <string name="home_status_overdue">Sin regresar</string>
+    <string name="home_status_follow_up">Seguimiento</string>
+    <string name="home_results_title">Resultados de %1$s</string>
+    <string name="home_results_metrics">Métricas</string>
+    <string name="home_results_contacted">Contactados</string>
+    <string name="home_results_contacted_unit">mensajes</string>
+    <string name="home_results_recovered">Recuperadas</string>
+    <string name="home_results_conversion">Conversión</string>
+    <string name="home_results_goal">Objetivo: %1$s</string>
+    <string name="home_results_footnote">Datos basados en tus registros de este mes en %1$s.</string>
+    <string name="home_quick_actions">ACCIONES RÁPIDAS</string>
+    <string name="home_quick_register_visit">Registrar visita</string>
+    <string name="home_quick_client_list">Lista de clientes</string>
 </resources>
