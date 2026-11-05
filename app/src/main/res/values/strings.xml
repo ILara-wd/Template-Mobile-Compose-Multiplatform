@@ -96,7 +96,7 @@
         <item quantity="other">%1$d urgentes</item>
     </plurals>
     <string name="home_priority_see_all">Ver todos (%1$d)</string>
-    <string name="home_pet_breed">• %1$s</string>
+    <string name="vuelve_pet_breed">• %1$s</string>
     <string name="home_contact">Contactar</string>
     <string name="home_contact_description">Contactar a %1$s por WhatsApp</string>
     <string name="home_status_due">Toca servicio</string>
@@ -113,4 +113,34 @@
     <string name="home_quick_actions">ACCIONES RÁPIDAS</string>
     <string name="home_quick_register_visit">Registrar visita</string>
     <string name="home_quick_client_list">Lista de clientes</string>
+
+    <!-- Clientes — Directorio y Estados (Figma 91:2586) -->
+    <string name="clients_title">Clientes</string>
+    <string name="clients_registered">(%1$d registrados)</string>
+    <string name="clients_subtitle">Control del ciclo de visitas y retención</string>
+    <string name="clients_new">Nuevo</string>
+    <string name="clients_new_description">Nuevo cliente</string>
+    <string name="clients_kpi_to_contact">Por contactar hoy</string>
+    <string name="clients_kpi_to_contact_value">%1$d peluditos</string>
+    <string name="clients_kpi_up_to_date">Al día / En fecha</string>
+    <string name="clients_kpi_up_to_date_value">%1$d activos</string>
+    <string name="clients_search_placeholder">Buscar cliente o mascota...</string>
+    <string name="clients_search_clear">Borrar búsqueda</string>
+    <string name="clients_filter_all">Todos (%1$d)</string>
+    <string name="clients_filter_to_contact">Por contactar (%1$d)</string>
+    <string name="clients_filter_inactive">Sin actividad (%1$d)</string>
+    <string name="clients_filter_up_to_date">Al día (%1$d)</string>
+    <string name="clients_status_contact">Toca contactar</string>
+    <plurals name="clients_status_overdue">
+        <item quantity="one">Atrasado %1$d día</item>
+        <item quantity="other">Atrasado %1$d días</item>
+    </plurals>
+    <string name="clients_status_follow_up_today">Seguimiento hoy</string>
+    <string name="clients_status_up_to_date">Al día</string>
+    <string name="clients_suggested">"Sugerida: "</string>
+    <string name="clients_suggested_today">Hoy</string>
+    <string name="clients_empty">No encontramos clientes ni mascotas con «%1$s».</string>
+    <string name="clients_empty_filter">No hay clientes en este filtro.</string>
+    <string name="clients_tip_title">Consejo de retorno</string>
+    <string name="clients_tip_body">Los recordatorios a los 28 días recuperan un 35% más de citas que esperar a los 45 días.</string>
 </resources>

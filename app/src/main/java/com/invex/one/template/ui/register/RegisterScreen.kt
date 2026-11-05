@@ -578,7 +578,7 @@ private fun TrustBanner(modifier: Modifier = Modifier) {
                 .background(VuelveMint, CircleShape),
             contentAlignment = Alignment.Center,
         ) {
-            Image(painter = painterResource(R.drawable.ic_register_verified), contentDescription = null)
+            Image(painter = painterResource(R.drawable.ic_vuelve_verified), contentDescription = null)
         }
         Column {
             Text(

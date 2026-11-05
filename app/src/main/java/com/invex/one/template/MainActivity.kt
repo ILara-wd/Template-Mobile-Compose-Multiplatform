@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.invex.one.template.ui.clients.ClientsScreen
+import com.invex.one.template.ui.clients.SampleClientsUiState
 import com.invex.one.template.ui.components.MainTab
 import com.invex.one.template.ui.components.VuelveMainScaffold
 import com.invex.one.template.ui.home.HomeScreen
@@ -72,6 +74,10 @@ private fun VuelveApp(onExit: () -> Unit) {
                     onSeeAllPriority = { tab = MainTab.FollowUps },
                     onMetrics = { tab = MainTab.Results },
                     onClientList = { tab = MainTab.Clients },
+                )
+                MainTab.Clients -> ClientsScreen(
+                    state = SampleClientsUiState,
+                    onTabSelected = { tab = it },
                 )
                 else -> ComingSoonScreen(tab = tab, onTabSelected = { tab = it })
             }

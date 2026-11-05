@@ -530,7 +530,7 @@ private fun PriorityClientCard(client: PriorityClient, onContact: () -> Unit, on
                             color = VuelveOnSurface,
                         )
                         Text(
-                            text = stringResource(R.string.home_pet_breed, client.breed),
+                            text = stringResource(R.string.vuelve_pet_breed, client.breed),
                             style = MaterialTheme.typography.bodySmall,
                             color = VuelveOnSurfaceVariant,
                             maxLines = 1,

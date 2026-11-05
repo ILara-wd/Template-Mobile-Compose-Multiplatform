@@ -47,3 +47,12 @@ val StatusOverdueText = Color(0xFF93000A)
 val StatusFollowUpContainer = Color(0xFFDBE1FF)
 val StatusFollowUpDot = Color(0xFF004AC6)
 val StatusFollowUpText = Color(0xFF003EA8)
+
+// Added with "Clientes — Directorio y Estados" (91:2586)
+val StatusContactContainer = Color(0xFFFEF3C7) // "Toca contactar" badge (text: StatusDueText)
+val StatusUpToDateContainer = Color(0xFFD1FAE5)
+val StatusUpToDateText = Color(0xFF065F46)
+val StatusUpToDateDot = Color(0xFF006D2F) // "Al día" chip dot + green paw badge
+val VuelvePrimaryFixedDim = Color(0xFFB4C5FF) // strong lavender initials avatar
+val VuelveMintStrong = Color(0xFF66FF8E) // initials avatar for clients "Al día"
+val VuelveOnMintStrong = Color(0xFF002109)
