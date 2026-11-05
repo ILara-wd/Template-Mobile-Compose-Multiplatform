@@ -25,3 +25,10 @@ val VuelveOutline = Color(0xFF737686)
 // Accent / WhatsApp / success
 val VuelveMint = Color(0xFF5DFD8A)
 val VuelveSuccess = Color(0xFF006D2F)
+
+// Added with "Crear cuenta — Registro de negocio" (89:2171)
+val VuelveBlue600 = Color(0xFF2563EB) // selected chip + "Crear mi cuenta" CTA
+val VuelveSurfaceContainerHigh = Color(0xFFE2E7FF) // country-code chip, unselected service chips
+val VuelveSecondaryContainer = Color(0xFFDAE2FD) // "Vista previa" pill
+val VuelveMintSoft = Color(0xFF7FFC97) // preview card icon circle
+val VuelveOnMint = Color(0xFF007232) // text on mint brand badge

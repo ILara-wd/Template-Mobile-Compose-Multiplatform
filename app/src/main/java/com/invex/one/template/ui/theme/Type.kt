@@ -20,6 +20,8 @@ private fun style(size: Int, line: Int, weight: FontWeight, tracking: Double) = 
 val Typography = Typography(
     // "Vuelve" wordmark
     displaySmall = style(30, 36, FontWeight.Bold, -0.75),
+    // Form headings ("Crea tu cuenta de negocio")
+    headlineSmall = style(22, 28, FontWeight.SemiBold, -0.55),
     // Top bar title
     titleLarge = style(18, 24, FontWeight.SemiBold, -0.45),
     // "Te damos la bienvenida"

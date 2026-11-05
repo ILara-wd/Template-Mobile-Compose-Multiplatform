@@ -3,8 +3,8 @@
 
     <!-- Login (Figma 87:2049) -->
     <string name="login_title">Sign In</string>
-    <string name="login_back">Regresar</string>
-    <string name="login_profile">Perfil</string>
+    <string name="vuelve_back">Regresar</string>
+    <string name="vuelve_profile">Perfil</string>
     <string name="login_brand">Vuelve</string>
     <string name="login_brand_pro">PRO</string>
     <string name="login_welcome">Te damos la bienvenida</string>
@@ -32,4 +32,42 @@
     <string name="login_no_account">¿Aún no tienes cuenta?</string>
     <string name="login_register">Regístrate gratis</string>
     <string name="login_data_protected">Tus datos y los de tus clientes están protegidos</string>
+
+    <!-- Registro de negocio (Figma 89:2171) -->
+    <string name="register_title">Register Business</string>
+    <string name="register_brand_badge">VUELVE • PET RETENTION</string>
+    <string name="register_heading">Crea tu cuenta de negocio</string>
+    <string name="register_intro">Empieza a recuperar clientes y aumentar tus citas en menos de 2 minutos. Gratis durante tu prueba inicial.</string>
+    <string name="register_required">Requerido</string>
+    <string name="register_business_label">Nombre de tu negocio o estética</string>
+    <string name="register_business_placeholder">Ej. Patitas Felices Grooming</string>
+    <string name="register_owner_label">Tu nombre o responsable</string>
+    <string name="register_owner_placeholder">Ej. Ana Martínez</string>
+    <string name="register_phone_label">Teléfono celular (WhatsApp del negocio)</string>
+    <string name="register_phone_flag">🇲🇽</string>
+    <string name="register_phone_prefix">+52</string>
+    <string name="register_phone_placeholder">55 1234 5678</string>
+    <string name="register_phone_helper">Usaremos este número para enviar los recordatorios de citas desde tu cuenta.</string>
+    <string name="register_services_label">¿Qué servicios ofreces principalmente?</string>
+    <string name="register_service_grooming">Estética canina / Grooming</string>
+    <string name="register_service_vet">Veterinaria y baño</string>
+    <string name="register_service_mobile">Grooming a domicilio</string>
+    <string name="register_service_other">Otro</string>
+    <string name="register_password_label">Contraseña de acceso</string>
+    <string name="register_password_placeholder">Mínimo 6 caracteres</string>
+    <string name="register_password_toggle">Ver u ocultar contraseña</string>
+    <string name="register_terms_prefix">"Acepto los "</string>
+    <string name="register_terms_link">Términos de servicio</string>
+    <string name="register_terms_middle">" y la "</string>
+    <string name="register_privacy_link">Política de privacidad</string>
+    <string name="register_terms_suffix">" de Vuelve."</string>
+    <string name="register_submit">Crear mi cuenta y comenzar</string>
+    <string name="register_have_account">"¿Ya tienes cuenta en Vuelve? "</string>
+    <string name="register_sign_in">Inicia sesión</string>
+    <string name="register_trust_title">Prueba 100% libre de riesgo</string>
+    <string name="register_trust_subtitle">Sin tarjeta de crédito requerida • Listo en menos de 2 min</string>
+    <string name="register_preview_title">Así verán tus clientes el mensaje</string>
+    <string name="register_preview_badge">Vista previa</string>
+    <string name="register_preview_channel">WhatsApp Automático</string>
+    <string name="register_preview_message">\"¡Hola Sofía! 🐾 Ya pasaron 5 semanas desde el último corte de Rocky. ¿Agendamos su baño de esta semana con horario preferencial?\"</string>
 </resources>

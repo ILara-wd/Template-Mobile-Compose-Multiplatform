@@ -7,29 +7,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,10 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -56,12 +43,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.invex.one.template.R
+import com.invex.one.template.ui.components.VuelveButton
+import com.invex.one.template.ui.components.VuelveFlowScaffold
+import com.invex.one.template.ui.components.VuelveTextField
+import com.invex.one.template.ui.components.subtleShadow
 import com.invex.one.template.ui.theme.TemplateTheme
-import com.invex.one.template.ui.theme.VuelveBackground
 import com.invex.one.template.ui.theme.VuelveMint
 import com.invex.one.template.ui.theme.VuelveOnPrimaryContainer
 import com.invex.one.template.ui.theme.VuelveOnSurface
@@ -137,20 +126,14 @@ fun LoginContent(
     onRegister: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(VuelveBackground),
+    VuelveFlowScaffold(
+        title = stringResource(R.string.login_title),
+        onBack = onBack,
+        onProfile = onProfile,
+        modifier = modifier,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .statusBarsPadding()
-                .navigationBarsPadding()
-                .imePadding()
-                .padding(top = HeaderHeight)
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp),
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             LoginHero()
@@ -173,88 +156,8 @@ fun LoginContent(
             )
             LoginFooter(onRegister = onRegister)
         }
-
-        LoginHeader(onBack = onBack, onProfile = onProfile)
     }
 }
-
-private val HeaderHeight = 56.dp
-private val SubtleShadowColor = Color.Black.copy(alpha = 0.05f)
-
-private fun Modifier.subtleShadow(shape: Shape) =
-    shadow(elevation = 1.dp, shape = shape, ambientColor = SubtleShadowColor, spotColor = SubtleShadowColor)
-
-// region Header
-
-@Composable
-private fun LoginHeader(onBack: () -> Unit, onProfile: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 4.dp,
-                ambientColor = Color.Black.copy(alpha = 0.04f),
-                spotColor = Color.Black.copy(alpha = 0.04f),
-            )
-            .background(VuelveBackground.copy(alpha = 0.8f))
-            .statusBarsPadding(),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(HeaderHeight)
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Box(modifier = Modifier.width(36.dp)) {
-                Box(
-                    modifier = Modifier
-                        .offset(x = (-8).dp)
-                        .size(44.dp)
-                        .clip(CircleShape)
-                        .clickable(onClick = onBack, role = Role.Button),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_login_arrow_back),
-                        contentDescription = stringResource(R.string.login_back),
-                    )
-                }
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(8.dp)
-                        .background(VuelvePrimary, CircleShape),
-                )
-                Text(
-                    text = stringResource(R.string.login_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = VuelveOnSurface,
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(VuelvePrimary)
-                    .clickable(onClick = onProfile, role = Role.Button),
-                contentAlignment = Alignment.Center,
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.ic_login_person),
-                    contentDescription = stringResource(R.string.login_profile),
-                )
-            }
-        }
-    }
-}
-
-// endregion
 
 // region Hero
 
@@ -284,7 +187,7 @@ private fun LoginHero() {
                     .background(VuelveMint, CircleShape),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(painter = painterResource(R.drawable.ic_login_check_small), contentDescription = null)
+                Image(painter = painterResource(R.drawable.ic_vuelve_check_small), contentDescription = null)
             }
         }
         Spacer(Modifier.height(8.dp))
@@ -418,11 +321,11 @@ private fun LoginFormCard(
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             if (method == LoginMethod.Phone) {
                 LabeledField(label = { FieldLabel(stringResource(R.string.login_phone_label)) }) {
-                    FilledInput(
+                    VuelveTextField(
                         value = phone,
                         onValueChange = onPhoneChange,
                         placeholder = stringResource(R.string.login_phone_placeholder),
-                        keyboardType = KeyboardType.Phone,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                         leading = {
                             Row(
                                 modifier = Modifier.padding(end = 8.dp),
@@ -445,11 +348,11 @@ private fun LoginFormCard(
                 }
             } else {
                 LabeledField(label = { FieldLabel(stringResource(R.string.login_email_label)) }) {
-                    FilledInput(
+                    VuelveTextField(
                         value = email,
                         onValueChange = onEmailChange,
                         placeholder = stringResource(R.string.login_email_placeholder),
-                        keyboardType = KeyboardType.Email,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                         leading = {
                             Icon(
                                 painter = painterResource(R.drawable.ic_login_mail),
@@ -478,18 +381,18 @@ private fun LoginFormCard(
                     }
                 },
             ) {
-                FilledInput(
+                VuelveTextField(
                     value = password,
                     onValueChange = onPasswordChange,
                     placeholder = stringResource(R.string.login_password_placeholder),
-                    keyboardType = KeyboardType.Password,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     visualTransformation = if (passwordVisible) {
                         VisualTransformation.None
                     } else {
                         PasswordVisualTransformation()
                     },
                     leading = {
-                        Image(painter = painterResource(R.drawable.ic_login_lock), contentDescription = null)
+                        Icon(painter = painterResource(R.drawable.ic_vuelve_lock), contentDescription = null, tint = VuelveOutline)
                     },
                     trailing = {
                         Box(
@@ -500,11 +403,12 @@ private fun LoginFormCard(
                                 .clickable(onClick = onTogglePasswordVisible, role = Role.Button),
                             contentAlignment = Alignment.Center,
                         ) {
-                            Image(
-                                painter = painterResource(R.drawable.ic_login_eye),
+                            Icon(
+                                painter = painterResource(R.drawable.ic_vuelve_eye),
                                 contentDescription = stringResource(
                                     if (passwordVisible) R.string.login_hide_password else R.string.login_show_password,
                                 ),
+                                tint = VuelveOutline,
                             )
                         }
                     },
@@ -605,75 +509,6 @@ private fun LabeledField(label: @Composable () -> Unit, field: @Composable () ->
     Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
         label()
         field()
-    }
-}
-
-@Composable
-private fun FilledInput(
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    keyboardType: KeyboardType,
-    leading: @Composable () -> Unit,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    trailing: (@Composable () -> Unit)? = null,
-) {
-    val textStyle = MaterialTheme.typography.bodyMedium.copy(color = VuelveOnSurface)
-    BasicTextField(
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-        textStyle = textStyle,
-        cursorBrush = SolidColor(VuelvePrimary),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        visualTransformation = visualTransformation,
-        modifier = Modifier.fillMaxWidth(),
-        decorationBox = { innerTextField ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .background(VuelveSurfaceContainerLow, RoundedCornerShape(8.dp))
-                    .padding(horizontal = 12.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                leading()
-                Box(modifier = Modifier.weight(1f)) {
-                    if (value.isEmpty()) {
-                        Text(text = placeholder, style = textStyle, color = VuelveOutline, maxLines = 1)
-                    }
-                    innerTextField()
-                }
-                trailing?.invoke()
-            }
-        },
-    )
-}
-
-@Composable
-private fun VuelveButton(
-    onClick: () -> Unit,
-    containerColor: Color,
-    contentColor: Color,
-    modifier: Modifier = Modifier,
-    horizontalSpacing: Dp = 10.dp,
-    content: @Composable RowScope.() -> Unit,
-) {
-    Button(
-        onClick = onClick,
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
-        contentPadding = PaddingValues(horizontal = 16.dp),
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(horizontalSpacing),
-            content = content,
-        )
     }
 }
 
