@@ -6,29 +6,30 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Set of Material typography styles to start with
+// Figma uses Inter; until the font is bundled we fall back to the platform sans-serif (Roboto).
+private val VuelveFontFamily = FontFamily.Default
+
+private fun style(size: Int, line: Int, weight: FontWeight, tracking: Double) = TextStyle(
+    fontFamily = VuelveFontFamily,
+    fontWeight = weight,
+    fontSize = size.sp,
+    lineHeight = line.sp,
+    letterSpacing = tracking.sp,
+)
+
 val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+    // "Vuelve" wordmark
+    displaySmall = style(30, 36, FontWeight.Bold, -0.75),
+    // Top bar title
+    titleLarge = style(18, 24, FontWeight.SemiBold, -0.45),
+    // "Te damos la bienvenida"
+    titleMedium = style(16, 22, FontWeight.SemiBold, -0.08),
+    bodyMedium = style(14, 20, FontWeight.Normal, 0.0),
+    bodySmall = style(12, 16, FontWeight.Normal, 0.12),
+    // Buttons
+    labelLarge = style(14, 20, FontWeight.SemiBold, 0.14),
+    // Field labels, tabs, card titles
+    labelMedium = style(12, 16, FontWeight.SemiBold, 0.24),
+    // Links, divider text, metric pill
+    labelSmall = style(11, 14, FontWeight.SemiBold, 0.33),
 )

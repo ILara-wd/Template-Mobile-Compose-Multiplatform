@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">Template</string>
+
+    <!-- Login (Figma 87:2049) -->
+    <string name="login_title">Sign In</string>
+    <string name="login_back">Regresar</string>
+    <string name="login_profile">Perfil</string>
+    <string name="login_brand">Vuelve</string>
+    <string name="login_brand_pro">PRO</string>
+    <string name="login_welcome">Te damos la bienvenida</string>
+    <string name="login_subtitle">Gestiona el retorno de tus clientes peludos y no dejes escapar ninguna visita.</string>
+    <string name="login_social_title">Recordatorios automáticos</string>
+    <string name="login_social_subtitle">8 citas reactivadas hoy en tu zona</string>
+    <string name="login_social_metric">+28%</string>
+    <string name="login_tab_phone">WhatsApp / Tel</string>
+    <string name="login_tab_email">Correo</string>
+    <string name="login_phone_label">Número de teléfono móvil</string>
+    <string name="login_phone_flag">🇲🇽</string>
+    <string name="login_phone_prefix">+52</string>
+    <string name="login_phone_placeholder">55 1234 5678</string>
+    <string name="login_email_label">Correo electrónico</string>
+    <string name="login_email_placeholder">tu@negocio.com</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_password_placeholder">Tu contraseña segura</string>
+    <string name="login_show_password">Mostrar contraseña</string>
+    <string name="login_hide_password">Ocultar contraseña</string>
+    <string name="login_submit">Iniciar sesión</string>
+    <string name="login_divider">o continúa con</string>
+    <string name="login_whatsapp_code">Ingresar con código por WhatsApp</string>
+    <string name="login_google">Continuar con Google</string>
+    <string name="login_no_account">¿Aún no tienes cuenta?</string>
+    <string name="login_register">Regístrate gratis</string>
+    <string name="login_data_protected">Tus datos y los de tus clientes están protegidos</string>
 </resources>

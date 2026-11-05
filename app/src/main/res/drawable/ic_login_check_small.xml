@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exported from Figma: Prototipo-Demo-UiKit, "Iniciar sesión — Vuelve" (87:2049) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="8.82917dp"
+    android:height="6.51354dp"
+    android:viewportWidth="8.82917"
+    android:viewportHeight="6.51354">
+    <path
+        android:fillColor="#007232"
+        android:pathData="M3.0875 6.51354L0 3.42604L0.771875 2.65417L3.0875 4.96979L8.05729 0L8.82917 0.771875L3.0875 6.51354V6.51354" />
+</vector>
