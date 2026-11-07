@@ -1,7 +1,5 @@
 package com.invex.sportkid.feature.agenda
 
-import com.invex.sportkid.core.ui.shortLabelWithYear
-import com.invex.sportkid.core.designsystem.component.SkAvatar
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,10 +33,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -52,6 +50,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.invex.sportkid.core.designsystem.component.SkAvatar
 import com.invex.sportkid.core.designsystem.component.SkButton
 import com.invex.sportkid.core.designsystem.component.SkButtonSize
 import com.invex.sportkid.core.designsystem.component.SkChip
@@ -67,11 +66,13 @@ import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SkElevation
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.core.model.Sport
+import com.invex.sportkid.core.ui.FormCard
 import com.invex.sportkid.core.ui.SkDatePickerDialog
 import com.invex.sportkid.core.ui.SkTimePickerDialog
 import com.invex.sportkid.core.ui.iconRes
 import com.invex.sportkid.core.ui.label
 import com.invex.sportkid.core.ui.labelRes
+import com.invex.sportkid.core.ui.shortLabelWithYear
 import java.time.LocalDate
 import java.time.LocalTime
 import com.invex.sportkid.core.ui.R as UiR
@@ -266,7 +267,7 @@ private fun SportSection(selected: Sport?, onSelect: (Sport) -> Unit, modifier: 
 private fun ScheduleCard(state: NewTrainingState, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     var picker by rememberSaveable { mutableStateOf<String?>(null) }
-    FormCard(modifier) {
+    FormCard(modifier, spacing = 0) {
         Row(horizontalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.md)) {
             PickerField(
                 label = stringResource(R.string.training_date),
@@ -407,7 +408,7 @@ private fun PlaceSection(place: String, onPlaceChange: (String) -> Unit) {
 @Composable
 private fun CostCard(state: NewTrainingState, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
-    FormCard(modifier) {
+    FormCard(modifier, spacing = 0) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             SkIconCircle(
                 icon = painterResource(R.drawable.ic_training_cost),
@@ -507,18 +508,6 @@ private fun NotesSection(notes: String, onNotesChange: (String) -> Unit, onAttac
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun FormCard(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surfaceContainerLowest,
-        shadowElevation = SkElevation.card,
-    ) {
-        Column(Modifier.padding(SportKidTheme.spacing.lg)) { content() }
     }
 }
 
