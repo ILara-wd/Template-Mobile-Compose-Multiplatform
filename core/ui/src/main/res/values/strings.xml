@@ -44,6 +44,24 @@
     <string name="payment_status_paid">Pagado</string>
     <string name="payment_status_pending">Pendiente de pago</string>
 
+    <!-- Resultado de torneo (README §5.4) -->
+    <string name="medal_gold">Oro</string>
+    <string name="medal_silver">Plata</string>
+    <string name="medal_bronze">Bronce</string>
+    <string name="medal_participation">Participación</string>
+    <string name="medal_pending">Por registrar</string>
+    <!-- Etiquetas cortas del selector (5 columnas) -->
+    <string name="medal_short_participation">Diploma</string>
+    <string name="medal_short_pending">Espera</string>
+
+    <!-- M15 PhotoUploadArea -->
+    <string name="photo_upload_browse">Examinar galería</string>
+    <string name="photo_attached_cd">Foto adjunta</string>
+
+    <!-- Diálogos de fecha y hora -->
+    <string name="dialog_accept">Aceptar</string>
+    <string name="dialog_cancel">Cancelar</string>
+
     <!-- O5 EventCard -->
     <string name="event_settle_payment">Toca para saldar o adjuntar comprobante</string>
     <string name="event_athlete_cd">Deportista: %1$s</string>

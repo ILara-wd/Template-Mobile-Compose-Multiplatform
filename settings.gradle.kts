@@ -28,4 +28,5 @@ include(":feature:auth")
 include(":feature:athlete")
 include(":feature:agenda")
 include(":feature:home")
+include(":feature:tkd")
  

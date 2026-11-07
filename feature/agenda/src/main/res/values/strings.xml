@@ -20,8 +20,6 @@
     <string name="agenda_month_empty">Sin compromisos este mes</string>
     <string name="agenda_new_event">Nuevo evento</string>
     <string name="agenda_tip_title">¡Día clave para %1$s!</string>
-    <string name="action_accept">Aceptar</string>
-    <string name="action_cancel">Cancelar</string>
 
     <!-- P07 Nuevo entrenamiento -->
     <string name="training_title">Nuevo entrenamiento</string>

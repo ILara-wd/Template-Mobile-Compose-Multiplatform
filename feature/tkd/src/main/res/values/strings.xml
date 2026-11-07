@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Comunes -->
+    <string name="tkd_save">Guardar</string>
+    <string name="tkd_age">%1$d años</string>
+    <string name="tkd_sport_school">Taekwondo · %1$s</string>
+    <string name="tkd_amount">$%1$s MXN</string>
+    <string name="tkd_paid">Pagado</string>
+    <string name="tkd_pending">Pendiente</string>
+    <string name="tkd_sync_note">Se sincronizará automáticamente con todos los tutores</string>
+    <string name="tkd_required_suffix">%1$s *</string>
+
+    <!-- P11 Registrar torneo -->
+    <string name="tournament_title">Registrar torneo</string>
+    <string name="tournament_banner_overline">Torneo oficial</string>
+    <string name="tournament_banner_title">Registro y seguimiento de logros</string>
+    <string name="tournament_name">Nombre del torneo</string>
+    <string name="tournament_name_placeholder">Ej. Copa Metropolitana Infantil</string>
+    <string name="tournament_place">Lugar</string>
+    <string name="tournament_place_placeholder">Gimnasio o sede</string>
+    <string name="tournament_date">Fecha</string>
+    <string name="tournament_time">Pesaje / inicio</string>
+    <string name="tournament_modality">Modalidad</string>
+    <string name="tournament_modality_combat">Combate (Kyorugi)</string>
+    <string name="tournament_modality_forms">Formas (Poomsae)</string>
+    <string name="tournament_category">Categoría</string>
+    <string name="tournament_category_placeholder">Ej. Infantil · -32 kg · Verdes</string>
+    <string name="tournament_cost">Costo de inscripción</string>
+    <string name="tournament_result">Resultado del torneo</string>
+    <string name="tournament_result_hint">Selecciona el logro obtenido o marca pendiente</string>
+    <string name="tournament_result_pending_note">Torneo programado: el resultado se actualizará al concluir los combates.</string>
+    <string name="tournament_result_podium_note">¡Felicidades! La medalla se sumará al palmarés de %1$s.</string>
+    <string name="tournament_result_participation_note">La participación también cuenta: quedará en el historial de %1$s.</string>
+    <string name="tournament_photo">Foto de la medalla o combate</string>
+    <string name="tournament_photo_optional">(opcional)</string>
+    <string name="tournament_photo_title">Sube una foto del podio, medalla o diploma</string>
+    <string name="tournament_photo_hint">Comparte el recuerdo con la familia (PNG o JPG hasta 10 MB)</string>
+    <string name="tournament_photo_album">Álbum familiar de %1$s</string>
+    <string name="tournament_save_cta">Guardar torneo</string>
+
+    <!-- P10 Registrar examen de cinta -->
+    <string name="exam_title">Registrar examen de cinta</string>
+    <string name="exam_official">Kup oficial</string>
+    <string name="exam_auto_update_title">Actualización automática</string>
+    <string name="exam_auto_update_body">Al marcar como Aprobado, se actualizará la cinta actual en el perfil y el palmarés de %1$s.</string>
+    <string name="exam_current_belt">Cinta y grado actual</string>
+    <string name="exam_current_badge">Grado actual</string>
+    <string name="exam_current_since">%1$s · Obtenida en %2$s</string>
+    <string name="exam_locked_cd">No se puede editar</string>
+    <string name="exam_goal">Objetivo del examen</string>
+    <string name="exam_target_belt">Cinta a la que aspira</string>
+    <string name="exam_place">Lugar del examen</string>
+    <string name="exam_place_placeholder">Doyang o sede del examen</string>
+    <string name="exam_date">Fecha</string>
+    <string name="exam_time">Hora</string>
+    <string name="exam_fee_title">Costo y estado de pago</string>
+    <string name="exam_fee">Tarifa de graduación</string>
+    <string name="exam_fee_paid">Cuota pagada</string>
+    <string name="exam_fee_paid_note">Se registrará en gastos como pagado</string>
+    <string name="exam_fee_pending_note">Se agregará a gastos por saldar</string>
+    <string name="exam_result">Resultado del examen</string>
+    <string name="exam_result_hint">Estado actual</string>
+    <string name="exam_result_pending">Pendiente</string>
+    <string name="exam_result_passed">Aprobado</string>
+    <string name="exam_result_failed">No aprobado</string>
+    <string name="exam_result_pending_note">El resultado se registrará después del examen.</string>
+    <string name="exam_result_passed_note">¡Excelente! %1$s pasará a portar %2$s.</string>
+    <string name="exam_result_failed_note">%1$s podrá presentar de nuevo en la próxima convocatoria.</string>
+    <string name="exam_photo">Certificado o foto del examen</string>
+    <string name="exam_photo_optional">Opcional</string>
+    <string name="exam_photo_title">Toca para adjuntar diploma o foto</string>
+    <string name="exam_photo_hint">Captura la entrega de cinta o sube el certificado digital (JPG, PNG o PDF)</string>
+    <string name="exam_save_cta">Guardar examen</string>
+
+    <!-- P09 Taekwondo -->
+    <string name="tkd_screen_title">Taekwondo</string>
+    <string name="tkd_more">Más opciones</string>
+    <plurals name="tkd_exams_count">
+        <item quantity="one">%d examen</item>
+        <item quantity="many">%d exámenes</item>
+        <item quantity="other">%d exámenes</item>
+    </plurals>
+    <plurals name="tkd_tournaments_count">
+        <item quantity="one">%d torneo</item>
+        <item quantity="many">%d torneos</item>
+        <item quantity="other">%d torneos</item>
+    </plurals>
+    <plurals name="tkd_competitions_count">
+        <item quantity="one">%d competencia</item>
+        <item quantity="many">%d competencias</item>
+        <item quantity="other">%d competencias</item>
+    </plurals>
+    <string name="tkd_new_exam">Examen de cinta</string>
+    <string name="tkd_new_tournament">Torneo</string>
+    <string name="tkd_grade_overline">Grado oficial TKD</string>
+    <string name="tkd_school_instructor">%1$s · %2$s</string>
+    <string name="tkd_route">Ruta</string>
+    <string name="tkd_next_goal">Próximo objetivo</string>
+    <string name="tkd_belt_with_grade">Cinta %1$s (%2$s)</string>
+    <string name="tkd_next">Siguiente</string>
+    <string name="tkd_progress">Progreso de cinta: %1$d de %2$d grados</string>
+    <string name="tkd_active_grade">Activo: %1$s</string>
+    <string-array name="tkd_belt_abbr">
+        <item>Blan</item>
+        <item>Amar</item>
+        <item>Naran</item>
+        <item>Verde</item>
+        <item>Azul</item>
+        <item>Marr</item>
+        <item>Roja</item>
+        <item>R/N</item>
+        <item>Negra</item>
+    </string-array>
+    <string name="tkd_history_title">Historial de promociones</string>
+    <string name="tkd_exam_cost">Costo de examen:</string>
+    <string name="tkd_paid_suffix">(Pagado)</string>
+    <string name="tkd_pending_suffix">(Pendiente)</string>
+    <string name="tkd_no_cost">Sin costo</string>
+    <string name="tkd_tournaments_title">Torneos disputados</string>
+    <string name="tkd_date_place">%1$s · %2$s</string>
+</resources>
