@@ -57,11 +57,14 @@ fun SkCircularProgress(
 }
 
 /**
- * Máscara de tiempo `mm:ss.cc` tipo cronómetro para un campo que guarda solo dígitos (máx. 6):
- * se rellena desde la derecha, así "3885" se ve "00:38.85" y "12" se ve "00:00.12".
+ * Máscara de tiempo tipo cronómetro para un campo que guarda solo dígitos (máx. 6): se rellena
+ * desde la derecha. Con [lastSeparator] = '.' es `mm:ss.cc` ("3885" → "00:38.85"); con ':' es
+ * `hh:mm:ss` ("1452" → "00:14:52").
  */
-object SkTimeMaskTransformation : VisualTransformation {
-    private const val Digits = 6
+class SkTimeMask(private val lastSeparator: Char) : VisualTransformation {
+    private companion object {
+        const val Digits = 6
+    }
 
     /** Posición en "mm:ss.cc" del dígito [k] (0..5). */
     private fun slot(k: Int) = k + (if (k >= 2) 1 else 0) + (if (k >= 4) 1 else 0)
@@ -70,7 +73,7 @@ object SkTimeMaskTransformation : VisualTransformation {
         val digits = text.text.takeLast(Digits)
         if (digits.isEmpty()) return TransformedText(text, OffsetMapping.Identity)
         val padded = digits.padStart(Digits, '0')
-        val out = "${padded.substring(0, 2)}:${padded.substring(2, 4)}.${padded.substring(4, 6)}"
+        val out = "${padded.substring(0, 2)}:${padded.substring(2, 4)}$lastSeparator${padded.substring(4, 6)}"
         val lead = Digits - digits.length
         val mapping = object : OffsetMapping {
             override fun originalToTransformed(offset: Int): Int =
@@ -84,6 +87,12 @@ object SkTimeMaskTransformation : VisualTransformation {
         return TransformedText(AnnotatedString(out), mapping)
     }
 }
+
+/** `mm:ss.cc` (natación). */
+val SkTimeMaskTransformation: VisualTransformation = SkTimeMask('.')
+
+/** `hh:mm:ss` (atletismo). */
+val SkDurationMaskTransformation: VisualTransformation = SkTimeMask(':')
 
 @SkPreviews
 @Composable

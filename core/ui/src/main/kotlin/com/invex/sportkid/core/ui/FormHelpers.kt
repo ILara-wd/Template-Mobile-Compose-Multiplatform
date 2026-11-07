@@ -81,7 +81,8 @@ fun SkTimePickerDialog(initial: LocalTime, onDismiss: () -> Unit, onConfirm: (Lo
 
 /**
  * M15. Área para subir una foto: caja punteada con icono, título, ayuda y botón opcional
- * ("Examinar galería"). Toda el área abre el selector.
+ * ("Examinar galería"). Toda el área abre el selector ([onPick] = galería). Con [onCamera] se
+ * muestran las dos acciones "Cámara" y "Galería".
  */
 @Composable
 fun PhotoUploadArea(
@@ -90,6 +91,7 @@ fun PhotoUploadArea(
     onPick: () -> Unit,
     modifier: Modifier = Modifier,
     buttonLabel: String? = null,
+    onCamera: (() -> Unit)? = null,
 ) {
     val colors = MaterialTheme.colorScheme
     val dash = colors.outline
@@ -131,7 +133,28 @@ fun PhotoUploadArea(
             color = colors.onSurfaceVariant,
             textAlign = TextAlign.Center,
         )
-        if (buttonLabel != null) {
+        if (onCamera != null) {
+            Row(Modifier.fillMaxWidth().padding(top = SportKidTheme.spacing.md), horizontalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.sm)) {
+                SkTonalButton(
+                    stringResource(R.string.photo_camera),
+                    onClick = onCamera,
+                    icon = painterResource(R.drawable.ic_photo_camera),
+                    containerColor = colors.primary,
+                    contentColor = colors.onPrimary,
+                    shape = MaterialTheme.shapes.full,
+                    modifier = Modifier.weight(1f),
+                )
+                SkTonalButton(
+                    stringResource(R.string.photo_gallery),
+                    onClick = onPick,
+                    icon = painterResource(R.drawable.ic_photo_gallery),
+                    containerColor = colors.surfaceContainerHighest,
+                    contentColor = colors.onSurface,
+                    shape = MaterialTheme.shapes.full,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        } else if (buttonLabel != null) {
             SkTonalButton(
                 buttonLabel,
                 onClick = onPick,

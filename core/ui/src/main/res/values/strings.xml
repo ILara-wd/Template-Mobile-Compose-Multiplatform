@@ -56,6 +56,8 @@
 
     <!-- M15 PhotoUploadArea -->
     <string name="photo_upload_browse">Examinar galería</string>
+    <string name="photo_camera">Cámara</string>
+    <string name="photo_gallery">Galería</string>
     <string name="photo_attached_cd">Foto adjunta</string>
 
     <string name="athlete_age">%1$d años</string>

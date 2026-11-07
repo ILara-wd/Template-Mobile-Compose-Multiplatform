@@ -184,6 +184,24 @@ fun AthleteProfileScreen(
                             modifier = Modifier.align(Alignment.End),
                         )
                     }
+                    // TODO: resumen de atletismo en la pestaña (mejores marcas); por ahora, acceso a P14.
+                    sport == Sport.ATHLETICS -> {
+                        Text(
+                            stringResource(R.string.profile_athletics_hint),
+                            modifier = Modifier.fillMaxWidth().padding(top = SportKidTheme.spacing.lg),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            textAlign = TextAlign.Center,
+                        )
+                        SkTextButton(
+                            stringResource(R.string.profile_athletics_detail),
+                            onClick = { onOpenSportDetail(Sport.ATHLETICS) },
+                            trailingIcon = painterResource(DsR.drawable.sk_ic_chevron_right),
+                            color = MaterialTheme.colorScheme.primary,
+                            textStyle = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier.align(Alignment.End),
+                        )
+                    }
                     sport != null -> TabComingSoon(sport)
                 }
             }

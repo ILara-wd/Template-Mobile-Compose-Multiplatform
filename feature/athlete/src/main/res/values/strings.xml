@@ -106,6 +106,8 @@
         <item quantity="other">Faltan %d días</item>
     </plurals>
     <string name="profile_swim_detail">Ver progreso completo</string>
+    <string name="profile_athletics_hint">Consulta mejores marcas, galería de medallas y carreras disputadas.</string>
+    <string name="profile_athletics_detail">Ver progreso completo</string>
     <string name="profile_tkd_history">Ver trayectoria completa</string>
     <string name="profile_next_event">Próximo evento</string>
     <string name="profile_event_when">%1$s · %2$s</string>

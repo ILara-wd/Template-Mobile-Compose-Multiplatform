@@ -18,6 +18,8 @@ import com.invex.sportkid.feature.athlete.AthleteProfileScreen
 import com.invex.sportkid.feature.athlete.AthleteSamples
 import com.invex.sportkid.feature.athlete.AthletesScreen
 import com.invex.sportkid.feature.athlete.CreateAthleteScreen
+import com.invex.sportkid.feature.athletics.AthleticsScreen
+import com.invex.sportkid.feature.athletics.RaceFormScreen
 import com.invex.sportkid.feature.auth.LoginScreen
 import com.invex.sportkid.feature.auth.SplashScreen
 import com.invex.sportkid.feature.auth.WelcomeScreen
@@ -43,7 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 /** Flujo P01 → P04 y la app principal (T1). Navegación por estado hasta agregar Navigation Compose. */
-private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet }
+private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet, Athletics, RaceForm }
 
 @Composable
 private fun SportKidApp(onExit: () -> Unit) {
@@ -63,11 +65,20 @@ private fun SportKidApp(onExit: () -> Unit) {
     BackHandler(enabled = destination == Destination.NewTraining || destination == Destination.AthleteProfile) {
         destination = Destination.Main
     }
-    BackHandler(enabled = destination == Destination.SwimMeet) {
+    BackHandler(enabled = destination == Destination.SwimMeet || destination == Destination.RaceForm) {
         destination = formReturn
     }
-    BackHandler(enabled = destination == Destination.Taekwondo || destination == Destination.Swimming) {
+    BackHandler(enabled = destination == Destination.Taekwondo || destination == Destination.Swimming || destination == Destination.Athletics) {
         destination = Destination.AthleteProfile
+    }
+    // Cambio de deporte desde la cabecera de una vista de deporte; sin vista propia vuelve al perfil.
+    val openSport: (Sport) -> Unit = { sport ->
+        profileSport = sport
+        destination = when (sport) {
+            Sport.TAEKWONDO -> Destination.Taekwondo
+            Sport.SWIMMING -> Destination.Swimming
+            Sport.ATHLETICS -> Destination.Athletics
+        }
     }
     BackHandler(enabled = destination == Destination.BeltExam || destination == Destination.Tournament) {
         destination = formReturn
@@ -137,13 +148,7 @@ private fun SportKidApp(onExit: () -> Unit) {
                     onBack = { destination = Destination.Main },
                     onQuickLog = { showQuickAdd = true },
                     initialSport = profileSport,
-                    onOpenSportDetail = { sport ->
-                        when (sport) {
-                            Sport.TAEKWONDO -> destination = Destination.Taekwondo
-                            Sport.SWIMMING -> destination = Destination.Swimming
-                            Sport.ATHLETICS -> Unit // TODO: P14 Tab Atletismo.
-                        }
-                    },
+                    onOpenSportDetail = openSport,
                     // TODO: P17 Compartir QR, P19 Tutores, edición, pago y detalle del examen.
                 )
             }
@@ -161,14 +166,7 @@ private fun SportKidApp(onExit: () -> Unit) {
                     formReturn = Destination.Taekwondo
                     destination = Destination.Tournament
                 },
-                onSelectSport = { sport ->
-                    if (sport == Sport.SWIMMING) {
-                        destination = Destination.Swimming
-                    } else {
-                        profileSport = sport
-                        destination = Destination.AthleteProfile
-                    }
-                },
+                onSelectSport = openSport,
             )
         }
 
@@ -180,15 +178,25 @@ private fun SportKidApp(onExit: () -> Unit) {
                     formReturn = Destination.Swimming
                     destination = Destination.SwimMeet
                 },
-                onSelectSport = { sport ->
-                    if (sport == Sport.TAEKWONDO) {
-                        destination = Destination.Taekwondo
-                    } else {
-                        profileSport = sport
-                        destination = Destination.AthleteProfile
-                    }
-                },
+                onSelectSport = openSport,
             )
+        }
+
+        Destination.Athletics -> athleticsAthleteFor(profileId)?.let { athlete ->
+            AthleticsScreen(
+                athlete = athlete,
+                onBack = { destination = Destination.AthleteProfile },
+                onNewRace = {
+                    formReturn = Destination.Athletics
+                    destination = Destination.RaceForm
+                },
+                onSelectSport = openSport,
+            )
+        }
+
+        // TODO: guardar la carrera y actualizar mejores marcas y galería.
+        Destination.RaceForm -> athleticsAthleteFor(profileId)?.let { athlete ->
+            RaceFormScreen(athlete = athlete, onClose = { destination = formReturn }, onSave = { destination = formReturn })
         }
 
         // TODO: guardar la competencia y actualizar mejores tiempos.
@@ -211,9 +219,13 @@ private fun SportKidApp(onExit: () -> Unit) {
             onDismiss = { showQuickAdd = false },
             onSelect = { action ->
                 showQuickAdd = false
-                // TODO: P15 Carrera. Examen, torneo y competencia usan al primer hijo del deporte.
+                // Examen, torneo, competencia y carrera usan al hijo abierto o al primero del deporte.
                 when (action) {
                     QuickAddAction.Training -> destination = Destination.NewTraining
+                    QuickAddAction.Race -> {
+                        formReturn = destination
+                        destination = Destination.RaceForm
+                    }
                     QuickAddAction.SwimMeet -> {
                         formReturn = destination
                         destination = Destination.SwimMeet
@@ -222,7 +234,6 @@ private fun SportKidApp(onExit: () -> Unit) {
                         formReturn = destination
                         destination = if (action == QuickAddAction.BeltExam) Destination.BeltExam else Destination.Tournament
                     }
-                    else -> Unit
                 }
             },
         )

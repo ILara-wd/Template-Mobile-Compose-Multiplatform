@@ -30,4 +30,5 @@ include(":feature:agenda")
 include(":feature:home")
 include(":feature:tkd")
 include(":feature:swimming")
+include(":feature:athletics")
  
