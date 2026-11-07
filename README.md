@@ -471,9 +471,27 @@ fun StatusChip(
 | UI | Compose UI Test | `MoneyField` (formato y centavos), `DurationField` (máscara), `SwimRacesEditor` (agregar y quitar). |
 | Accesibilidad | `composeTestRule` + checks ATF | Contraste y tamaño de los objetivos táctiles. |
 
-### 6.4 Catálogo interno
+### 6.4 Catálogo de UI (`docs/ui-catalogo/index.html`)
 
-La variante `dev` incluye una pantalla **"UI Kit"** oculta en Ajustes, que se abre con 7 taps en la versión. Muestra todos los componentes con sus estados y un selector de tema en vivo. Sirve para QA visual y para validar los temas MaterialKolor.
+Página HTML que se genera desde el código. Ábrela en el navegador. Tiene tres pestañas:
+
+- **Pantallas**: cada pantalla ya implementada con sus capturas del emulador, composable, módulo, enlace al nodo de Figma y los componentes que usa.
+- **Componentes**: todos los `@Composable` públicos de `core:designsystem` (átomos), `core:ui` (dominio) y `app`, más los privados de cada feature (locales). Muestra su KDoc, su código del README (M9, O21…), su firma, sus usos y en qué pantallas aparece. Antes de construir una pieza, búscala aquí.
+- **Tokens**: esquema de color claro y oscuro, colores de deporte, de cada hijo y de cintas, tipografía, espaciado y formas, leídos de `core:designsystem/theme`.
+
+Cómo se actualiza:
+
+```bash
+./gradlew :app:installDebug                 # emulador encendido
+python3 scripts/ui-catalogo/capturar.py     # todas las pantallas, o solo algunas: … capturar.py P14 P15
+python3 scripts/ui-catalogo/generar.py      # reescribe index.html
+```
+
+- `docs/ui-catalogo/pantallas.json` es la lista de pantallas: id, nombre, composable, nodo de Figma y cómo abrirla. Cada pantalla nueva se agrega ahí.
+- Las capturas usan extras que solo funcionan en debug (`sk_screen`, `sk_tab`, `sk_athlete`, `sk_sport`, `sk_quickadd`). Con ellos `MainActivity` abre cualquier pantalla directo, por ejemplo: `adb shell am start -n com.invex.one.template/.MainActivity --es sk_screen Athletics --es sk_athlete sofia`.
+- El skill `/catalogo-ui-sportkid` describe el flujo completo.
+
+Pendiente: una pantalla **"UI Kit"** dentro de la app de debug, con los estados de cada componente y un selector de tema en vivo, para QA visual de los temas MaterialKolor.
 
 ---
 

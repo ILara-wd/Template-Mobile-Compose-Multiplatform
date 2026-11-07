@@ -1,5 +1,6 @@
 package com.invex.one.template
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -36,9 +37,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val debugStart = if (BuildConfig.DEBUG) DebugStart.from(intent) else null
         setContent {
             SportKidTheme {
-                SportKidApp(onExit = ::finish)
+                SportKidApp(onExit = ::finish, debugStart = debugStart)
             }
         }
     }
@@ -47,17 +49,44 @@ class MainActivity : ComponentActivity() {
 /** Flujo P01 → P04 y la app principal (T1). Navegación por estado hasta agregar Navigation Compose. */
 private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet, Athletics, RaceForm }
 
+/**
+ * Solo en debug: abre una pantalla directamente para el catálogo de UI y las capturas
+ * (`scripts/ui-catalogo/capturar.py`). Extras: `sk_screen` (nombre de [Destination]),
+ * `sk_tab` ([MainTab]), `sk_athlete` (id del hijo), `sk_sport` ([Sport]) y `sk_quickadd` (true).
+ */
+private data class DebugStart(
+    val destination: Destination,
+    val tab: MainTab?,
+    val athleteId: String?,
+    val sport: Sport?,
+    val quickAdd: Boolean,
+) {
+    companion object {
+        fun from(intent: Intent): DebugStart? {
+            val screen = intent.getStringExtra("sk_screen") ?: return null
+            val destination = Destination.entries.firstOrNull { it.name == screen } ?: return null
+            return DebugStart(
+                destination = destination,
+                tab = MainTab.entries.firstOrNull { it.name == intent.getStringExtra("sk_tab") },
+                athleteId = intent.getStringExtra("sk_athlete"),
+                sport = Sport.entries.firstOrNull { it.name == intent.getStringExtra("sk_sport") },
+                quickAdd = intent.getBooleanExtra("sk_quickadd", false),
+            )
+        }
+    }
+}
+
 @Composable
-private fun SportKidApp(onExit: () -> Unit) {
-    var destination by rememberSaveable { mutableStateOf(Destination.Splash) }
-    var tab by rememberSaveable { mutableStateOf(MainTab.Agenda) }
-    var showQuickAdd by rememberSaveable { mutableStateOf(false) }
-    var profileId by rememberSaveable { mutableStateOf<String?>(null) }
+private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
+    var destination by rememberSaveable { mutableStateOf(debugStart?.destination ?: Destination.Splash) }
+    var tab by rememberSaveable { mutableStateOf(debugStart?.tab ?: MainTab.Agenda) }
+    var showQuickAdd by rememberSaveable { mutableStateOf(debugStart?.quickAdd ?: false) }
+    var profileId by rememberSaveable { mutableStateOf(debugStart?.athleteId) }
     // Alta de deportista desde Bienvenida (onboarding) o desde la pestaña Deportistas.
     var createAthleteReturn by rememberSaveable { mutableStateOf(Destination.Welcome) }
     // Los formularios de deporte regresan a donde se abrieron (agenda o vista del deporte).
     var formReturn by rememberSaveable { mutableStateOf(Destination.Main) }
-    var profileSport by rememberSaveable { mutableStateOf<Sport?>(null) }
+    var profileSport by rememberSaveable { mutableStateOf(debugStart?.sport) }
 
     BackHandler(enabled = destination == Destination.CreateAthlete) {
         destination = createAthleteReturn

@@ -18,8 +18,11 @@
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/agenda" />
             <option value="$PROJECT_DIR$/feature/athlete" />
+            <option value="$PROJECT_DIR$/feature/athletics" />
             <option value="$PROJECT_DIR$/feature/auth" />
             <option value="$PROJECT_DIR$/feature/home" />
+            <option value="$PROJECT_DIR$/feature/swimming" />
+            <option value="$PROJECT_DIR$/feature/tkd" />
           </set>
         </option>
       </GradleProjectSettings>
