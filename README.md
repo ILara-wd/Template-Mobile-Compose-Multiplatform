@@ -34,8 +34,8 @@ Tema por defecto **"Océano"**. Semilla primary `#0061A4`, semilla tertiary `#E6
 | `onPrimaryContainer` | `#001D36` | `#D1E4FF` | |
 | `secondary` | `#535F70` | `#BBC7DB` | Iconos secundarios, metadatos |
 | `secondaryContainer` | `#D7E3F8` | `#3B4858` | Botones tonales, chips de filtro, campos rellenos |
-| `tertiary` | `#A83900` | `#FFB68F` | **Logros y energía:** FAB "+ Registrar", récords, celebraciones |
-| `tertiaryContainer` | `#FFDBCF` | `#7A3000` | Fondo de cards de logro y chip "Nuevo récord" |
+| `tertiary` | `#A83900` | `#FFB68F` | **Logros y energía:** FAB "Nuevo evento", récords, celebraciones, punto de "Torneo / Especial" en el calendario, texto de "Pendiente de pago" |
+| `tertiaryContainer` | `#FFDBCF` | `#7A3000` | Fondo de cards de logro, chip "Nuevo récord" y chip "Pendiente de pago" |
 | `onTertiaryContainer` | `#380D00` | `#FFDBCB` | |
 | `error` | `#BA1A1A` | `#FFB4AB` | Validación de formularios y error de sincronización |
 | `surface` | `#F8F9FF` | `#111418` | Fondo de pantalla |
@@ -64,16 +64,21 @@ Tema por defecto **"Océano"**. Semilla primary `#0061A4`, semilla tertiary `#E6
 |---|---|---|---|
 | `sport.tkd` | `#C62828` | `#FF8A80` | Icono, acento lateral y tab de Taekwondo |
 | `sport.tkdContainer` | `#FFEBEE` | `#4A1414` | Fondo de tile o badge TKD |
+| `sport.onTkdContainer` | `#93000A` | `#FFDAD6` | Texto sobre `tkdContainer` (etiqueta "Taekwondo") |
 | `sport.swimming` | `#00838F` | `#4DD0E1` | Natación |
 | `sport.swimmingContainer` | `#E0F7FA` | `#0B3A3E` | |
+| `sport.onSwimmingContainer` | `#004F56` | `#C4EBF2` | Texto sobre `swimmingContainer` |
 | `sport.athletics` | `#EF6C00` | `#FFB74D` | Atletismo |
 | `sport.athleticsContainer` | `#FFF3E0` | `#4A2A0B` | |
+| `sport.onAthleticsContainer` | `#803800` | `#FFE0B2` | Texto sobre `athleticsContainer` |
 | `medal.gold` | `#D4A017` | `#E6C04A` | Oro |
 | `medal.silver` | `#9E9E9E` | `#BDBDBD` | Plata |
 | `medal.bronze` | `#A0522D` | `#C98A5E` | Bronce |
-| `status.success` / `successContainer` | `#2E7D32` / `#DCF5DD` | `#81C784` / `#1B3A1D` | Pagado, Dominado, Aprobado, Sincronizado |
-| `status.warning` / `warningContainer` | `#8A5A00` / `#FFF3D6` | `#FFCC66` / `#3D2E0A` | Pendiente de pago, Aprendiendo, Pendiente |
+| `status.success` / `successContainer` | `#2E7D32` / `#DCF5DD` | `#81C784` / `#1B3A1D` | Dominado, Aprobado, Sincronizado |
+| `status.warning` / `warningContainer` | `#8A5A00` / `#FFF3D6` | `#FFCC66` / `#3D2E0A` | Aprendiendo, Pendiente |
 | `status.neutral` | `onSurfaceVariant` + outline | — | Pendiente (por aprender), Participación |
+
+> El color del deporte (`sport.tkd`, etc.) no cumple 4.5:1 como texto sobre su contenedor en todos los casos. Para etiquetas de texto se usa `sport.on*Container`; en código, `Sport.colors().onContainer`.
 
 \* Las variantes oscuras están desaturadas. Se pueden sustituir por `MaterialColors.harmonize(color, primary)` para que combinen con el tema activo.
 
@@ -162,15 +167,47 @@ Se mapea sobre el `Typography` de M3, así que nadie usa tamaños sueltos en el 
 
 ### 1.6 Átomos básicos (`core:designsystem`, prefijo `Sk`)
 
-| Átomo | Composable | Especificación |
-|---|---|---|
+Estado: ✅ implementado · ⏳ pendiente (todavía no lo usa ninguna pantalla).
+
+| Átomo | Composable | Especificación | Estado |
+|---|---|---|---|
+| Botón primario | `SkButton` | Pill, `primary`/`onPrimary`, `labelLarge`, icono líder opcional. Tamaños (`SkButtonSize`): **Small 40dp** (acción "Guardar" en la top bar, elevación nivel 1), **Medium 48dp** (CTA fijo de formularios de evento) y **Large 56dp** (CTA principal, default). Deshabilitado: 38% `onSurface`. Falta el estado cargando (spinner 20dp, ancho fijo). | ✅ |
+| Botón elevado | `SkElevatedButton` | Pill blanca de 56dp con icono a color sin teñir ("Continuar con Google"). | ✅ |
+| Botón de logro | `SkAccentButton` | Igual al primario con `tertiary`. Solo para CTAs de celebración. | ⏳ |
+| Botón tonal | `SkTonalButton` | 48dp, `secondaryContainer`, icono opcional ("Compartir (QR)", "Miembros", "+ Agregar prueba"). | ⏳ |
+| Botón outlined | `SkOutlinedButton` | 48dp, borde `outline` ("Generar nuevo", "Cancelar"). | ⏳ |
+| Botón de texto | `SkTextButton` | `labelLarge`, color `onSurfaceVariant` por defecto (configurable) e icono final opcional ("Explorar demo ›"). | ✅ |
+| Botón de icono | — | Se usa `IconButton` de M3 directamente: área de 48dp e icono de 24dp (atrás, cerrar, notificaciones, adjuntar). | ✅ |
+| Botón de perfil | `SkProfileButton` | Círculo `primary` de 32dp con icono de persona; abre Ajustes. | ✅ |
+| FAB extendido | `SkExtendedFab` | Pill de 56dp, `tertiary`/`onTertiary`, icono "+" y "Nuevo evento". Se colapsa a FAB al hacer scroll (`expanded`). | ✅ |
+| Etiqueta de campo | `SkFieldLabel` | `labelMedium` `onSurface` con icono `primary` opcional, encima del campo ("Nombre del deportista"). | ✅ |
+| Encabezado de sección de formulario | `SkFormLabel` | `titleSmall` `onSurface`, asterisco `tertiary` si es obligatorio (TalkBack lee "obligatorio"), icono líder `primary` opcional y slot a la derecha (ayuda o icono). | ✅ |
+| Campo relleno | `SkTextField` | 56dp, `shape.medium`, fondo `surfaceContainerHigh`, **etiqueta arriba** (no flotante), placeholder `onSurfaceVariant`, slots líder y final (icono de lugar, botón borrar), texto de ayuda. | ✅ |
+| Campo de selección | `SkSelectField` | Mismo aspecto que `SkTextField`; muestra el valor y abre un menú o diálogo al tocarlo ("Fecha de nacimiento", "Cinta actual"). Variante `emphasized` en `titleMedium`. | ✅ |
+| Campo multilínea | `SkTextArea` | Mínimo 96dp, `surfaceContainerHigh`, `shape.medium`, `bodyMedium`, placeholder `outline` y pie opcional para metadatos y acciones ("Visible para todos los tutores", adjuntar). | ✅ |
+| Switch | — | Se usa `Switch` de M3 dentro de una fila `toggleable` (role Switch) ("¿Ya está pagado?"). | ✅ |
+| Checkbox | `SkCheckbox` | 24dp con radio 4dp. | ⏳ |
+| Chip | `SkChip` | Chip único para filtros, opciones y sugerencias. Pill (o `shape` configurable), `labelMedium`, slot `leading` (punto, avatar) e icono opcional. Seleccionado: contenedor sólido (`primary`/`onPrimary` por defecto). Sin seleccionar: `surfaceContainerLowest` con sombra nivel 1, o el contenedor que se pase. Alturas usadas: **32dp** filtros de agenda, **36dp** recordatorio, **40dp** disciplina (seleccionado `tertiary`), **28dp** sugerencias de lugar (seleccionado `primaryContainer`), **24dp** "Hoy" (`secondaryContainer`). La duración usa `shape.small` y ancho igual. | ✅ |
+| Pill / badge | `SkPill` | Pill no interactiva, `labelSmall`, icono o slot líder opcional; `overline` = MAYÚSCULAS con tracking +0.55 ("ACCESO RÁPIDO", "9 años", "2 compromisos"). | ✅ |
+| Icono en círculo | `SkIconCircle` | 40dp por defecto (también 24, 32 y 36dp), contenedor y tinte configurables (icono de deporte en la card de evento, costo, recordatorio clave). | ✅ |
+| Card | `SkCard` | `surfaceContainerLowest`, `shape.large`, elevación nivel 1, acento lateral opcional de 6dp (`SkCardAccentWidth`), clic opcional. | ✅ |
+| Selector de color | `SkColorSwatchPicker` | Grid de 4 columnas; el seleccionado crece a 1.05 con check claro u oscuro según la luminancia. | ✅ |
+| Avatar | `SkAvatar` | 40/56/96dp. Foto o iniciales sobre `primaryContainer`, con **anillo de 2dp del color del hijo**. Hoy cada pantalla lo dibuja con `Image` + `border`; falta extraerlo. | ⏳ |
+| Punto de color | `AthleteDot` (`core:ui`) | 8dp por defecto (4dp en el calendario, 6dp en el día seleccionado, 10dp en filtros). | ✅ |
+| Barra de progreso | `SkLinearProgress` | 6dp, pill, track `surfaceContainerHighest`. | ⏳ |
+| Progreso circular | `SkCircularProgress` | 64dp, trazo 6dp ("3 de 5 estilos"). | ⏳ |
+| Divisor | `SkDivider` | 1dp `outlineVariant`, con variante con texto. | ⏳ |
+| Overline | — | Cubierto por `SkPill(overline = true)`. | ✅ |
+| Skeleton | `SkSkeleton` | Bloque con *shimmer* sobre `surfaceContainerHigh`. | ⏳ |
+
+---|---|---|
 | Botón primario | `SkButton` | 48dp alto, pill, `primary`/`onPrimary`, `labelLarge`. Estados: normal, presionado (ripple), deshabilitado (38% `onSurface`), cargando (spinner 20dp, ancho fijo). |
 | Botón de logro | `SkAccentButton` | Igual al primario con `tertiary`. Solo para "+ Registrar" y CTAs de celebración. |
 | Botón tonal | `SkTonalButton` | 48dp, `secondaryContainer`, icono opcional ("Compartir (QR)", "Miembros", "+ Agregar prueba"). |
 | Botón outlined | `SkOutlinedButton` | 48dp, borde `outline` ("Generar nuevo", "Cancelar"). |
 | Botón de texto | `SkTextButton` | `labelLarge` en `primary` ("Ver detalle ›", "Guardar" en la top bar). |
 | Botón de icono | `SkIconButton` | Área de 48dp e icono de 24dp (atrás, cerrar, ⋮, copiar). |
-| FAB extendido | `SkExtendedFab` | Pill, `tertiaryContainer`/`onTertiaryContainer`, icono "+" y "Registrar". Se colapsa a FAB al hacer scroll. |
+| FAB extendido | `SkExtendedFab` | Pill de 56dp, `tertiary`/`onTertiary`, icono "+" y "Nuevo evento". Se colapsa a FAB al hacer scroll. |
 | Campo relleno | `SkTextField` | 56dp, `shape.medium`, fondo `surfaceContainerHigh`, etiqueta flotante, icono líder opcional, texto de ayuda o error. |
 | Campo multilínea | `SkTextArea` | Igual, mínimo 96dp ("Notas"). |
 | Switch | `SkSwitch` | M3 Switch con icono check en el thumb ("Pagado"). |
@@ -200,14 +237,14 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | M4 | Badge de medalla | `MedalBadge` | `core:ui` | Icono `military_tech` coloreado (oro, plata o bronce) y etiqueta. "Participación" va en neutral y "Pendiente" en outlined. |
 | M5 | Badge de cinta | `BeltBadge` | `core:ui` | Rectángulo de 24×8dp con el color de la cinta y su nombre ("Amarilla"). |
 | M6 | Chip de estado | `StatusChip` | `core:ui` | Usa el vocabulario de §5. Icono, texto y contenedor semántico. |
-| M7 | Campo de dinero | `MoneyField` | `core:designsystem` | Prefijo "$", sufijo "MXN" y teclado decimal. Formatea `$1,250.00` y emite centavos (`Long`). |
+| M7 | Campo de dinero | `SkMoneyField` | `core:designsystem` | Caja compacta de 40dp en `surfaceContainerLow`: prefijo "$", monto en `metric` alineado a la derecha y sufijo "MXN". Hoy acepta pesos enteros (máx. 7 dígitos); falta formatear `$1,250.00` y emitir centavos (`Long`). |
 | M8 | Fila de pago | `PaidSwitchRow` | `core:designsystem` | Texto "Pagado" y `SkSwitch`. Si está apagado muestra la ayuda "Se mostrará como pendiente". |
 | M9 | Campo de tiempo | `DurationField` | `core:designsystem` | Máscara `mm:ss.cc` (natación) o `hh:mm:ss` (atletismo) con teclado numérico. Emite `Duration`. |
 | M10 | Campo fecha y hora | `DateTimeField` | `core:designsystem` | Abre el `DatePicker` y el `TimePicker` de M3. Formato "Sáb 14 nov · 10:00". |
 | M11 | Campo de lugar | `PlaceField` | `core:ui` | `SkTextField` con un menú de lugares recientes y un botón de icono para abrir Maps. |
 | M12 | Selector de recordatorio | `ReminderChips` | `core:ui` | Chips de opción "Ninguno · 1 h · 1 día · 2 días antes". |
 | M13 | Selector de distancia | `DistanceChips` | `core:ui` | Chips predefinidos más "Otra", que abre un campo numérico en metros. |
-| M14 | Botón segmentado | `SkSegmentedButton` | `core:designsystem` | De 2 a 3 opciones ("Lisa / Obstáculos", "Pendiente / Aprobado / No aprobado", "Sistema / Claro / Oscuro"). |
+| M14 | Control segmentado | `SkSegmentedControl` | `core:designsystem` | Pista pill `surfaceContainer` con el segmento activo en pill blanca elevada y texto `primary`; icono opcional por opción ("Mes / Lista"). También para "Lisa / Obstáculos", "Pendiente / Aprobado / No aprobado" y "Sistema / Claro / Oscuro". |
 | M15 | Área de foto | `PhotoUploadArea` | `core:ui` | Caja punteada de 160dp con dos acciones (Cámara / Galería). Con foto: preview recortado y botón "Cambiar". |
 | M16 | Chip de récord | `PersonalRecordChip` | `core:ui` | `tertiaryContainer`, icono `emoji_events` y "¡Nuevo récord personal!". |
 | M17 | Encabezado de sección | `SectionHeader` | `core:designsystem` | `SkOverline` más acción opcional a la derecha ("Ver todo ›") o contador. |
@@ -229,11 +266,11 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 
 | ID | Organismo | Composable | Módulo | Composición |
 |---|---|---|---|---|
-| O1 | Top bar principal | `SkMainTopBar` | `core:ui` | `AthleteSelector` (M2), `SyncIndicator` (M28) y avatar del usuario, que abre Ajustes. |
-| O2 | Top bar de detalle o formulario | `SkDetailTopBar` | `core:designsystem` | Atrás o cerrar, título y acción de texto ("Guardar") u overflow. |
+| O1 | Top bar principal | `SkMainTopBar` | `core:designsystem` | Marca "SportKid" (`titleLarge` `primary`), notificaciones y avatar del usuario con anillo `primaryContainer`, que abre Ajustes. Falta `SyncIndicator` (M28). |
+| O2 | Top bar de detalle o formulario | `SkDetailTopBar` | `core:designsystem` | Atrás o cerrar (`SkNavigationIcon`), título `titleMedium` y acciones a la derecha (`SkButton` Small "Guardar", avatar). |
 | O3 | Bottom navigation | `SkBottomBar` | `app` | 4 destinos: Inicio, Agenda, Deportistas y Gastos. El activo va en pill `secondaryContainer`. |
 | O4 | Sheet de registro rápido | `QuickAddSheet` | `feature:home` | Título y grid 2×3 de tiles: Entrenamiento, Examen de cinta, Torneo TKD, Competencia de natación y Carrera. |
-| O5 | Card de evento | `EventCard` | `core:ui` | Acento lateral del deporte, `SportIconTile`, título, punto y nombre del hijo, fecha, lugar, costo y `StatusChip` de pago. |
+| O5 | Card de evento | `EventCard` | `core:ui` | Acento lateral de 6dp del deporte, horario, `AthleteTag` (punto y nombre del hijo), título, subtítulo, icono del deporte en círculo de 36dp, lugar, franja de costo en `surfaceContainerLow` con `PaymentStatusChip` y, si está pendiente, la franja "Toca para saldar o adjuntar comprobante". |
 | O6 | Lista de próximos | `UpcomingEventsSection` | `feature:home` | `SectionHeader` con hasta 3 `EventCard` y el link "Ver agenda ›". |
 | O7 | Carrusel de logros | `AchievementsCarousel` | `feature:home` | Cards de 160dp en `tertiaryContainer` con foto de medalla, `MedalBadge` o `BeltBadge`, y dato ("5K · 28:41"). |
 | O8 | Card de gastos del mes | `MonthlyExpensesCard` | `feature:home` | Overline, total `displaySmall`, barra apilada por color de deporte y leyenda. |
@@ -308,10 +345,13 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 Cada dominio tiene **un solo nombre por estado**. En código, cada estado es un `enum` en `core:model` y su presentación (texto, icono y color) se define **una sola vez** en `core:ui` (`StatusChip`).
 
 ### 5.1 Pago del evento
+
+Los colores siguen a Figma (Agenda): el pago usa los roles del tema en lugar de `status.success` / `status.warning`. El enum es `PaymentStatus` en `core:model`.
+
 | Estado | Etiqueta | Icono | Color |
 |---|---|---|---|
-| `PAID` | "Pagado" | `check_circle` | `status.success` |
-| `UNPAID` | "Pendiente de pago" | `schedule` | `status.warning` |
+| `PAID` | "Pagado" | `check_circle` | `secondaryContainer` / `primary` |
+| `PENDING` | "Pendiente de pago" | `pending` | `tertiaryContainer` / `tertiary` |
 | Sin costo | (no se muestra el chip) | — | — |
 
 ### 5.2 Estilo de natación
