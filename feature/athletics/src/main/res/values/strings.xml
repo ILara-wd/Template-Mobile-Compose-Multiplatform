@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ath_distance_m">%1$d m</string>
+    <string name="ath_distance_km">%1$d K</string>
+    <string name="ath_type_flat">Lisa</string>
+    <string name="ath_type_hurdles">Obstáculos</string>
+    <string name="ath_type_flat_long">Carrera lisa</string>
+    <string name="ath_type_hurdles_long">Con obstáculos</string>
+    <string name="ath_minutes">min</string>
+    <string name="ath_amount">$%1$s MXN</string>
+    <string name="ath_save">Guardar</string>
+
+    <!-- P14 Atletismo -->
+    <string name="ath_screen_title">Atletismo</string>
+    <string name="ath_category">Cat. %1$s</string>
+    <string name="ath_medals_summary">%1$s · %2$s</string>
+    <plurals name="ath_golds">
+        <item quantity="one">%d oro</item>
+        <item quantity="many">%d oros</item>
+        <item quantity="other">%d oros</item>
+    </plurals>
+    <plurals name="ath_silvers">
+        <item quantity="one">%d plata</item>
+        <item quantity="many">%d platas</item>
+        <item quantity="other">%d platas</item>
+    </plurals>
+    <string name="ath_new_race">Registrar carrera</string>
+    <string name="ath_best_marks">Mejores marcas</string>
+    <string name="ath_best_marks_hint">Pista y obstáculos</string>
+    <string name="ath_record">Récord</string>
+    <string name="ath_gallery">Galería de medallas</string>
+    <plurals name="ath_gallery_count">
+        <item quantity="one">(%d medalla)</item>
+        <item quantity="many">(%d medallas)</item>
+        <item quantity="other">(%d medallas)</item>
+    </plurals>
+    <string name="ath_next_goal">Próxima meta</string>
+    <string name="ath_races">Carreras disputadas</string>
+    <string name="ath_races_add">+ Carrera</string>
+    <string name="ath_distance_type">Distancia y tipo</string>
+    <string name="ath_official_time">Tiempo oficial</string>
+    <string name="ath_distance_with_type">%1$s · %2$s</string>
+    <string name="ath_place">%1$d° lugar (%2$s)</string>
+    <string name="ath_cost_paid">%1$s (Pagado)</string>
+    <string name="ath_cost_pending">%1$s (Pendiente)</string>
+    <string name="ath_quick_log">Registrar nueva marca</string>
+
+    <!-- P15 Registrar carrera -->
+    <string name="race_title">Registrar carrera</string>
+    <string name="race_sport_club">Atletismo · %1$s</string>
+    <string name="race_switch_athlete">Cambiar deportista</string>
+    <string name="race_data_section">Datos de la carrera</string>
+    <string name="race_name">Nombre de la carrera *</string>
+    <string name="race_name_placeholder">Ej. Carrera Infantil 3K</string>
+    <string name="race_venue">Sede o pista *</string>
+    <string name="race_venue_placeholder">Pista o circuito</string>
+    <string name="race_date">Fecha *</string>
+    <string name="race_time">Hora de salida</string>
+    <string name="race_fee">Inscripción</string>
+    <string name="race_fee_paid">Cuota pagada</string>
+    <string name="race_details_section">Detalles de la prueba</string>
+    <string name="race_distance">Distancia recorrida</string>
+    <string name="race_distance_other">Otra</string>
+    <string name="race_distance_custom">Distancia en metros</string>
+    <string name="race_modality">Modalidad</string>
+    <string name="race_official_time">Tiempo oficial cronometrado</string>
+    <string name="race_time_format">hh:mm:ss</string>
+    <string name="race_new_record">¡Nuevo récord personal en %1$s de %2$s! (-%3$s)</string>
+    <string name="race_result">Posición o resultado</string>
+    <string name="race_place">%1$d° lugar</string>
+    <string name="race_finalist">Finalista</string>
+    <string name="race_pending">Por definir / en proceso</string>
+    <string name="race_photo_section">Foto de la medalla o podio</string>
+    <string name="race_photo_title">Captura el recuerdo de %1$s</string>
+    <string name="race_photo_hint">Sube la medalla de finisher o la foto del podio</string>
+    <string name="race_photo_ready">Lista para el álbum</string>
+    <string name="race_save_cta">Guardar carrera</string>
+    <string name="race_sync_note">Se sincronizará en el perfil de %1$s y en el calendario familiar.</string>
+</resources>
