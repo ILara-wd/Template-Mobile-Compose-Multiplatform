@@ -140,9 +140,10 @@ object AthleteSamples {
                     formsLabel = "Taegeuk 1-4",
                     attendancePercent = 92,
                     history = listOf(
-                        BeltStep(Belt.WHITE, LocalDate.of(2024, 1, 15)),
-                        BeltStep(Belt.YELLOW, LocalDate.of(2024, 5, 18)),
-                        BeltStep(Belt.GREEN, LocalDate.of(2025, 6, 7)),
+                        BeltStep(Belt.WHITE, LocalDate.of(2023, 1, 12)),
+                        BeltStep(Belt.YELLOW, LocalDate.of(2023, 7, 15)),
+                        BeltStep(Belt.ORANGE, LocalDate.of(2023, 12, 10)),
+                        BeltStep(Belt.GREEN, LocalDate.of(2024, 5, 18)),
                     ),
                     equipment = listOf(
                         Equipment("Uniforme Dobok Oficial", "Talla 130 cm · Cuello blanco", R.drawable.ic_profile_dobok),

@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
@@ -39,7 +40,7 @@ enum class SkButtonSize(internal val height: Dp, internal val horizontalPadding:
     Small(40.dp, 16.dp, 8.dp),
 
     /** 48dp: CTA fijo de formularios de evento. */
-    Medium(48.dp, 24.dp, 8.dp),
+    Medium(48.dp, 16.dp, 8.dp),
 
     /** 56dp: CTA principal (Figma: "Guardar deportista"). */
     Large(LargeButtonHeight, 24.dp, 10.dp),
@@ -54,12 +55,15 @@ fun SkButton(
     enabled: Boolean = true,
     leadingIcon: Painter? = null,
     size: SkButtonSize = SkButtonSize.Large,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    contentColor: Color = MaterialTheme.colorScheme.onPrimary,
 ) {
     Button(
         onClick = onClick,
         modifier = modifier.height(size.height),
         enabled = enabled,
         shape = MaterialTheme.shapes.full,
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = if (size == SkButtonSize.Small) SkElevation.level1 else SkElevation.level3,
         ),
@@ -69,7 +73,7 @@ fun SkButton(
             Icon(leadingIcon, contentDescription = null)
             Spacer(Modifier.width(size.iconGap))
         }
-        Text(text, style = MaterialTheme.typography.labelLarge)
+        Text(text, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
 

@@ -22,14 +22,9 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.derivedStateOf
@@ -54,6 +49,7 @@ import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.core.model.Sport
 import com.invex.sportkid.core.ui.AthleteDot
+import com.invex.sportkid.core.ui.SkDatePickerDialog
 import com.invex.sportkid.core.ui.EventCard
 import com.invex.sportkid.core.ui.colors
 import com.invex.sportkid.core.ui.iconRes
@@ -62,7 +58,6 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 private val FabClearance = 96.dp
-private const val MillisPerDay = 86_400_000L
 
 /**
  * P06. Agenda: control "Mes / Lista", filtros por hijo y deporte, calendario mensual (O9), los
@@ -166,7 +161,7 @@ fun AgendaScreen(
     }
 
     if (showDatePicker) {
-        MonthPickerDialog(
+        SkDatePickerDialog(
             initial = state.selectedDate,
             onDismiss = { showDatePicker = false },
             onConfirm = {
@@ -328,20 +323,6 @@ private fun EmptyText(text: Int) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MonthPickerDialog(initial: LocalDate, onDismiss: () -> Unit, onConfirm: (LocalDate) -> Unit) {
-    val pickerState = rememberDatePickerState(initialSelectedDateMillis = initial.toEpochDay() * MillisPerDay)
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = {
-                pickerState.selectedDateMillis?.let { onConfirm(LocalDate.ofEpochDay(it / MillisPerDay)) } ?: onDismiss()
-            }) { Text(stringResource(R.string.action_accept)) }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
-    ) { DatePicker(state = pickerState) }
-}
 
 @SkPreviews
 @Composable

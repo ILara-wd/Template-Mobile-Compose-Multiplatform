@@ -114,8 +114,12 @@ fun AthleteProfileScreen(
     onEdit: () -> Unit = {},
     onPayFee: () -> Unit = {},
     onEventDetails: () -> Unit = {},
+    initialSport: Sport? = null,
+    onOpenSportDetail: (Sport) -> Unit = {},
 ) {
-    var selectedSport by rememberSaveable(athlete.id) { mutableStateOf(athlete.sports.firstOrNull()) }
+    var selectedSport by rememberSaveable(athlete.id, initialSport) {
+        mutableStateOf(initialSport?.takeIf { it in athlete.sports } ?: athlete.sports.firstOrNull())
+    }
     var menuOpen by remember { mutableStateOf(false) }
     Scaffold(
         modifier = modifier,
@@ -168,7 +172,7 @@ fun AthleteProfileScreen(
                 val tkd = athlete.tkd
                 val swim = athlete.swim
                 when {
-                    sport == Sport.TAEKWONDO && tkd != null -> TkdTab(tkd, today, onPayFee, onEventDetails)
+                    sport == Sport.TAEKWONDO && tkd != null -> TkdTab(tkd, today, onPayFee, onEventDetails) { onOpenSportDetail(Sport.TAEKWONDO) }
                     sport == Sport.SWIMMING && swim != null -> SwimProgressPanel(swim)
                     sport != null -> TabComingSoon(sport)
                 }
@@ -329,9 +333,9 @@ private fun SportTabs(sports: List<Sport>, selected: Sport?, onSelect: (Sport) -
 }
 
 @Composable
-private fun TkdTab(tkd: TkdProfile, today: LocalDate, onPayFee: () -> Unit, onEventDetails: () -> Unit) {
+private fun TkdTab(tkd: TkdProfile, today: LocalDate, onPayFee: () -> Unit, onEventDetails: () -> Unit, onOpenHistory: () -> Unit) {
     val accent = Sport.TAEKWONDO.colors().content
-    BeltCard(tkd, today, accent)
+    BeltCard(tkd, today, accent, onOpenHistory)
     tkd.nextEvent?.let { NextEventCard(it, accent, onPayFee, onEventDetails) }
     StatsCard(tkd, today, accent)
     EquipmentCard(tkd.equipment, accent)
@@ -363,7 +367,7 @@ private fun CardTitle(icon: Int?, title: String, iconTint: Color, trailing: @Com
 
 /** Card 1: cinta actual, instructor y progreso hacia la siguiente cinta (O15). */
 @Composable
-private fun BeltCard(tkd: TkdProfile, today: LocalDate, accent: Color) {
+private fun BeltCard(tkd: TkdProfile, today: LocalDate, accent: Color, onOpenHistory: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     val beltColor = tkd.belt.color()
     val next = tkd.belt.next
@@ -460,6 +464,14 @@ private fun BeltCard(tkd: TkdProfile, today: LocalDate, accent: Color) {
                 }
             }
         }
+        SkTextButton(
+            stringResource(R.string.profile_tkd_history),
+            onClick = onOpenHistory,
+            trailingIcon = painterResource(DsR.drawable.sk_ic_chevron_right),
+            color = colors.primary,
+            textStyle = MaterialTheme.typography.labelLarge,
+            modifier = Modifier.align(Alignment.End),
+        )
     }
 }
 

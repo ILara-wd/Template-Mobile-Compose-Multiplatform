@@ -2,6 +2,7 @@ package com.invex.sportkid.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +43,7 @@ fun SkDetailTopBar(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     navigationIcon: SkNavigationIcon = SkNavigationIcon.Back,
+    subtitle: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Surface(
@@ -69,14 +71,24 @@ fun SkDetailTopBar(
                 )
             }
             Spacer(Modifier.width(SportKidTheme.spacing.xs))
-            Text(
-                title,
-                modifier = Modifier.weight(1f),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Column(Modifier.weight(1f)) {
+                Text(
+                    title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                if (subtitle != null) {
+                    Text(
+                        subtitle,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.primary,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+            }
             actions()
         }
     }

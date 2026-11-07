@@ -95,6 +95,9 @@ fun SkSegmentedControl(
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
     icons: List<Painter?> = emptyList(),
+    selectedContainerColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
+    selectedContentColor: Color = MaterialTheme.colorScheme.primary,
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
 ) {
     val colors = MaterialTheme.colorScheme
     Surface(
@@ -113,8 +116,8 @@ fun SkSegmentedControl(
                         .clip(MaterialTheme.shapes.full)
                         .selectable(selected = selected, role = Role.Tab, onClick = { onSelect(index) }),
                     shape = MaterialTheme.shapes.full,
-                    color = if (selected) colors.surfaceContainerLowest else Color.Transparent,
-                    contentColor = if (selected) colors.primary else colors.onSurfaceVariant,
+                    color = if (selected) selectedContainerColor else Color.Transparent,
+                    contentColor = if (selected) selectedContentColor else colors.onSurfaceVariant,
                     shadowElevation = if (selected) SkElevation.level1 else 0.dp,
                 ) {
                     Row(
@@ -122,7 +125,7 @@ fun SkSegmentedControl(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         icons.getOrNull(index)?.let { Icon(it, contentDescription = null) }
-                        Text(label, style = MaterialTheme.typography.labelLarge)
+                        Text(label, style = textStyle, maxLines = 1)
                     }
                 }
             }

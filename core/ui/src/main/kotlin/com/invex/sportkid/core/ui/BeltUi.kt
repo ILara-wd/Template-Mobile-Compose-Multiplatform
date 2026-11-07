@@ -169,20 +169,22 @@ fun BeltSelectField(
     trailingIcon: Painter,
     modifier: Modifier = Modifier,
     placeholder: String? = null,
+    options: List<Belt> = Belt.entries,
+    required: Boolean = false,
 ) {
     var expanded by remember { mutableStateOf(false) }
     Box(modifier) {
         SkSelectField(
             value = belt?.let { stringResource(it.labelRes()) }.orEmpty(),
             onClick = { expanded = true },
-            label = label,
+            label = if (required) "$label *" else label,
             placeholder = placeholder,
             emphasized = true,
             leading = belt?.let { { BeltSwatch(it) } },
             trailing = { Icon(trailingIcon, contentDescription = null, tint = MaterialTheme.colorScheme.outline) },
         )
         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            Belt.entries.forEach { option ->
+            options.forEach { option ->
                 DropdownMenuItem(
                     text = { Text(stringResource(option.labelRes())) },
                     leadingIcon = { BeltSwatch(option) },

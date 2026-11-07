@@ -27,10 +27,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,10 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberDatePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
@@ -75,14 +67,14 @@ import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SkElevation
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.core.model.Sport
+import com.invex.sportkid.core.ui.SkDatePickerDialog
+import com.invex.sportkid.core.ui.SkTimePickerDialog
 import com.invex.sportkid.core.ui.iconRes
 import com.invex.sportkid.core.ui.label
 import com.invex.sportkid.core.ui.labelRes
 import java.time.LocalDate
 import java.time.LocalTime
 import com.invex.sportkid.core.ui.R as UiR
-
-private const val MillisPerDay = 86_400_000L
 
 /** Lugar sugerido: [value] se escribe en el campo; [label] es lo que muestra el chip. */
 private data class PlaceSuggestion(val label: String, val value: String, @DrawableRes val icon: Int)
@@ -326,11 +318,11 @@ private fun ScheduleCard(state: NewTrainingState, modifier: Modifier = Modifier)
         }
     }
     when (picker) {
-        "date" -> TrainingDatePicker(state.date, onDismiss = { picker = null }) {
+        "date" -> SkDatePickerDialog(state.date, onDismiss = { picker = null }) {
             state.date = it
             picker = null
         }
-        "time" -> TrainingTimePicker(state.start, onDismiss = { picker = null }) {
+        "time" -> SkTimePickerDialog(state.start, onDismiss = { picker = null }) {
             state.start = it
             picker = null
         }
@@ -558,36 +550,7 @@ private fun SaveBar(enabled: Boolean, onSave: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TrainingDatePicker(initial: LocalDate, onDismiss: () -> Unit, onConfirm: (LocalDate) -> Unit) {
-    val pickerState = rememberDatePickerState(initialSelectedDateMillis = initial.toEpochDay() * MillisPerDay)
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = {
-                pickerState.selectedDateMillis?.let { onConfirm(LocalDate.ofEpochDay(it / MillisPerDay)) } ?: onDismiss()
-            }) { Text(stringResource(R.string.action_accept)) }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
-    ) { DatePicker(state = pickerState) }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TrainingTimePicker(initial: LocalTime, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
-    val pickerState = rememberTimePickerState(initialHour = initial.hour, initialMinute = initial.minute, is24Hour = true)
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = { onConfirm(LocalTime.of(pickerState.hour, pickerState.minute)) }) {
-                Text(stringResource(R.string.action_accept))
-            }
-        },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.action_cancel)) } },
-        text = { TimePicker(state = pickerState) },
-    )
-}
 
 /** Estado exacto del diseño de Figma (Mateo, Taekwondo, 1.5 h, Doyang Central, $250). */
 @SkPreviews
