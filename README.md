@@ -24,34 +24,35 @@ Sistema de diseño para la app móvil nativa Android **SportKid**. Usa Material 
 
 ### 1.1 Paleta: roles M3 (cambian con el tema)
 
-Tema por defecto **"Océano"**. Semilla primary `#0061A4`, semilla tertiary `#E65100`, estilo *Tonal Spot*.
+Tema por defecto **"Océano"**. Semilla primary `#0061A4`, semilla tertiary `#E65100`, estilo *Tonal Spot*. Los valores del tema claro están ajustados a los diseños de Figma (archivo `KqTFktvrRvCzO2idPga5xf`), que mandan sobre la semilla. Figma solo tiene tema claro, así que el oscuro conserva los valores de Theme Builder.
 
 | Rol M3 | Claro | Oscuro | Uso en SportKid |
 |---|---|---|---|
-| `primary` | `#0061A4` | `#9ECAFF` | Acción principal, tab y chip activos, links |
+| `primary` | `#00497D` | `#9ECAFF` | Acción principal, tab y chip activos, links |
 | `onPrimary` | `#FFFFFF` | `#003258` | Texto sobre primary |
 | `primaryContainer` | `#D1E4FF` | `#00497D` | Chip seleccionado, indicador de bottom nav, avatar sin foto |
 | `onPrimaryContainer` | `#001D36` | `#D1E4FF` | |
 | `secondary` | `#535F70` | `#BBC7DB` | Iconos secundarios, metadatos |
-| `secondaryContainer` | `#D7E3F7` | `#3B4858` | Botones tonales, chips de filtro, campos rellenos |
-| `tertiary` | `#A04100` | `#FFB68F` | **Logros y energía:** FAB "+ Registrar", récords, celebraciones |
-| `tertiaryContainer` | `#FFDBCB` | `#7A3000` | Fondo de cards de logro y chip "Nuevo récord" |
-| `onTertiaryContainer` | `#341100` | `#FFDBCB` | |
+| `secondaryContainer` | `#D7E3F8` | `#3B4858` | Botones tonales, chips de filtro, campos rellenos |
+| `tertiary` | `#A83900` | `#FFB68F` | **Logros y energía:** FAB "+ Registrar", récords, celebraciones |
+| `tertiaryContainer` | `#FFDBCF` | `#7A3000` | Fondo de cards de logro y chip "Nuevo récord" |
+| `onTertiaryContainer` | `#380D00` | `#FFDBCB` | |
 | `error` | `#BA1A1A` | `#FFB4AB` | Validación de formularios y error de sincronización |
 | `surface` | `#F8F9FF` | `#111418` | Fondo de pantalla |
 | `surfaceContainerLowest` | `#FFFFFF` | `#0C0E12` | Cards |
-| `surfaceContainer` | `#ECEEF4` | `#1D2024` | Bottom nav, bottom sheets, cajas de info |
+| `surfaceContainer` | `#ECEEF3` | `#1D2024` | Bottom nav, bottom sheets, cajas de info |
+| `surfaceContainerHigh` | `#E7E8EE` | `#282A2F` | Fondo de campos rellenos (`SkTextField`, `SkSelectField`) |
 | `onSurface` | `#191C20` | `#E1E2E8` | Texto principal |
-| `onSurfaceVariant` | `#43474E` | `#C3C7CF` | Texto secundario y metadatos |
-| `outline` | `#73777F` | `#8D9199` | Bordes de inputs outlined y chips no seleccionados |
-| `outlineVariant` | `#C3C7CF` | `#43474E` | Divisores |
+| `onSurfaceVariant` | `#414750` | `#C3C7CF` | Texto secundario y metadatos |
+| `outline` | `#717782` | `#8D9199` | Bordes de inputs outlined y chips no seleccionados |
+| `outlineVariant` | `#C1C7D2` | `#43474E` | Divisores |
 
 **Temas seleccionables** (cada uno en claro y oscuro):
 
 | Tema | Semilla | Generación |
 |---|---|---|
 | Automático (Material You) | Wallpaper del usuario | `dynamicLight/DarkColorScheme` (Android 12+) |
-| **Océano** (default) | `#0061A4` | Esquema exportado de Theme Builder |
+| **Océano** (default) | `#0061A4` | Esquema fijo: claro ajustado a Figma, oscuro de Theme Builder |
 | Dojang | `#9C2A22` | MaterialKolor en runtime |
 | Alberca | `#006A6A` | MaterialKolor en runtime |
 | Pista | `#B45309` | MaterialKolor en runtime |
@@ -80,10 +81,12 @@ Tema por defecto **"Océano"**. Semilla primary `#0061A4`, semilla tertiary `#E6
 
 | Token | Hex | | Token | Hex |
 |---|---|---|---|---|
-| `athlete.blue` | `#1E88E5` | | `athlete.orange` | `#FB8C00` |
-| `athlete.green` | `#43A047` | | `athlete.teal` | `#00ACC1` |
-| `athlete.purple` | `#8E24AA` | | `athlete.red` | `#E53935` |
-| `athlete.pink` | `#D81B60` | | `athlete.yellow` | `#FDD835` |
+| `athlete.blue` (Azul) | `#1E88E5` | | `athlete.purple` (Morado) | `#8E24AA` |
+| `athlete.pink` (Rosa) | `#D81B60` | | `athlete.yellow` (Amarillo) | `#FDD835` |
+| `athlete.mint` (Verde menta) | `#00897B` | | `athlete.sky` (Azul cielo) | `#039BE5` |
+| `athlete.orange` (Naranja) | `#FB8C00` | | `athlete.red` (Rojo) | `#E53935` |
+
+El selector de P04 los muestra en una cuadrícula de 4×2 en este orden: azul, rosa, verde menta, naranja, morado, amarillo, azul cielo y rojo (`AthleteColors.all`).
 
 > Regla: el color de cada hijo **solo** se usa en el anillo del avatar, los puntos del calendario, el punto junto al nombre y el borde del chip seleccionado. **Nunca** como fondo de texto, porque el amarillo y el naranja no cumplen el contraste de 4.5:1.
 
@@ -104,8 +107,9 @@ Se mapea sobre el `Typography` de M3, así que nadie usa tamaños sueltos en el 
 | Token M3 | Tamaño / Peso / Interlineado | Uso en SportKid |
 |---|---|---|
 | `displaySmall` | 36sp / Bold / 44sp | Cifra hero: total de gastos, "3 de 5" estilos |
-| `headlineSmall` | 24sp / Bold / 32sp | Nombre del deportista en el perfil |
-| `titleLarge` | 22sp / Bold / 28sp | Títulos de pantalla y de formulario |
+| `headlineMedium` | 28sp / SemiBold / 36sp · tracking −0.7 | Títulos de bienvenida y propuesta de valor (Login, Bienvenida) |
+| `headlineSmall` | 24sp / SemiBold / 30sp · tracking −0.6 | Nombre del deportista en el perfil, encabezado de paso en formularios |
+| `titleLarge` | 20sp / SemiBold / 26sp | Títulos de card de acción y de formulario |
 | `titleMedium` | 16sp / SemiBold / 24sp | Título de card de evento y de sección |
 | `titleSmall` | 14sp / SemiBold / 20sp | Encabezados dentro de cards |
 | `bodyLarge` | 16sp / Regular / 24sp | Texto de inputs, contenido |
@@ -113,8 +117,9 @@ Se mapea sobre el `Typography` de M3, así que nadie usa tamaños sueltos en el 
 | `bodySmall` | 12sp / Regular / 16sp | Ayudas de campo, fechas relativas |
 | `labelLarge` | 14sp / SemiBold / 20sp | Botones y tabs |
 | `labelMedium` | 12sp / SemiBold / 16sp | Chips, badges |
-| `labelSmall` | 11sp / SemiBold / 16sp · MAYÚSCULAS · tracking +0.5 | Overline de sección ("PRÓXIMOS", "ÚLTIMOS LOGROS") |
+| `labelSmall` | 11sp / SemiBold / 14sp | Pills. Como overline de sección ("PRÓXIMOS", "ÚLTIMOS LOGROS") va en MAYÚSCULAS con tracking +0.55 (`SkPill(overline = true)`) |
 | **`metric`** (extensión) | 20sp / Bold / 24sp · **tabular figures** | Tiempos (`00:41.23`), montos, distancias |
+| **`brand`** (extensión) | 32sp / Bold / 40sp · tracking −0.8 | Solo el wordmark "SportKid" (Splash) |
 
 > Los tiempos y montos usan `fontFeatureSettings = "tnum"` para que los dígitos no "bailen" en las tablas de récords.
 
@@ -125,14 +130,15 @@ Se mapea sobre el `Typography` de M3, así que nadie usa tamaños sueltos en el 
 | `shape.extraSmall` | 4dp | Checkbox, mini‑badges |
 | `shape.small` | 8dp | Badges de estado, tiles de icono pequeños |
 | `shape.medium` | 12dp | Inputs, botones tonales cuadrados, celdas de tabla |
-| `shape.large` | 16dp | **Cards** |
+| `shape.large` | 20dp | **Cards** |
 | `shape.extraLarge` | 28dp | Bottom sheets, diálogos |
 | `shape.full` | pill | Botones principales, chips, FAB extendido |
+| **`shape.hero`** (extensión) | 24dp | Card con ilustración hero (Login) |
 
 - **Espaciado base:** 4dp. Escala `xs 4 · sm 8 · md 12 · lg 16 · xl 24 · xxl 32`.
 - **Márgenes de pantalla:** 16dp. **Padding de card:** 16dp. **Separación entre cards:** 12dp. **Entre secciones:** 24dp.
-- **Elevación tonal** (sin sombras pesadas): las cards van en `surfaceContainerLowest` sobre `surface`, con nivel 1. La bottom nav y los sheets van en `surfaceContainer`, nivel 2. El FAB usa nivel 3.
-- **Acento lateral:** barra izquierda de 4dp del color del deporte en cards de evento y en el historial.
+- **Elevación tonal** (sin sombras pesadas): las cards van en `surfaceContainerLowest` sobre `surface`, con nivel 1. La bottom nav y los sheets van en `surfaceContainer`, nivel 2. El FAB usa nivel 3. Valores de `SkElevation`: nivel 0 = 0dp, 1 = 1dp, 2 = 3dp, 3 = 6dp.
+- **Acento lateral:** barra izquierda de 4dp del color del deporte en cards de evento y en el historial. Las cards de acción y de sección de deporte (Bienvenida, P04) usan 6dp (`SkCardAccentWidth`).
 - **Área táctil mínima:** 48×48dp.
 
 ### 1.5 Iconografía
@@ -165,7 +171,7 @@ Se mapea sobre el `Typography` de M3, así que nadie usa tamaños sueltos en el 
 | Botón de texto | `SkTextButton` | `labelLarge` en `primary` ("Ver detalle ›", "Guardar" en la top bar). |
 | Botón de icono | `SkIconButton` | Área de 48dp e icono de 24dp (atrás, cerrar, ⋮, copiar). |
 | FAB extendido | `SkExtendedFab` | Pill, `tertiaryContainer`/`onTertiaryContainer`, icono "+" y "Registrar". Se colapsa a FAB al hacer scroll. |
-| Campo relleno | `SkTextField` | 56dp, `shape.medium`, fondo `surfaceContainerHighest`, etiqueta flotante, icono líder opcional, texto de ayuda o error. |
+| Campo relleno | `SkTextField` | 56dp, `shape.medium`, fondo `surfaceContainerHigh`, etiqueta flotante, icono líder opcional, texto de ayuda o error. |
 | Campo multilínea | `SkTextArea` | Igual, mínimo 96dp ("Notas"). |
 | Switch | `SkSwitch` | M3 Switch con icono check en el thumb ("Pagado"). |
 | Checkbox | `SkCheckbox` | 24dp con radio 4dp. |
@@ -454,8 +460,9 @@ La variante `dev` incluye una pantalla **"UI Kit"** oculta en Ajustes, que se ab
 
 ## 8. Pendientes por validar
 
-- [ ] Exportar los esquemas exactos de **Océano** desde Material Theme Builder y reemplazar los valores de §1.1
-- [ ] Medir las pantallas generadas en Stitch y ajustar radios y espaciados si difieren
+- [x] Ajustar el esquema claro de **Océano** a los valores de Figma (§1.1)
+- [ ] Definir el esquema oscuro de **Océano** (Figma no tiene tema oscuro; hoy usa los valores de Theme Builder)
+- [x] Medir las pantallas de Figma (Splash, Login, Bienvenida, Crear deportista) y ajustar radios y tipografía
 - [ ] Diseñar el vector `ic_belt` y el logo de SportKid
 - [ ] Confirmar la secuencia de cintas de la escuela de TKD real
 - [ ] Ilustraciones para Login, Bienvenida y estados vacíos (estilo plano, colores del tema)
