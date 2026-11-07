@@ -9,9 +9,12 @@ import androidx.compose.ui.graphics.Color
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.core.model.Sport
 
-/** Par contenido / contenedor de un deporte (Icon Tile, acento lateral, tabs). */
+/**
+ * Colores de un deporte: [content] para icono, acento lateral y tabs; [container] de fondo de
+ * tile o etiqueta; [onContainer] para texto sobre [container].
+ */
 @Immutable
-data class SportColorRole(val content: Color, val container: Color)
+data class SportColorRole(val content: Color, val container: Color, val onContainer: Color)
 
 /** Único punto donde un [Sport] del dominio se traduce a sus tokens de color. */
 @Composable
@@ -19,9 +22,9 @@ data class SportColorRole(val content: Color, val container: Color)
 fun Sport.colors(): SportColorRole {
     val c = SportKidTheme.sportColors
     return when (this) {
-        Sport.TAEKWONDO -> SportColorRole(c.tkd, c.tkdContainer)
-        Sport.SWIMMING -> SportColorRole(c.swimming, c.swimmingContainer)
-        Sport.ATHLETICS -> SportColorRole(c.athletics, c.athleticsContainer)
+        Sport.TAEKWONDO -> SportColorRole(c.tkd, c.tkdContainer, c.onTkdContainer)
+        Sport.SWIMMING -> SportColorRole(c.swimming, c.swimmingContainer, c.onSwimmingContainer)
+        Sport.ATHLETICS -> SportColorRole(c.athletics, c.athleticsContainer, c.onAthleticsContainer)
     }
 }
 

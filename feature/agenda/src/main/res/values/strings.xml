@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fechas (es-MX). Se definen aquí para no depender del formato del dispositivo. -->
+    <string-array name="agenda_weekday_initials">
+        <item>D</item>
+        <item>L</item>
+        <item>M</item>
+        <item>M</item>
+        <item>J</item>
+        <item>V</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="agenda_weekdays">
+        <item>Domingo</item>
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sábado</item>
+    </string-array>
+    <string-array name="agenda_weekdays_short">
+        <item>Dom</item>
+        <item>Lun</item>
+        <item>Mar</item>
+        <item>Mié</item>
+        <item>Jue</item>
+        <item>Vie</item>
+        <item>Sáb</item>
+    </string-array>
+    <string-array name="agenda_months">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
+    <string-array name="agenda_months_short">
+        <item>ene</item>
+        <item>feb</item>
+        <item>mar</item>
+        <item>abr</item>
+        <item>may</item>
+        <item>jun</item>
+        <item>jul</item>
+        <item>ago</item>
+        <item>sep</item>
+        <item>oct</item>
+        <item>nov</item>
+        <item>dic</item>
+    </string-array>
+    <string name="agenda_month_year">%1$s %2$d</string>
+    <string name="agenda_day_long">%1$s %2$d de %3$s</string>
+    <string name="agenda_date_short">%1$s %2$d %3$s, %4$d</string>
+    <string name="agenda_time">%1$02d:%2$02d hrs</string>
+    <string name="agenda_time_range">%1$02d:%2$02d - %3$02d:%4$02d hrs</string>
+    <string name="agenda_amount">$%1$s MXN</string>
+
+    <!-- P06 Agenda -->
+    <string name="agenda_view_month">Mes</string>
+    <string name="agenda_view_list">Lista</string>
+    <string name="agenda_filter_all">Todos</string>
+    <string name="agenda_today">Hoy</string>
+    <string name="agenda_prev_month">Mes anterior</string>
+    <string name="agenda_next_month">Mes siguiente</string>
+    <string name="agenda_pick_month">Elegir fecha</string>
+    <string name="agenda_legend_special">Torneo / Especial</string>
+    <plurals name="agenda_commitments">
+        <item quantity="one">%d compromiso</item>
+        <item quantity="many">%d compromisos</item>
+        <item quantity="other">%d compromisos</item>
+    </plurals>
+    <string name="agenda_day_empty">Sin compromisos este día</string>
+    <string name="agenda_month_empty">Sin compromisos este mes</string>
+    <string name="agenda_new_event">Nuevo evento</string>
+    <string name="agenda_tip_title">¡Día clave para %1$s!</string>
+    <string name="action_accept">Aceptar</string>
+    <string name="action_cancel">Cancelar</string>
+
+    <!-- P07 Nuevo entrenamiento -->
+    <string name="training_title">Nuevo entrenamiento</string>
+    <string name="training_save">Guardar</string>
+    <string name="training_athlete">Deportista</string>
+    <string name="training_athlete_hint">Selecciona para asignar</string>
+    <string name="training_age">%1$d años</string>
+    <string name="training_sport">Disciplina deportiva</string>
+    <string name="training_date">Fecha</string>
+    <string name="training_time">Hora de inicio</string>
+    <string name="training_duration">Duración del bloque</string>
+    <string name="training_duration_value">%1$d minutos</string>
+    <string name="training_duration_45">45 min</string>
+    <string name="training_duration_60">1 h</string>
+    <string name="training_duration_90">1.5 h</string>
+    <string name="training_duration_120">2 h</string>
+    <string name="training_place">Lugar del entrenamiento</string>
+    <string name="training_place_placeholder">Busca o escribe un lugar</string>
+    <string name="training_place_clear">Borrar lugar</string>
+    <string name="training_place_recent">%1$s (reciente)</string>
+    <string name="training_cost">Costo de la sesión</string>
+    <string name="training_cost_hint">Monto estimado por clase</string>
+    <string name="training_paid_question">¿Ya está pagado?</string>
+    <string name="training_paid_no">Pendiente de pago (se agregará a gastos por saldar)</string>
+    <string name="training_paid_yes">Pagado (se registrará en gastos del mes)</string>
+    <string name="training_reminder">Recordatorio familiar</string>
+    <string name="training_reminder_none">Ninguno</string>
+    <string name="training_reminder_hour">1 hora antes</string>
+    <string name="training_reminder_day">1 día antes</string>
+    <string name="training_reminder_two_days">2 días antes</string>
+    <string name="training_notes">Notas y equipo para tutores</string>
+    <string name="training_notes_placeholder">Ej. Llevar dobok limpio, espinilleras y botella de agua con electrolitos…</string>
+    <string name="training_notes_shared">Visible para todos los tutores en tiempo real</string>
+    <string name="training_notes_attach">Adjuntar archivo</string>
+    <string name="training_save_cta">Guardar entrenamiento</string>
+    <string name="training_sync_note">Se sincronizará con el calendario compartido familiar.</string>
+</resources>

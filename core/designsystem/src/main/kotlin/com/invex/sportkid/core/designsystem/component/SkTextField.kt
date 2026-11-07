@@ -81,6 +81,7 @@ fun SkTextField(
     placeholder: String? = null,
     helperText: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    leading: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
 ) {
     val colors = MaterialTheme.colorScheme
@@ -98,9 +99,14 @@ fun SkTextField(
                         .fillMaxWidth()
                         .height(FieldHeight)
                         .background(colors.surfaceContainerHigh, MaterialTheme.shapes.medium)
-                        .padding(start = SportKidTheme.spacing.lg, end = if (trailing != null) SportKidTheme.spacing.xs else SportKidTheme.spacing.lg),
+                        .padding(
+                            start = if (leading != null) SportKidTheme.spacing.md else SportKidTheme.spacing.lg,
+                            end = if (trailing != null) SportKidTheme.spacing.xs else SportKidTheme.spacing.lg,
+                        ),
+                    horizontalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.sm),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    leading?.invoke()
                     Box(Modifier.weight(1f)) {
                         if (value.isEmpty() && placeholder != null) {
                             Text(placeholder, style = MaterialTheme.typography.bodyLarge, color = colors.onSurfaceVariant)

@@ -26,4 +26,6 @@ include(":core:model")
 include(":core:ui")
 include(":feature:auth")
 include(":feature:athlete")
+include(":feature:agenda")
+include(":feature:home")
  

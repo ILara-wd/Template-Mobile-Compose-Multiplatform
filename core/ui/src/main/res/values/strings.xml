@@ -17,4 +17,12 @@
 
     <string name="sport_status_active">Activo</string>
     <string name="sport_toggle_add">Agregar</string>
+
+    <!-- Estados de pago (README §5.1) -->
+    <string name="payment_status_paid">Pagado</string>
+    <string name="payment_status_pending">Pendiente de pago</string>
+
+    <!-- O5 EventCard -->
+    <string name="event_settle_payment">Toca para saldar o adjuntar comprobante</string>
+    <string name="event_athlete_cd">Deportista: %1$s</string>
 </resources>

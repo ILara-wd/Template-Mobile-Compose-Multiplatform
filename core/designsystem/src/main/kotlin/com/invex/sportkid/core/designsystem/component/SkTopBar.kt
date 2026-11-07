@@ -29,8 +29,11 @@ import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SkElevation
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 
+/** Icono de navegación de [SkDetailTopBar]: atrás (detalle) o cerrar (formulario de alta). */
+enum class SkNavigationIcon { Back, Close }
+
 /**
- * O2. Top bar de detalle o formulario: atrás, título y acciones a la derecha.
+ * O2. Top bar de detalle o formulario: atrás o cerrar, título y acciones a la derecha.
  * Fondo translúcido para que el contenido se vea al hacer scroll por debajo.
  */
 @Composable
@@ -38,6 +41,7 @@ fun SkDetailTopBar(
     title: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    navigationIcon: SkNavigationIcon = SkNavigationIcon.Back,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Surface(
@@ -55,8 +59,12 @@ fun SkDetailTopBar(
         ) {
             IconButton(onClick = onBack) {
                 Icon(
-                    painterResource(R.drawable.sk_ic_arrow_back),
-                    contentDescription = stringResource(R.string.sk_action_back),
+                    painterResource(
+                        if (navigationIcon == SkNavigationIcon.Close) R.drawable.sk_ic_close else R.drawable.sk_ic_arrow_back,
+                    ),
+                    contentDescription = stringResource(
+                        if (navigationIcon == SkNavigationIcon.Close) R.string.sk_action_close else R.string.sk_action_back,
+                    ),
                     tint = MaterialTheme.colorScheme.onSurface,
                 )
             }

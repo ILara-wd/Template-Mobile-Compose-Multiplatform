@@ -3,4 +3,8 @@
     <string name="sk_action_back">Regresar</string>
     <string name="sk_action_profile">Perfil y ajustes</string>
     <string name="sk_selected">Seleccionado</string>
+    <string name="sk_action_close">Cerrar</string>
+    <string name="sk_action_notifications">Notificaciones</string>
+    <string name="sk_brand_name" translatable="false">SportKid</string>
+    <string name="sk_required">obligatorio</string>
 </resources>

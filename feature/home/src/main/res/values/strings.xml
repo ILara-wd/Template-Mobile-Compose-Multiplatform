@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- O4 QuickAddSheet -->
+    <string name="quick_add_overline">Acceso rápido</string>
+    <string name="quick_add_title">¿Qué quieres registrar?</string>
+    <string name="quick_add_close">Cerrar</string>
+    <string name="quick_add_training">Entrenamiento</string>
+    <string name="quick_add_training_tag">Rutina</string>
+    <string name="quick_add_training_desc">Práctica regular o clase</string>
+    <string name="quick_add_belt_exam">Examen de cinta</string>
+    <string name="quick_add_belt_exam_desc">Ascenso de grado o kup</string>
+    <string name="quick_add_tournament">Torneo TKD</string>
+    <string name="quick_add_tournament_desc">Combate o poomsae</string>
+    <string name="quick_add_swim_meet">Competencia acuática</string>
+    <string name="quick_add_swim_meet_desc">Pruebas y relevos</string>
+    <string name="quick_add_race">Carrera atlética</string>
+    <string name="quick_add_race_desc">3K, 5K infantil o pista escolar</string>
+    <string name="quick_add_tip">Los gastos y recordatorios se vinculan automáticamente al calendario familiar.</string>
+</resources>

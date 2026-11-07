@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SkDimens
@@ -30,7 +31,19 @@ import com.invex.sportkid.core.designsystem.theme.full
 
 private val LargeButtonHeight = 56.dp
 
-/** Botón primario pill de 56dp (Figma: "Guardar deportista"). */
+/** Alto del botón primario según el contexto. */
+enum class SkButtonSize(internal val height: Dp, internal val horizontalPadding: Dp, internal val iconGap: Dp) {
+    /** 40dp: acción "Guardar" en la top bar. */
+    Small(40.dp, 16.dp, 8.dp),
+
+    /** 48dp: CTA fijo de formularios de evento. */
+    Medium(48.dp, 24.dp, 8.dp),
+
+    /** 56dp: CTA principal (Figma: "Guardar deportista"). */
+    Large(LargeButtonHeight, 24.dp, 10.dp),
+}
+
+/** Botón primario pill (Figma: "Guardar deportista", "Guardar entrenamiento"). */
 @Composable
 fun SkButton(
     text: String,
@@ -38,18 +51,21 @@ fun SkButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     leadingIcon: Painter? = null,
+    size: SkButtonSize = SkButtonSize.Large,
 ) {
     Button(
         onClick = onClick,
-        modifier = modifier.height(LargeButtonHeight),
+        modifier = modifier.height(size.height),
         enabled = enabled,
         shape = MaterialTheme.shapes.full,
-        elevation = ButtonDefaults.buttonElevation(defaultElevation = SkElevation.level3),
-        contentPadding = PaddingValues(horizontal = SportKidTheme.spacing.xl),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = if (size == SkButtonSize.Small) SkElevation.level1 else SkElevation.level3,
+        ),
+        contentPadding = PaddingValues(horizontal = size.horizontalPadding),
     ) {
         if (leadingIcon != null) {
             Icon(leadingIcon, contentDescription = null)
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(size.iconGap))
         }
         Text(text, style = MaterialTheme.typography.labelLarge)
     }
