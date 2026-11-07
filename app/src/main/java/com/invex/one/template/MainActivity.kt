@@ -23,14 +23,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import com.invex.one.template.ui.theme.TemplateTheme
+import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TemplateTheme {
+            SportKidTheme {
                 TemplateApp()
             }
         }
@@ -88,7 +88,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    TemplateTheme {
+    SportKidTheme {
         Greeting("Android")
     }
 }

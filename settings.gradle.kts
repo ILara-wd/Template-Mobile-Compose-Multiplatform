@@ -21,4 +21,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "SportKids"
 include(":app")
+include(":core:designsystem")
+include(":core:model")
+include(":core:ui")
  

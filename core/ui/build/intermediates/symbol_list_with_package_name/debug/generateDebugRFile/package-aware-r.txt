@@ -1,0 +1,1 @@
+com.invex.sportkid.core.ui

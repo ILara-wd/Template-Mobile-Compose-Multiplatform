@@ -1,0 +1,4 @@
+com.invex.sportkid.core.designsystem
+font plus_jakarta_sans_bold
+font plus_jakarta_sans_regular
+font plus_jakarta_sans_semibold

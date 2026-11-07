@@ -1,0 +1,16 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml:2:13-83
+INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml:2:13-83
+	package
+		INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml
+	xmlns:android
+		ADDED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml:2:23-81
+uses-sdk
+INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml reason: use-sdk injection requested
+INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml
+INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml
+	android:targetSdkVersion
+		INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml
+	android:minSdkVersion
+		INJECTED from /Users/EXT_ILARA-MAC/Repository/Multiplatform/Template-Mobile-Compose-Multiplatform/core/ui/build/intermediates/tmp/ProcessLibraryManifest/debug/tempAndroidManifest13202721526496408343.xml
