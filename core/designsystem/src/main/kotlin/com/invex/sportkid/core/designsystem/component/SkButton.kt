@@ -20,7 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
@@ -109,6 +111,7 @@ fun SkTextButton(
     modifier: Modifier = Modifier,
     trailingIcon: Painter? = null,
     color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    textStyle: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
     TextButton(
         onClick = onClick,
@@ -116,11 +119,45 @@ fun SkTextButton(
         colors = ButtonDefaults.textButtonColors(contentColor = color),
         contentPadding = PaddingValues(horizontal = SportKidTheme.spacing.lg, vertical = SportKidTheme.spacing.xs),
     ) {
-        Text(text, style = MaterialTheme.typography.labelMedium)
+        Text(text, style = textStyle)
         if (trailingIcon != null) {
             Spacer(Modifier.width(SportKidTheme.spacing.xs))
             Icon(trailingIcon, contentDescription = null)
         }
+    }
+}
+
+/**
+ * Botón tonal: contenedor de color suave, `shape.medium` por defecto ("botones tonales
+ * cuadrados", README §1.4) e icono opcional. Figma: "Compartir (QR)", "Tutores (2)",
+ * "Pagar cuota" y, en pill de 48dp, "Agregar deportista".
+ */
+@Composable
+fun SkTonalButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: Painter? = null,
+    containerColor: Color = MaterialTheme.colorScheme.secondaryContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onSecondaryContainer,
+    size: SkButtonSize = SkButtonSize.Small,
+    shape: Shape = MaterialTheme.shapes.medium,
+    enabled: Boolean = true,
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier.height(size.height),
+        enabled = enabled,
+        shape = shape,
+        colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = SkElevation.level1),
+        contentPadding = PaddingValues(horizontal = SportKidTheme.spacing.lg),
+    ) {
+        if (icon != null) {
+            Icon(icon, contentDescription = null)
+            Spacer(Modifier.width(size.iconGap))
+        }
+        Text(text, style = MaterialTheme.typography.labelLarge, maxLines = 1)
     }
 }
 
@@ -134,5 +171,11 @@ private fun SkButtonPreview() = SportKidTheme {
         SkButton("Guardar deportista", onClick = {}, Modifier.fillMaxWidth())
         SkElevatedButton("Continuar con Google", onClick = {}, Modifier.fillMaxWidth())
         SkTextButton("Explorar como invitado", onClick = {})
+        SkTonalButton(
+            "Compartir (QR)",
+            onClick = {},
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            contentColor = MaterialTheme.colorScheme.primary,
+        )
     }
 }

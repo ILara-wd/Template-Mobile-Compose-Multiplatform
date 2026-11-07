@@ -1,5 +1,6 @@
 package com.invex.sportkid.feature.agenda
 
+import com.invex.sportkid.core.ui.longLabel
 import com.invex.sportkid.core.designsystem.component.SkAvatar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

@@ -28,6 +28,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.Dp
 import com.invex.sportkid.core.designsystem.component.SkSelectField
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SkElevation
@@ -47,6 +53,42 @@ fun Belt.labelRes(): Int = when (this) {
     Belt.BLACK -> R.string.belt_black
 }
 
+/** "Verde". */
+@StringRes
+fun Belt.shortLabelRes(): Int = when (this) {
+    Belt.WHITE -> R.string.belt_short_white
+    Belt.YELLOW -> R.string.belt_short_yellow
+    Belt.ORANGE -> R.string.belt_short_orange
+    Belt.GREEN -> R.string.belt_short_green
+    Belt.BLUE -> R.string.belt_short_blue
+    Belt.BROWN -> R.string.belt_short_brown
+    Belt.RED -> R.string.belt_short_red
+    Belt.RED_BLACK -> R.string.belt_short_red_black
+    Belt.BLACK -> R.string.belt_short_black
+}
+
+/** "6° Kup". Grados por defecto; TODO: confirmar con la escuela real (README §8). */
+@StringRes
+fun Belt.gradeRes(): Int = when (this) {
+    Belt.WHITE -> R.string.belt_grade_white
+    Belt.YELLOW -> R.string.belt_grade_yellow
+    Belt.ORANGE -> R.string.belt_grade_orange
+    Belt.GREEN -> R.string.belt_grade_green
+    Belt.BLUE -> R.string.belt_grade_blue
+    Belt.BROWN -> R.string.belt_grade_brown
+    Belt.RED -> R.string.belt_grade_red
+    Belt.RED_BLACK -> R.string.belt_grade_red_black
+    Belt.BLACK -> R.string.belt_grade_black
+}
+
+/** Siguiente cinta de la secuencia, o `null` si ya es negra. */
+val Belt.next: Belt? get() = Belt.entries.getOrNull(ordinal + 1)
+
+/** Color principal de la cinta (punto, barra de progreso, línea de tiempo). */
+@Composable
+@ReadOnlyComposable
+fun Belt.color(): Color = colors().first
+
 /** Color principal y secundario (cintas divididas) de cada cinta. */
 @Composable
 @ReadOnlyComposable
@@ -65,14 +107,14 @@ private fun Belt.colors(): Pair<Color, Color?> {
     }
 }
 
-/** Muestra de cinta de 24×12dp (Figma: "Ribbon badge preview"). */
+/** Muestra de cinta, 24×12dp por defecto (Figma: "Ribbon badge preview"; 14×8 en chips). */
 @Composable
-fun BeltSwatch(belt: Belt, modifier: Modifier = Modifier) {
+fun BeltSwatch(belt: Belt, modifier: Modifier = Modifier, width: Dp = 24.dp, height: Dp = 12.dp) {
     val shape = RoundedCornerShape(2.dp)
     val (main, second) = belt.colors()
     Row(
         modifier
-            .size(width = 24.dp, height = 12.dp)
+            .size(width = width, height = height)
             .shadow(SkElevation.level1, shape)
             .clip(shape)
             .background(main)
@@ -88,6 +130,33 @@ fun BeltSwatch(belt: Belt, modifier: Modifier = Modifier) {
             )
             if (belt == Belt.BLACK) Box(Modifier.width(3.dp))
         }
+    }
+}
+
+/**
+ * M5. Insignia de cinta: rectángulo de 16dp del color de la cinta con una franja clara y el
+ * grado en MAYÚSCULAS ("6° KUP"). El texto es oscuro sobre cintas claras (blanca, amarilla).
+ */
+@Composable
+fun BeltBadge(belt: Belt, modifier: Modifier = Modifier) {
+    val shape = MaterialTheme.shapes.extraSmall
+    val main = belt.color()
+    val text = if (main.luminance() > 0.5f) Color(0xFF191C20) else Color.White
+    Box(
+        modifier
+            .height(16.dp)
+            .clip(shape)
+            .background(main)
+            .then(if (belt == Belt.WHITE) Modifier.border(1.dp, MaterialTheme.colorScheme.outline, shape) else Modifier),
+        contentAlignment = Alignment.CenterStart,
+    ) {
+        Box(Modifier.padding(start = 12.dp).width(6.dp).fillMaxHeight().background(Color.White.copy(alpha = 0.4f)))
+        Text(
+            stringResource(belt.gradeRes()).uppercase(),
+            modifier = Modifier.padding(start = 16.dp, end = 8.dp),
+            style = MaterialTheme.typography.labelSmall.copy(fontSize = 10.sp, lineHeight = 15.sp, fontWeight = FontWeight.Bold, letterSpacing = 0.5.sp),
+            color = text,
+        )
     }
 }
 

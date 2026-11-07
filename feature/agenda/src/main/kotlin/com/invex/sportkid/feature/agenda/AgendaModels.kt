@@ -1,17 +1,16 @@
 package com.invex.sportkid.feature.agenda
 
-import androidx.annotation.ArrayRes
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.core.model.PaymentStatus
 import com.invex.sportkid.core.model.Sport
+import com.invex.sportkid.core.ui.timeRangeLabel
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
@@ -56,43 +55,9 @@ data class AgendaEvent(
 internal fun AgendaAthlete.color(): Color =
     SportKidTheme.sportColors.athlete.all.let { it[colorIndex.mod(it.size)] }
 
-// --- Formato de fechas es-MX (independiente del idioma del dispositivo) ---
-
-@Composable
-private fun names(@ArrayRes res: Int): Array<String> = stringArrayResource(res)
-
-/** "Noviembre 2025". */
-@Composable
-internal fun YearMonth.label(): String =
-    stringResource(R.string.agenda_month_year, names(R.array.agenda_months)[monthValue - 1], year)
-
-/** "Viernes 14 de noviembre". */
-@Composable
-internal fun LocalDate.longLabel(): String = stringResource(
-    R.string.agenda_day_long,
-    names(R.array.agenda_weekdays)[dayOfWeek.value % 7],
-    dayOfMonth,
-    names(R.array.agenda_months)[monthValue - 1].lowercase(),
-)
-
-/** "Sáb 15 nov, 2025". */
-@Composable
-internal fun LocalDate.shortLabel(): String = stringResource(
-    R.string.agenda_date_short,
-    names(R.array.agenda_weekdays_short)[dayOfWeek.value % 7],
-    dayOfMonth,
-    names(R.array.agenda_months_short)[monthValue - 1],
-    year,
-)
-
-/** "10:00 hrs". */
-@Composable
-internal fun LocalTime.label(): String = stringResource(R.string.agenda_time, hour, minute)
-
 /** "09:00 - 11:30 hrs". */
 @Composable
-internal fun AgendaEvent.timeLabel(): String =
-    stringResource(R.string.agenda_time_range, start.hour, start.minute, end.hour, end.minute)
+internal fun AgendaEvent.timeLabel(): String = timeRangeLabel(start, end)
 
 /** "$650 MXN". */
 @Composable

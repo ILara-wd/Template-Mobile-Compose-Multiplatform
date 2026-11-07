@@ -1,5 +1,8 @@
 package com.invex.sportkid.feature.agenda
 
+import com.invex.sportkid.core.ui.R as UiR
+import com.invex.sportkid.core.ui.label
+import com.invex.sportkid.core.ui.longLabel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -128,7 +131,7 @@ private fun CalendarHeader(
 @Composable
 private fun WeekdayHeader() {
     Row(Modifier.fillMaxWidth().padding(top = SportKidTheme.spacing.sm).clearAndSetSemantics {}) {
-        stringArrayResource(R.array.agenda_weekday_initials).forEach {
+        stringArrayResource(UiR.array.date_weekday_initials).forEach {
             Text(
                 it,
                 modifier = Modifier.weight(1f).padding(vertical = SportKidTheme.spacing.xs),

@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -42,8 +43,9 @@ fun SkPill(
     spacing: Dp = SportKidTheme.spacing.xs,
     shadowElevation: Dp = 0.dp,
     leading: (@Composable () -> Unit)? = null,
+    textStyle: TextStyle = MaterialTheme.typography.labelSmall,
 ) {
-    val base = MaterialTheme.typography.labelSmall
+    val base = textStyle
     val style = base.copy(
         letterSpacing = if (overline) 0.55.sp else base.letterSpacing,
         fontWeight = if (emphasized) FontWeight.Bold else base.fontWeight,

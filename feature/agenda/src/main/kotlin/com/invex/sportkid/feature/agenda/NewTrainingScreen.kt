@@ -1,5 +1,6 @@
 package com.invex.sportkid.feature.agenda
 
+import com.invex.sportkid.core.ui.shortLabelWithYear
 import com.invex.sportkid.core.designsystem.component.SkAvatar
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
@@ -75,6 +76,7 @@ import com.invex.sportkid.core.designsystem.theme.SkElevation
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.core.model.Sport
 import com.invex.sportkid.core.ui.iconRes
+import com.invex.sportkid.core.ui.label
 import com.invex.sportkid.core.ui.labelRes
 import java.time.LocalDate
 import java.time.LocalTime
@@ -276,7 +278,7 @@ private fun ScheduleCard(state: NewTrainingState, modifier: Modifier = Modifier)
         Row(horizontalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.md)) {
             PickerField(
                 label = stringResource(R.string.training_date),
-                value = state.date.shortLabel(),
+                value = state.date.shortLabelWithYear(),
                 icon = painterResource(R.drawable.ic_training_date),
                 onClick = { picker = "date" },
                 modifier = Modifier.weight(1f),
