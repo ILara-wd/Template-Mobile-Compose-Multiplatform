@@ -1,5 +1,11 @@
 R_DEF: Internal format may change without notice
 local
+drawable sk_ic_arrow_back
+drawable sk_ic_person
+drawable sk_ic_swatch_check
 font plus_jakarta_sans_bold
 font plus_jakarta_sans_regular
 font plus_jakarta_sans_semibold
+string sk_action_back
+string sk_action_profile
+string sk_selected

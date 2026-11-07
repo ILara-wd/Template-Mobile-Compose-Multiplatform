@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sport_taekwondo">Taekwondo</string>
+    <string name="sport_swimming">Natación</string>
+    <string name="sport_athletics">Atletismo</string>
+
+    <!-- Grado por defecto de cada cinta. TODO: confirmar con la escuela real (README §8). -->
+    <string name="belt_white">Cinta blanca (10° Kup)</string>
+    <string name="belt_yellow">Cinta amarilla (8° Kup)</string>
+    <string name="belt_orange">Cinta naranja (7° Kup)</string>
+    <string name="belt_green">Cinta verde (6° Kup)</string>
+    <string name="belt_blue">Cinta azul (4° Kup)</string>
+    <string name="belt_brown">Cinta marrón (3° Kup)</string>
+    <string name="belt_red">Cinta roja (2° Kup)</string>
+    <string name="belt_red_black">Cinta roja‑negra (1° Kup)</string>
+    <string name="belt_black">Cinta negra (1° Dan)</string>
+
+    <string name="sport_status_active">Activo</string>
+    <string name="sport_toggle_add">Agregar</string>
+</resources>

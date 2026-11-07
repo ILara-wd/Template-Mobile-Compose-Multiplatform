@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- P04 Alta de deportista -->
+    <string name="athlete_create_title">Crear deportista</string>
+    <string name="athlete_step">Paso %1$d de %2$d</string>
+    <string name="athlete_step_hint">Personaliza el perfil para sincronizar sus entrenamientos y medallas</string>
+    <string name="athlete_photo_title">Foto del atleta</string>
+    <string name="athlete_photo_hint">Toca para subir una foto o elegir un avatar</string>
+    <string name="athlete_photo_change">Cambiar foto</string>
+    <string name="athlete_name_label">Nombre del deportista</string>
+    <string name="athlete_name_placeholder">Ej. Mateo Gómez</string>
+    <string name="athlete_birthdate_label">Fecha de nacimiento</string>
+    <string name="athlete_birthdate_placeholder">Selecciona una fecha</string>
+    <string name="athlete_birthdate_helper">Utilizada para clasificar sus categorías por edad (ej. Sub-10)</string>
+    <string name="athlete_birthdate_open">Abrir calendario</string>
+    <string name="athlete_color_title">Color distintivo para el perfil</string>
+    <string name="athlete_color_hint">Identifica sus eventos, fichas de competencia y chips en el calendario familiar.</string>
+    <string-array name="athlete_color_names">
+        <item>Azul Royal</item>
+        <item>Rosa Magenta</item>
+        <item>Verde Menta</item>
+        <item>Naranja</item>
+        <item>Morado</item>
+        <item>Amarillo</item>
+        <item>Azul Cielo</item>
+        <item>Rojo Coral</item>
+    </string-array>
+    <string name="athlete_sports_label">Deportes que practica</string>
+    <plurals name="athlete_sports_selected">
+        <item quantity="one">%d seleccionado</item>
+        <item quantity="other">%d seleccionados</item>
+    </plurals>
+    <string name="athlete_sport_tkd_subtitle">Artes marciales y combate</string>
+    <string name="athlete_sport_swimming_subtitle">Estilo libre, dorso y pruebas</string>
+    <string name="athlete_sport_athletics_subtitle">Pista, velocidad y fondo</string>
+    <string name="athlete_tkd_section">Datos de Taekwondo</string>
+    <string name="athlete_tkd_belt">Cinta actual</string>
+    <string name="athlete_tkd_belt_placeholder">Selecciona la cinta</string>
+    <string name="athlete_tkd_school">Escuela / Dojang</string>
+    <string name="athlete_tkd_school_placeholder">Ej. Doyang Central</string>
+    <string name="athlete_swimming_section">Datos de Natación</string>
+    <string name="athlete_swimming_club">Club o Alberca</string>
+    <string name="athlete_swimming_club_placeholder">Ej. Club Acuático Los Pinos</string>
+    <string name="athlete_save">Guardar deportista</string>
+    <string name="athlete_dialog_ok">Aceptar</string>
+    <string name="athlete_dialog_cancel">Cancelar</string>
+</resources>

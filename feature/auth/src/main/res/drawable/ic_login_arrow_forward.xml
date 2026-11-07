@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado desde Figma (Prototipo-Demo-UiKit). No editar a mano. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="10.6667dp"
+    android:height="10.6667dp"
+    android:viewportWidth="10.6667"
+    android:viewportHeight="10.6667">
+    <path
+        android:pathData="M8.11667 6H0V4.66667H8.11667L4.38333 0.933333L5.33333 0L10.6667 5.33333L5.33333 10.6667L4.38333 9.73333L8.11667 6V6"
+        android:fillColor="#414750" />
+</vector>

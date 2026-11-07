@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generado desde Figma (Prototipo-Demo-UiKit). No editar a mano. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <path
+        android:pathData="M19 10L14 26L20 28L24 16L28 28L34 26L29 10H19V10"
+        android:fillColor="#A83900" />
+    <path
+        android:pathData="M20.5 11C20.5 12.9317 22.0683 14.5 24 14.5C25.9317 14.5 27.5 12.9317 27.5 11C27.5 9.0683 25.9317 7.5 24 7.5C22.0683 7.5 20.5 9.0683 20.5 11V11"
+        android:fillColor="#0061A4" />
+    <path
+        android:pathData="M13 31C13 37.0711 17.9289 42 24 42C30.0711 42 35 37.0711 35 31C35 24.9289 30.0711 20 24 20C17.9289 20 13 24.9289 13 31H13"
+        android:fillColor="#0061A4" />
+    <path
+        android:pathData="M16 31C16 35.4153 19.5847 39 24 39C28.4153 39 32 35.4153 32 31C32 26.5847 28.4153 23 24 23C19.5847 23 16 26.5847 16 31V31"
+        android:fillColor="#00497D" />
+    <path
+        android:pathData="M21 31L23.5 33.5L27.5 28.5"
+        android:strokeColor="#FFCEBD"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sk_action_back">Regresar</string>
+    <string name="sk_action_profile">Perfil y ajustes</string>
+    <string name="sk_selected">Seleccionado</string>
+</resources>

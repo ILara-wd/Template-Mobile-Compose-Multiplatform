@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- P01 Splash -->
+    <string name="splash_season">Temporada juvenil 2025</string>
+    <string name="splash_brand">SportKid</string>
+    <string name="splash_tagline">Pasión y disciplina en familia</string>
+    <string name="splash_pill_training">Entrenamientos</string>
+    <string name="splash_pill_goals">Metas</string>
+    <string name="splash_pill_agenda">Agenda</string>
+    <string name="splash_syncing">Sincronizando perfiles atléticos…</string>
+    <string name="splash_platform">Android MD3</string>
+    <string name="splash_version">v%1$s</string>
+
+    <!-- P02 Login -->
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_brand">SportKid</string>
+    <string name="login_brand_tagline">Familia &amp; Logros</string>
+    <string name="login_hero_description">Familia celebrando los logros deportivos de sus hijos con medallas y confeti</string>
+    <string name="login_hero_badge">¡Momento de Oro!</string>
+    <string name="login_headline">Todo el deporte de tus hijos\nen un solo lugar</string>
+    <string name="login_subtitle">Agenda, logros y gastos compartidos en familia</string>
+    <string name="login_pill_calendar">Calendario</string>
+    <string name="login_pill_medals">Medallas</string>
+    <string name="login_pill_finances">Finanzas</string>
+    <string name="login_google">Continuar con Google</string>
+    <string name="login_guest">Explorar como invitado</string>
+    <string name="login_legal_prefix">Al continuar, aceptas las\u0020</string>
+    <string name="login_legal_terms">Condiciones del Servicio</string>
+    <string name="login_legal_middle">\u0020y la\u0020</string>
+    <string name="login_legal_privacy">Política de Privacidad</string>
+    <string name="login_legal_suffix">\u0020de SportKid.</string>
+
+    <!-- P03 Bienvenida -->
+    <string name="welcome_first_steps">Primeros pasos</string>
+    <string name="welcome_title">¡Bienvenido!</string>
+    <string name="welcome_subtitle">¿Cómo deseas comenzar a sincronizar las actividades deportivas en casa?</string>
+    <string name="welcome_create_badge">Recomendado para el primer tutor</string>
+    <string name="welcome_create_title">Crear deportista</string>
+    <string name="welcome_create_body">Registra a tu hijo y sus deportes, entrenamientos y torneos.</string>
+    <string name="welcome_create_cta">Comenzar nuevo perfil</string>
+    <string name="welcome_qr_badge">Coparentalidad activa</string>
+    <string name="welcome_qr_title">Tengo un código QR</string>
+    <string name="welcome_qr_body">Únete al perfil que ya creó tu pareja o tutor de la familia.</string>
+    <string name="welcome_qr_note">Ambos padres tienen control y edición en tiempo real</string>
+    <string name="welcome_qr_cta">Escanear código de sincronización</string>
+    <string name="welcome_qr_enter_code">Escribir el código</string>
+    <string name="welcome_later">¿Necesitas vincular más tarde?</string>
+    <string name="welcome_demo">Explorar demo</string>
+    <string name="welcome_security">Datos cifrados y seguros para menores</string>
+</resources>

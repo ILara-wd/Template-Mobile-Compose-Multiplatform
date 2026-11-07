@@ -1,2 +1,21 @@
 R_DEF: Internal format may change without notice
 local
+drawable ic_sport_athletics
+drawable ic_sport_chip_add
+drawable ic_sport_chip_check
+drawable ic_sport_swimming
+drawable ic_sport_tkd
+string belt_black
+string belt_blue
+string belt_brown
+string belt_green
+string belt_orange
+string belt_red
+string belt_red_black
+string belt_white
+string belt_yellow
+string sport_athletics
+string sport_status_active
+string sport_swimming
+string sport_taekwondo
+string sport_toggle_add

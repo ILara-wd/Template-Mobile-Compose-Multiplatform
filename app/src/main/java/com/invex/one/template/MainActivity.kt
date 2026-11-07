@@ -2,28 +2,19 @@ package com.invex.one.template
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
+import com.invex.sportkid.feature.athlete.CreateAthleteScreen
+import com.invex.sportkid.feature.auth.LoginScreen
+import com.invex.sportkid.feature.auth.SplashScreen
+import com.invex.sportkid.feature.auth.WelcomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,64 +22,48 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SportKidTheme {
-                TemplateApp()
+                SportKidApp(onExit = ::finish)
             }
         }
     }
 }
 
-@PreviewScreenSizes
-@Composable
-fun TemplateApp() {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
+/** Flujo de onboarding P01 → P04. Navegación simple por estado hasta agregar Navigation Compose. */
+private enum class Destination { Splash, Login, Welcome, CreateAthlete }
 
-    NavigationSuiteScaffold(
-        navigationSuiteItems = {
-            AppDestinations.entries.forEach {
-                item(
-                    icon = {
-                        Icon(
-                            it.icon,
-                            contentDescription = it.label
-                        )
-                    },
-                    label = { Text(it.label) },
-                    selected = it == currentDestination,
-                    onClick = { currentDestination = it }
-                )
-            }
-        }
-    ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Greeting(
-                name = "Android",
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
+@Composable
+private fun SportKidApp(onExit: () -> Unit) {
+    var destination by rememberSaveable { mutableStateOf(Destination.Splash) }
+
+    BackHandler(enabled = destination == Destination.CreateAthlete) {
+        destination = Destination.Welcome
     }
-}
 
-enum class AppDestinations(
-    val label: String,
-    val icon: ImageVector,
-) {
-    HOME("Home", Icons.Default.Home),
-    FAVORITES("Favorites", Icons.Default.Favorite),
-    PROFILE("Profile", Icons.Default.AccountBox),
-}
+    when (destination) {
+        Destination.Splash -> SplashScreen(
+            versionName = BuildConfig.VERSION_NAME,
+            onFinished = { destination = Destination.Login },
+        )
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+        Destination.Login -> LoginScreen(
+            onBack = onExit,
+            // TODO: Credential Manager + Firebase Auth.
+            onGoogleSignIn = { destination = Destination.Welcome },
+            onContinueAsGuest = { destination = Destination.Welcome },
+            onOpenTerms = {},
+            onOpenPrivacy = {},
+        )
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SportKidTheme {
-        Greeting("Android")
+        Destination.Welcome -> WelcomeScreen(
+            onCreateAthlete = { destination = Destination.CreateAthlete },
+            onScanQr = {}, // TODO: P18 Unirse con QR.
+            onEnterCode = {},
+            onExploreDemo = {},
+        )
+
+        Destination.CreateAthlete -> CreateAthleteScreen(
+            onBack = { destination = Destination.Welcome },
+            onSave = { destination = Destination.Welcome }, // TODO: persistir y abrir P05 Inicio.
+        )
     }
 }

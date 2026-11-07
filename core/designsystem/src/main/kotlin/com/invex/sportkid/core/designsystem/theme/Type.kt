@@ -32,9 +32,11 @@ val SportKidTypography = Typography(
     displayMedium = Base.displayMedium.copy(fontFamily = PlusJakartaSans),
     displaySmall = style(36, FontWeight.Bold, 44),
     headlineLarge = Base.headlineLarge.copy(fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold),
-    headlineMedium = Base.headlineMedium.copy(fontFamily = PlusJakartaSans, fontWeight = FontWeight.Bold),
-    headlineSmall = style(24, FontWeight.Bold, 32),
-    titleLarge = style(22, FontWeight.Bold, 28),
+    // Figma: títulos de bienvenida y propuesta de valor en SemiBold con tracking negativo.
+    headlineMedium = style(28, FontWeight.SemiBold, 36, letterSpacing = -0.7f),
+    headlineSmall = style(24, FontWeight.SemiBold, 30, letterSpacing = -0.6f),
+    // Figma: título de card (Bienvenida) 20/26 SemiBold.
+    titleLarge = style(20, FontWeight.SemiBold, 26),
     titleMedium = style(16, FontWeight.SemiBold, 24),
     titleSmall = style(14, FontWeight.SemiBold, 20),
     bodyLarge = style(16, FontWeight.Normal, 24),
@@ -42,8 +44,8 @@ val SportKidTypography = Typography(
     bodySmall = style(12, FontWeight.Normal, 16),
     labelLarge = style(14, FontWeight.SemiBold, 20),
     labelMedium = style(12, FontWeight.SemiBold, 16),
-    // Overline de sección: el texto se pasa a MAYÚSCULAS en SkOverline.
-    labelSmall = style(11, FontWeight.SemiBold, 16, letterSpacing = 0.5f),
+    // Pills y overlines. SkPill agrega tracking y MAYÚSCULAS cuando es overline.
+    labelSmall = style(11, FontWeight.SemiBold, 14),
 )
 
 /**
@@ -54,3 +56,9 @@ val SportKidMetric: TextStyle = style(20, FontWeight.Bold, 24).copy(fontFeatureS
 
 @Suppress("UnusedReceiverParameter")
 val Typography.metric: TextStyle get() = SportKidMetric
+
+/** Wordmark "SportKid" (Splash). Solo para la marca. */
+val SportKidBrand: TextStyle = style(32, FontWeight.Bold, 40, letterSpacing = -0.8f)
+
+@Suppress("UnusedReceiverParameter")
+val Typography.brand: TextStyle get() = SportKidBrand

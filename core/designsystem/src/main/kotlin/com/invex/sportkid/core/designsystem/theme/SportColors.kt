@@ -38,16 +38,16 @@ data class SportColors(
 @Immutable
 data class AthleteColors(
     val blue: Color = Color(0xFF1E88E5),
-    val green: Color = Color(0xFF43A047),
-    val purple: Color = Color(0xFF8E24AA),
     val pink: Color = Color(0xFFD81B60),
+    val mint: Color = Color(0xFF00897B),
     val orange: Color = Color(0xFFFB8C00),
-    val teal: Color = Color(0xFF00ACC1),
-    val red: Color = Color(0xFFE53935),
+    val purple: Color = Color(0xFF8E24AA),
     val yellow: Color = Color(0xFFFDD835),
+    val sky: Color = Color(0xFF039BE5),
+    val red: Color = Color(0xFFE53935),
 ) {
-    /** Orden en que se ofrecen en el selector de color de P04. */
-    val all: List<Color> get() = listOf(blue, green, purple, pink, orange, teal, red, yellow)
+    /** Orden del selector de color de P04 (Figma: grid 4×2). */
+    val all: List<Color> get() = listOf(blue, pink, mint, orange, purple, yellow, sky, red)
 }
 
 /**

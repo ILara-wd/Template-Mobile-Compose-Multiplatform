@@ -8,27 +8,28 @@ import androidx.compose.ui.graphics.Color
 /*
  * Tema "Océano" (default). Semilla primary #0061A4, tertiary #E65100, estilo Tonal Spot.
  *
- * Los roles listados en README §1.1 se copian tal cual. El resto (on*, *Container faltantes,
- * surfaceContainerLow/High/Highest, inverse*) se completó con los tonos M3 equivalentes.
+ * Claro: valores medidos en Figma (Prototipo-Demo-UiKit, generado con Stitch). Difiere del README
+ * en primary (#00497D), tertiary (#A83900) y algunos tonos neutros.
+ * Oscuro: valores del README §1.1, todavía sin diseño en Figma.
  * TODO(README §8): reemplazar por el esquema exportado de Material Theme Builder.
  */
 
 internal val OceanSeed = Color(0xFF0061A4)
 
 internal val OceanLightScheme: ColorScheme = lightColorScheme(
-    primary = Color(0xFF0061A4),
+    primary = Color(0xFF00497D),
     onPrimary = Color(0xFFFFFFFF),
     primaryContainer = Color(0xFFD1E4FF),
     onPrimaryContainer = Color(0xFF001D36),
     inversePrimary = Color(0xFF9ECAFF),
     secondary = Color(0xFF535F70),
     onSecondary = Color(0xFFFFFFFF),
-    secondaryContainer = Color(0xFFD7E3F7),
+    secondaryContainer = Color(0xFFD7E3F8),
     onSecondaryContainer = Color(0xFF101C2B),
-    tertiary = Color(0xFFA04100),
+    tertiary = Color(0xFFA83900),
     onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFFFFDBCB),
-    onTertiaryContainer = Color(0xFF341100),
+    tertiaryContainer = Color(0xFFFFDBCF),
+    onTertiaryContainer = Color(0xFF380D00),
     error = Color(0xFFBA1A1A),
     onError = Color(0xFFFFFFFF),
     errorContainer = Color(0xFFFFDAD6),
@@ -38,19 +39,19 @@ internal val OceanLightScheme: ColorScheme = lightColorScheme(
     surface = Color(0xFFF8F9FF),
     onSurface = Color(0xFF191C20),
     surfaceVariant = Color(0xFFDFE2EB),
-    onSurfaceVariant = Color(0xFF43474E),
-    surfaceTint = Color(0xFF0061A4),
+    onSurfaceVariant = Color(0xFF414750),
+    surfaceTint = Color(0xFF00497D),
     inverseSurface = Color(0xFF2E3135),
     inverseOnSurface = Color(0xFFEFF0F7),
-    outline = Color(0xFF73777F),
-    outlineVariant = Color(0xFFC3C7CF),
+    outline = Color(0xFF717782),
+    outlineVariant = Color(0xFFC1C7D2),
     scrim = Color(0xFF000000),
     surfaceBright = Color(0xFFF8F9FF),
     surfaceDim = Color(0xFFD8DAE0),
     surfaceContainerLowest = Color(0xFFFFFFFF),
     surfaceContainerLow = Color(0xFFF2F3F9),
-    surfaceContainer = Color(0xFFECEEF4),
-    surfaceContainerHigh = Color(0xFFE6E8EE),
+    surfaceContainer = Color(0xFFECEEF3),
+    surfaceContainerHigh = Color(0xFFE7E8EE),
     surfaceContainerHighest = Color(0xFFE1E2E8),
 )
 

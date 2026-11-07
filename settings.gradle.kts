@@ -24,4 +24,6 @@ include(":app")
 include(":core:designsystem")
 include(":core:model")
 include(":core:ui")
+include(":feature:auth")
+include(":feature:athlete")
  
