@@ -173,7 +173,7 @@ Estado: ✅ implementado · ⏳ pendiente (todavía no lo usa ninguna pantalla).
 
 | Átomo | Composable | Especificación | Estado |
 |---|---|---|---|
-| Botón primario | `SkButton` | Pill, `primary`/`onPrimary`, `labelLarge`, icono líder opcional. Tamaños (`SkButtonSize`): **Small 40dp** (acción "Guardar" en la top bar, elevación nivel 1), **Medium 48dp** (CTA fijo de formularios de evento) y **Large 56dp** (CTA principal, default). Deshabilitado: 38% `onSurface`. Falta el estado cargando (spinner 20dp, ancho fijo). | ✅ |
+| Botón primario | `SkButton` | Pill, `labelLarge` en una línea, icono líder opcional. Color `primary`/`onPrimary` por defecto, configurable (`containerColor`/`contentColor`: color del deporte en los CTA de TKD, `tertiary` en "Torneo"). Tamaños (`SkButtonSize`): **Small 40dp** (acción "Guardar" en la top bar, elevación nivel 1), **Medium 48dp** (CTA fijo de formularios de evento; padding horizontal 16dp) y **Large 56dp** (CTA principal, default). Deshabilitado: 38% `onSurface`. Falta el estado cargando (spinner 20dp, ancho fijo). | ✅ |
 | Botón elevado | `SkElevatedButton` | Pill blanca de 56dp con icono a color sin teñir ("Continuar con Google"). | ✅ |
 | Botón de logro | `SkAccentButton` | Igual al primario con `tertiary`. Solo para CTAs de celebración. | ⏳ |
 | Botón tonal | `SkTonalButton` | Contenedor y contenido configurables (`secondaryContainer` por defecto), icono opcional, `shape.medium` por defecto y tamaños de `SkButtonSize` (Small 40dp por defecto). Usos: "Compartir (QR)" (`primaryContainer`/`primary`), "Tutores (2)" (`surfaceContainerHigh`), "Pagar cuota" (`tertiary`/`onTertiary`) y "Agregar deportista" (pill de 48dp, `primaryContainer`). | ✅ |
@@ -187,7 +187,7 @@ Estado: ✅ implementado · ⏳ pendiente (todavía no lo usa ninguna pantalla).
 | Campo relleno | `SkTextField` | 56dp, `shape.medium`, fondo `surfaceContainerHigh`, **etiqueta arriba** (no flotante), placeholder `onSurfaceVariant`, slots líder y final (icono de lugar, botón borrar), texto de ayuda. | ✅ |
 | Campo de selección | `SkSelectField` | Mismo aspecto que `SkTextField`; muestra el valor y abre un menú o diálogo al tocarlo ("Fecha de nacimiento", "Cinta actual"). Variante `emphasized` en `titleMedium`. | ✅ |
 | Campo multilínea | `SkTextArea` | Mínimo 96dp, `surfaceContainerHigh`, `shape.medium`, `bodyMedium`, placeholder `outline` y pie opcional para metadatos y acciones ("Visible para todos los tutores", adjuntar). | ✅ |
-| Switch | — | Se usa `Switch` de M3 dentro de una fila `toggleable` (role Switch) ("¿Ya está pagado?"). | ✅ |
+| Switch | `SkSwitch` | `Switch` de M3 con check en el thumb cuando está encendido. Va dentro de una fila `toggleable` (role Switch) con su etiqueta ("Pagado", "Cuota pagada", "¿Ya está pagado?"). | ✅ |
 | Checkbox | `SkCheckbox` | 24dp con radio 4dp. | ⏳ |
 | Chip | `SkChip` | Chip único para filtros, opciones y sugerencias. Pill (o `shape` configurable), `labelMedium`, slot `leading` (punto, avatar) e icono opcional. Seleccionado: contenedor sólido (`primary`/`onPrimary` por defecto). Sin seleccionar: `surfaceContainerLowest` con sombra nivel 1, o el contenedor que se pase. Alturas usadas: **32dp** filtros de agenda, **36dp** recordatorio, **40dp** disciplina (seleccionado `tertiary`), **28dp** sugerencias de lugar (seleccionado `primaryContainer`), **24dp** "Hoy" (`secondaryContainer`). La duración usa `shape.small` y ancho igual. | ✅ |
 | Pill / badge | `SkPill` | Pill no interactiva, `labelSmall` por defecto (`textStyle` configurable), icono o slot líder opcional; `overline` = MAYÚSCULAS con tracking +0.55 ("ACCESO RÁPIDO", "9 años", "2 compromisos", "Sub-10"). | ✅ |
@@ -214,22 +214,22 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | M1 | Chip de deportista | `AthleteChip` | `core:ui` | Avatar de 24dp con anillo de color y nombre. Seleccionado: `primaryContainer`. |
 | M2 | Selector de deportista | `AthleteSelector` | `core:ui` | Fila con scroll de `AthleteChip` y la opción "Todos". Selección única. |
 | M3 | Icono de deporte | `SportIconTile` | `core:ui` | Icon Tile de 40dp con los colores del deporte. Variantes S (24dp) y M (40dp). |
-| M4 | Badge de medalla | `MedalBadge` | `core:ui` | Icono `military_tech` coloreado (oro, plata o bronce) y etiqueta. "Participación" va en neutral y "Pendiente" en outlined. |
+| M4 | Badge de medalla | `MedalBadge` | `core:ui` | Pill con el icono de medalla en el color de `medal.*` sobre ese color al 15%, texto en negrita ("Oro", "Plata", "Bronce"). "Participación" va en `surfaceContainer` con icono de verificado. Colores en `MedalResult.colors()`. |
 | M5 | Badge de cinta | `BeltBadge` / `BeltSwatch` | `core:ui` | `BeltBadge`: rectángulo de 16dp de alto (`shape.extraSmall`) del color de la cinta con franja blanca al 40% y el grado en MAYÚSCULAS ("6° KUP"); texto oscuro sobre cintas claras. `BeltSwatch`: muestra de 24×12dp (14×8 en chips). |
 | M6 | Chip de estado | `StatusChip` | `core:ui` | Usa el vocabulario de §5. Icono, texto y contenedor semántico. |
 | M7 | Campo de dinero | `SkMoneyField` | `core:designsystem` | Caja compacta de 40dp en `surfaceContainerLow`: prefijo "$", monto en `metric` alineado a la derecha y sufijo "MXN". Hoy acepta pesos enteros (máx. 7 dígitos); falta formatear `$1,250.00` y emitir centavos (`Long`). |
-| M8 | Fila de pago | `PaidSwitchRow` | `core:designsystem` | Texto "Pagado" y `SkSwitch`. Si está apagado muestra la ayuda "Se mostrará como pendiente". |
+| M8 | Fila de pago | `FeeRow` | `feature:tkd` | Caja `surfaceContainer` con etiqueta y `SkMoneyField` a la izquierda, y "Pagado"/"Pendiente" con `SkSwitch` a la derecha. Hoy es privada de TKD; se moverá a `core:designsystem` cuando otro feature la necesite. |
 | M9 | Campo de tiempo | `DurationField` | `core:designsystem` | Máscara `mm:ss.cc` (natación) o `hh:mm:ss` (atletismo) con teclado numérico. Emite `Duration`. |
-| M10 | Campo fecha y hora | `DateTimeField` | `core:designsystem` | Abre el `DatePicker` y el `TimePicker` de M3. Formato "Sáb 14 nov · 10:00". |
+| M10 | Campo fecha y hora | `DateTimeFields` + `SkDatePickerDialog` / `SkTimePickerDialog` | `feature:tkd` / `core:ui` | Dos `SkSelectField` lado a lado que abren el `DatePicker` y el `TimePicker` de M3 (24 h). Los diálogos viven en `core:ui` y trabajan con `LocalDate`/`LocalTime`; la Agenda y P07 también los usan. Formato "Sáb 14 nov" y "09:00 hrs". |
 | M11 | Campo de lugar | `PlaceField` | `core:ui` | `SkTextField` con un menú de lugares recientes y un botón de icono para abrir Maps. |
 | M12 | Selector de recordatorio | `ReminderChips` | `core:ui` | Chips de opción "Ninguno · 1 h · 1 día · 2 días antes". |
 | M13 | Selector de distancia | `DistanceChips` | `core:ui` | Chips predefinidos más "Otra", que abre un campo numérico en metros. |
-| M14 | Control segmentado | `SkSegmentedControl` | `core:designsystem` | Pista pill `surfaceContainer` con el segmento activo en pill blanca elevada y texto `primary`; icono opcional por opción ("Mes / Lista"). También para "Lisa / Obstáculos", "Pendiente / Aprobado / No aprobado" y "Sistema / Claro / Oscuro". |
-| M15 | Área de foto | `PhotoUploadArea` | `core:ui` | Caja punteada de 160dp con dos acciones (Cámara / Galería). Con foto: preview recortado y botón "Cambiar". |
+| M14 | Control segmentado | `SkSegmentedControl` | `core:designsystem` | Pista pill `surfaceContainer`; el segmento activo es pill blanca elevada con texto `primary` por defecto, o sólido (`selectedContainerColor` = `primary`, texto `onPrimary`) como en "Pendiente / Aprobado / No aprobado". Icono opcional por opción ("Mes / Lista", check en "Aprobado"). |
+| M15 | Área de foto | `PhotoUploadArea` / `AttachedPhotoRow` | `core:ui` | Caja punteada (`outline`) en `surfaceContainerLow` con icono de cámara en círculo `primaryContainer`, título, ayuda y botón opcional "Examinar galería"; toda el área abre el selector. `AttachedPhotoRow`: miniatura de 56dp, nombre, detalle y check. |
 | M16 | Chip de récord | `PersonalRecordChip` | `core:ui` | `tertiaryContainer`, icono `emoji_events` y "¡Nuevo récord personal!". |
 | M17 | Encabezado de sección | `SectionHeader` | `core:designsystem` | `SkOverline` más acción opcional a la derecha ("Ver todo ›") o contador. |
 | M18 | KPI compacto | `SkKpiTile` | `core:designsystem` | Valor en `metric` centrado (color configurable) y etiqueta `labelSmall` debajo, sobre `surfaceContainerLow` y `shape.medium` ("14 / 16 Combates", "92% Asistencia del mes"). |
-| M19 | Callout informativo | `InfoCallout` | `core:designsystem` | Caja `secondaryContainer` con icono `info` y texto `bodyMedium` ("Al marcar Aprobado se actualizará la cinta actual"). |
+| M19 | Callout informativo | `SkInfoCallout` | `core:designsystem` | Sin título: burbuja compacta (`shape.small`) con icono `info` `primary` y `bodySmall` ("Torneo programado: el resultado se actualizará…"). Con título y `emphasized`: icono en círculo `primary` y texto `primary` ("Actualización automática", sobre `primaryContainer` al 60%). Acepta texto con estilos (resaltar "Cinta Azul"). |
 | M20 | Ítem de timeline | `TimelineItem` | `core:designsystem` | Nodo de 12dp (sólido si es el último), línea vertical, fecha, título, slot de badge y metadatos. |
 | M21 | Fila de estilo de natación | `SwimStyleRow` | `feature:swimming` | Icono, nombre del estilo, `StatusChip` de 3 estados y "Desde 10 feb 2026". |
 | M22 | Fila de prueba | `SwimRaceItem` | `feature:swimming` | Card con estilo, distancia, tiempo y posición, más botón de eliminar. |
@@ -240,6 +240,7 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | M27 | Fila de ajustes | `SettingsRow` | `core:designsystem` | Icono, título, subtítulo y trailing (chevron, switch o valor). |
 | M28 | Indicador de sincronización | `SyncIndicator` | `core:ui` | Icono de 20dp en la top bar: `cloud_done`, `sync` (animado), `cloud_off` o `sync_problem`. |
 | M29 | Etiqueta de deporte | `SportTag` | `core:ui` | Pill con icono (color del deporte) y nombre (`sport.on*Container`) sobre el contenedor del deporte ("Taekwondo", "Natación"). |
+| M30 | Selector de resultado | `MedalResultPicker` | `core:ui` | 5 tarjetas iguales (oro, plata, bronce, diploma y espera) con icono en círculo de 36dp; la elegida en `primaryContainer`. Selección única (role RadioButton). |
 
 ---
 
@@ -248,7 +249,7 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | ID | Organismo | Composable | Módulo | Composición |
 |---|---|---|---|---|
 | O1 | Top bar principal | `SkMainTopBar` | `core:designsystem` | Marca "SportKid" (`titleLarge` `primary`), notificaciones y avatar del usuario con anillo `primaryContainer`, que abre Ajustes. Falta `SyncIndicator` (M28). |
-| O2 | Top bar de detalle o formulario | `SkDetailTopBar` | `core:designsystem` | Atrás o cerrar (`SkNavigationIcon`), título `titleMedium` y acciones a la derecha (`SkButton` Small "Guardar", avatar). |
+| O2 | Top bar de detalle o formulario | `SkDetailTopBar` | `core:designsystem` | Atrás o cerrar (`SkNavigationIcon`), título `titleMedium` con subtítulo opcional en `primary` ("Taekwondo" / "Mateo Gómez") y acciones a la derecha (`SkButton` Small "Guardar", avatar). |
 | O3 | Bottom navigation | `SkBottomBar` | `app` | 4 destinos: Inicio, Agenda, Deportistas y Gastos. El activo va en pill `secondaryContainer`. |
 | O4 | Sheet de registro rápido | `QuickAddSheet` | `feature:home` | Título y grid 2×3 de tiles: Entrenamiento, Examen de cinta, Torneo TKD, Competencia de natación y Carrera. |
 | O5 | Card de evento | `EventCard` | `core:ui` | Acento lateral de 6dp del deporte, horario, `AthleteTag` (punto y nombre del hijo), título, subtítulo, icono del deporte en círculo de 36dp, lugar, franja de costo en `surfaceContainerLow` con `PaymentStatusChip` y, si está pendiente, la franja "Toca para saldar o adjuntar comprobante". |
@@ -261,9 +262,9 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | O12 | Card de deportista | `AthleteCard` | `feature:athlete` | `SkCard` con acento de 6dp del color del hijo; `SkAvatar` de 56dp con su deporte principal en un círculo de 24dp; nombre, edad y medallas ("3 oros • 1 plata" o un logro destacado); `SportTag` por deporte; estado de cinta (`BeltBadge` y nivel); progreso de estilos de natación; próximo compromiso (franja `tertiaryContainer` con cuenta regresiva si es examen, o fila neutra con etiqueta como "Inscrita"). |
 | O13 | Header de perfil | `ProfileHeader` | `feature:athlete` | Avatar de 104dp con anillo degradado del color del hijo y badge de categoría ("Sub-10"), nombre, edad y fecha de nacimiento, chips de resumen (cinta, estilos, medallas) y dos `SkTonalButton`: "Compartir (QR)" y "Tutores (n)". No es colapsable por ahora. |
 | O14 | Tabs de deporte | `SportTabs` | `feature:athlete` | Control segmentado sobre `surfaceContainer`; la pestaña activa se rellena con el color del deporte y texto blanco en negrita. Solo muestra los deportes del hijo. |
-| O15 | Progresión de cintas | (en `BeltCard`) | `feature:athlete` | Card "Grado y cinta": cinta actual con grado, instructor y escuela, "Meta: Cinta Azul (5° Kup)" con porcentaje y `SkLinearProgress` degradado de la cinta actual a la siguiente, más "Próximo examen" y días restantes. Se moverá a `feature:tkd` cuando exista. |
-| O16 | Historial de cintas | `BeltTimeline` | `feature:athlete` | Línea horizontal con un paso por cinta (círculo de 32dp con punto del color de la cinta y fecha "Ene 2024"); la actual lleva anillo del color de la cinta y la etiqueta "Actual". Se moverá a `feature:tkd` cuando exista. |
-| O17 | Lista de torneos | `TournamentList` | `feature:tkd` | Cards con nombre, fecha, chip de modalidad (Combate / Formas) y `MedalBadge`. |
+| O15 | Progresión de cintas | `BeltProgression` / `BeltCard` | `feature:tkd` / `feature:athlete` | En P09: barra de 9 tramos (superados y actual sólidos, siguiente al 40%, resto atenuado; roja‑negra degradada), indicador por tramo (check, actual, flecha a la siguiente, punto) y abreviatura, más "Progreso de cinta: 4 de 9 grados", "44% Ruta" y la franja "Próximo objetivo". En el perfil (P08): `BeltCard` con meta y barra degradada de la cinta actual a la siguiente. |
+| O16 | Historial de cintas | `PromotionHistory` / `BeltTimeline` | `feature:tkd` / `feature:athlete` | En P09: línea vertical con nodo de 20dp del color de la cinta (check, o bandera en el ingreso) y una card por promoción con cinta, grado, fecha, lugar y costo ("$650 MXN (Pagado)" o "Sin costo"). En el perfil: versión horizontal compacta con la etiqueta "Actual". |
+| O17 | Lista de torneos | `TournamentList` | `feature:tkd` | `SkCard` con acento de 4dp del color de la medalla (neutro en participación), nombre, fecha y sede, `MedalBadge`, y una franja con la modalidad (Combate en `primaryContainer`, Formas en `secondaryContainer`) y la división. |
 | O18 | Checklist de estilos | `SwimStylesChecklist` | `feature:swimming` | `SkCircularProgress` ("3 de 5") y 5 `SwimStyleRow`. Combinado individual muestra la nota "Requiere los 4 estilos". |
 | O19 | Tabla de mejores tiempos | `BestTimesTable` | `feature:swimming` | Matriz de estilo × distancia con tiempos en `metric` y "—" si no hay registro. |
 | O20 | Lista dinámica de pruebas | `SwimRacesEditor` | `feature:swimming` | Lista de `SwimRaceItem` y botón "+ Agregar prueba". Marca el récord con `PersonalRecordChip`. |
@@ -305,9 +306,9 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | P06 | Agenda | T1 | O9, O10 y filtros | `feature:agenda` |
 | P07 | Evento / entrenamiento | T3 | O11 | `feature:agenda` |
 | P08 | Deportistas y perfil | T1 / T2 | O12, O13 y O14 | `feature:athlete` |
-| P09 | Tab TKD | T2 | O15, O16, próximo evento con cuota, `SkKpiTile` y equipamiento | `feature:athlete` (temporal; destino `feature:tkd`) |
-| P10 | Examen de cinta | T3 | O11, resultado (M14), M19 y O31 | `feature:tkd` |
-| P11 | Torneo TKD | T3 | O11, modalidad, grid de `MedalBadge` y M15 | `feature:tkd` |
+| P09 | Tab TKD | T2 | Resumen con conteos y pestañas de deporte, "Examen de cinta" / "Torneo", O15, O16 y O17 (`TaekwondoScreen`). Se abre desde "Ver trayectoria completa" en el perfil | `feature:tkd` |
+| P10 | Examen de cinta | T3 | Contexto del deportista, M19, cinta actual de solo lectura, cinta objetivo (`BeltSelectField`), lugar, M10, M8, resultado (M14) con callout y M15 (`BeltExamScreen`). Falta O31 al aprobar | `feature:tkd` |
+| P11 | Torneo TKD | T3 | Contexto del deportista, banner, nombre, lugar, M10, modalidad (`SkChip`), categoría, M8, M30 con callout y M15 (`TournamentFormScreen`) | `feature:tkd` |
 | P12 | Tab Natación | T2 | O18, O19 y lista de competencias | `feature:swimming` |
 | P13 | Competencia de natación | T3 | O11 y O20 | `feature:swimming` |
 | P14 | Tab Atletismo | T2 | O21, O22 y lista de carreras | `feature:athletics` |
@@ -356,6 +357,8 @@ Los colores siguen a Figma (Agenda): el pago usa los roles del tema en lugar de 
 | `PARTICIPATION` | "Participación" | Neutral |
 | `PENDING` | "Por registrar" | Outlined |
 
+El enum es `MedalResult` en `core:model`. En el selector de P11 se usan etiquetas cortas: "Diploma" para participación y "Espera" para pendiente.
+
 ### 5.5 Sincronización
 | Estado | Indicador | Texto en Ajustes |
 |---|---|---|
@@ -398,8 +401,9 @@ core/
 │                                 # StatusChip, EventCard, EventFormScaffold, SyncIndicator,
 │                                 # SportTag, DateLabels (fechas es-MX compartidas)…
 feature/
-├── tkd/ui/component/             ← Organismos exclusivos del feature
-│                                 # BeltProgressionBar, BeltHistoryTimeline, TournamentList
+├── tkd/                          ← P09 TaekwondoScreen, P10 BeltExamScreen, P11 TournamentFormScreen
+│                                 # BeltProgression, PromotionHistory, TournamentList, FeeRow.
+│                                 # Recibe TkdAthlete; `app` lo arma desde el perfil del hijo.
 ├── swimming/ui/component/        # SwimStylesChecklist, BestTimesTable, SwimRacesEditor
 └── …
 ```
