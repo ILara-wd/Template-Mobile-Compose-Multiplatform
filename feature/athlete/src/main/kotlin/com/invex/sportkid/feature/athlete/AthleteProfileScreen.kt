@@ -173,7 +173,17 @@ fun AthleteProfileScreen(
                 val swim = athlete.swim
                 when {
                     sport == Sport.TAEKWONDO && tkd != null -> TkdTab(tkd, today, onPayFee, onEventDetails) { onOpenSportDetail(Sport.TAEKWONDO) }
-                    sport == Sport.SWIMMING && swim != null -> SwimProgressPanel(swim)
+                    sport == Sport.SWIMMING && swim != null -> {
+                        SwimProgressPanel(swim)
+                        SkTextButton(
+                            stringResource(R.string.profile_swim_detail),
+                            onClick = { onOpenSportDetail(Sport.SWIMMING) },
+                            trailingIcon = painterResource(DsR.drawable.sk_ic_chevron_right),
+                            color = MaterialTheme.colorScheme.primary,
+                            textStyle = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier.align(Alignment.End),
+                        )
+                    }
                     sport != null -> TabComingSoon(sport)
                 }
             }

@@ -52,6 +52,7 @@ dependencies {
     implementation(project(":feature:agenda"))
     implementation(project(":feature:home"))
     implementation(project(":feature:tkd"))
+    implementation(project(":feature:swimming"))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

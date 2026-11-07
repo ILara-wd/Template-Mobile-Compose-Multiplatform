@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Estilos (README §5.2) -->
+    <string name="swim_style_freestyle">Libre (crol)</string>
+    <string name="swim_style_backstroke">Dorso (espalda)</string>
+    <string name="swim_style_breaststroke">Pecho (braza)</string>
+    <string name="swim_style_butterfly">Mariposa</string>
+    <string name="swim_style_medley">Combinado individual (CI)</string>
+    <string name="swim_style_short_freestyle">Libre</string>
+    <string name="swim_style_short_backstroke">Dorso</string>
+    <string name="swim_style_short_breaststroke">Pecho</string>
+    <string name="swim_style_short_butterfly">Mariposa</string>
+    <string name="swim_style_short_medley">CI</string>
+    <string name="swim_status_mastered">Dominado</string>
+    <string name="swim_status_learning">Aprendiendo</string>
+    <string name="swim_status_pending">Pendiente</string>
+    <string name="swim_accredited">Acreditado: %1$s</string>
+    <string name="swim_medley_requirement">Requiere los 4 estilos base</string>
+    <string name="swim_distance">%1$d m</string>
+    <string name="swim_distance_compact">%1$dm</string>
+    <string name="swim_amount">$%1$s MXN</string>
+    <string name="swim_no_time">--:--.--</string>
+    <string name="swim_save">Guardar</string>
+
+    <!-- P12 Natación -->
+    <string name="swim_screen_title">Natación</string>
+    <string name="swim_category">Cat. %1$s</string>
+    <string name="swim_styles_summary">%1$d / %2$d estilos dominados</string>
+    <string name="swim_new_meet">Registrar nueva competencia</string>
+    <string name="swim_progress_overline">Progreso técnico</string>
+    <string name="swim_progress_title">%1$d de %2$d estilos dominados</string>
+    <string name="swim_progress_percent">%1$d%%</string>
+    <string name="swim_progress_fraction">%1$d/%2$d</string>
+    <string name="swim_stat_mastered">Dominados</string>
+    <string name="swim_stat_learning">Aprendiendo</string>
+    <string name="swim_stat_pending">Pendientes</string>
+    <string name="swim_styles_title">Estilos aprendidos</string>
+    <string name="swim_styles_hint">Certificación del club</string>
+    <string name="swim_best_times_title">Mejores tiempos</string>
+    <string name="swim_best_times_pool">Piscina corta oficial (25 m)</string>
+    <string name="swim_best_times_badge">Cronómetro oficial</string>
+    <string name="swim_best_times_style">Estilo</string>
+    <string name="swim_best_times_record_cd">Récord personal</string>
+    <string name="swim_best_times_note">Medido en competencias oficiales FMN y chequeos técnicos del club.</string>
+    <string name="swim_meets_title">Competencias disputadas (%1$d)</string>
+    <string name="swim_meets_add">+ Competencia</string>
+    <string name="swim_meet_results">Resultados de pruebas nadadas</string>
+    <string name="swim_place">%1$d° lugar</string>
+    <string name="swim_race">%1$d m %2$s</string>
+    <string name="swim_relay">Relevo 4×%1$d m %2$s</string>
+    <string name="swim_relay_champions">%1$d° lugar · Campeones</string>
+    <string name="swim_seconds">%1$ss</string>
+    <string name="swim_coach_note">Nota del entrenador %1$s</string>
+    <string name="swim_coach_goal">Próximo objetivo: %1$s</string>
+
+    <!-- P13 Registrar competencia acuática -->
+    <string name="meet_title">Registrar competencia</string>
+    <string name="meet_sport_club">Natación · %1$s</string>
+    <string name="meet_event_section">Datos del evento</string>
+    <string name="meet_name">Nombre de la competencia *</string>
+    <string name="meet_name_placeholder">Ej. Torneo Estatal Infantil</string>
+    <string name="meet_venue">Sede o alberca *</string>
+    <string name="meet_venue_placeholder">Centro acuático o club</string>
+    <string name="meet_pool_short">Piscina corta 25 m</string>
+    <string name="meet_pool_long">Alberca olímpica 50 m</string>
+    <string name="meet_date">Fecha *</string>
+    <string name="meet_time">Hora de inicio</string>
+    <string name="meet_fee">Inscripción</string>
+    <string name="meet_fee_paid">Cuota pagada</string>
+    <string name="meet_races_title">Pruebas del evento</string>
+    <string name="meet_races_hint">Registra tiempos y resultados por prueba</string>
+    <plurals name="meet_races_count">
+        <item quantity="one">%d prueba</item>
+        <item quantity="many">%d pruebas</item>
+        <item quantity="other">%d pruebas</item>
+    </plurals>
+    <string name="meet_race">Prueba %1$d</string>
+    <string name="meet_race_delete">Eliminar prueba %1$d</string>
+    <string name="meet_new_record">¡Nuevo récord!</string>
+    <string name="meet_style">Estilo de nado</string>
+    <string name="meet_distance">Distancia</string>
+    <string name="meet_time_label">Tiempo cronometrado (mm:ss.cc)</string>
+    <string name="meet_record_diff">-%1$s s mejor que tu marca previa (%2$s)</string>
+    <string name="meet_result">Resultado / podio</string>
+    <string name="meet_result_gold">1° Oro</string>
+    <string name="meet_result_silver">2° Plata</string>
+    <string name="meet_result_bronze">3° Bronce</string>
+    <string name="meet_result_finalist">Finalista</string>
+    <string name="meet_add_race">Agregar otra prueba</string>
+    <string name="meet_photo_title">Foto de medallas o podio</string>
+    <string name="meet_photo_optional">Opcional</string>
+    <string name="meet_photo_upload">Subir una foto o el tiempo oficial</string>
+    <string name="meet_photo_hint">JPG o PNG hasta 10 MB</string>
+    <string name="meet_photo_ready">Lista para guardar</string>
+    <string name="meet_save_cta">Guardar competencia</string>
+    <string name="meet_sync_note">Los tiempos y gastos se actualizarán en el perfil de %1$s y en el calendario familiar.</string>
+</resources>

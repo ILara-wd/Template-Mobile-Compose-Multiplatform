@@ -1,12 +1,15 @@
 package com.invex.one.template
 
+import com.invex.sportkid.core.model.Sport
 import com.invex.sportkid.feature.athlete.AthleteProfile
 import com.invex.sportkid.feature.athlete.AthleteSamples
+import com.invex.sportkid.feature.swimming.SwimAthlete
+import com.invex.sportkid.feature.swimming.SwimSamples
 import com.invex.sportkid.feature.tkd.TkdAthlete
 import com.invex.sportkid.feature.tkd.TkdSamples
 
 /**
- * Traduce el perfil del hijo (feature:athlete) al contexto de Taekwondo (feature:tkd).
+ * Traduce el perfil del hijo (feature:athlete) al contexto de cada deporte (feature:tkd, feature:swimming).
  * Vive en `app` porque los features no dependen entre sí. TODO: un modelo `Athlete` en core:model.
  */
 internal fun AthleteProfile.toTkdAthlete(): TkdAthlete? = tkd?.let { tkd ->
@@ -30,4 +33,25 @@ internal fun AthleteProfile.toTkdAthlete(): TkdAthlete? = tkd?.let { tkd ->
 internal fun tkdAthleteFor(id: String?): TkdAthlete? {
     val athletes = AthleteSamples.athletes()
     return (athletes.firstOrNull { it.id == id && it.tkd != null } ?: athletes.firstOrNull { it.tkd != null })?.toTkdAthlete()
+}
+
+/** Perfil del hijo → contexto de natación (feature:swimming). */
+internal fun AthleteProfile.toSwimAthlete(): SwimAthlete? = takeIf { Sport.SWIMMING in sports }?.let {
+    SwimAthlete(
+        id = id,
+        firstName = firstName,
+        fullName = fullName,
+        colorIndex = colorIndex,
+        birthDate = birthDate,
+        sports = sports,
+        club = SwimSamples.mateo.club,
+        category = SwimSamples.mateo.category,
+        photoRes = avatarRes,
+    )
+}
+
+/** Deportista de natación por id, o el primero que nada. */
+internal fun swimAthleteFor(id: String?): SwimAthlete? {
+    val athletes = AthleteSamples.athletes()
+    return (athletes.firstOrNull { it.id == id && Sport.SWIMMING in it.sports } ?: athletes.firstOrNull { Sport.SWIMMING in it.sports })?.toSwimAthlete()
 }

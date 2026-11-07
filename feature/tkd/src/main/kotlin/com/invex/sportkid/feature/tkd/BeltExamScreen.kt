@@ -1,5 +1,9 @@
 package com.invex.sportkid.feature.tkd
 
+import com.invex.sportkid.core.ui.FormCard
+import com.invex.sportkid.core.ui.FormDateTimeFields
+import com.invex.sportkid.core.ui.FeeRow
+import com.invex.sportkid.core.ui.FormSaveBar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -158,9 +162,10 @@ fun BeltExamScreen(
             }
         },
         bottomBar = {
-            TkdSaveBar(
+            FormSaveBar(
+                containerColor = Sport.TAEKWONDO.colors().content,
                 text = stringResource(R.string.exam_save_cta),
-                icon = painterResource(R.drawable.ic_tkd_save),
+                icon = painterResource(UiR.drawable.ic_form_save),
                 enabled = state.canSave,
                 onSave = save,
             )
@@ -193,7 +198,7 @@ fun BeltExamScreen(
             GoalCard(athlete, state)
             FeeCard(state)
             ResultCard(athlete, state)
-            TkdFormCard(spacing = 8) {
+            FormCard(spacing = 8) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(stringResource(R.string.exam_photo), modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
                     Text(stringResource(R.string.exam_photo_optional), style = MaterialTheme.typography.labelSmall, color = colors.outline)
@@ -212,7 +217,7 @@ fun BeltExamScreen(
 @Composable
 private fun CurrentBeltCard(athlete: TkdAthlete) {
     val colors = MaterialTheme.colorScheme
-    TkdFormCard(spacing = 8) {
+    FormCard(spacing = 8) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 stringResource(R.string.exam_current_belt).uppercase(),
@@ -256,7 +261,7 @@ private fun CurrentBeltCard(athlete: TkdAthlete) {
 @Composable
 private fun GoalCard(athlete: TkdAthlete, state: BeltExamState) {
     val colors = MaterialTheme.colorScheme
-    TkdFormCard {
+    FormCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Spacer(Modifier.size(width = 8.dp, height = 16.dp).background(Sport.TAEKWONDO.colors().content, MaterialTheme.shapes.full))
             Spacer(Modifier.width(6.dp))
@@ -271,7 +276,7 @@ private fun GoalCard(athlete: TkdAthlete, state: BeltExamState) {
             belt = state.targetBelt,
             onBeltChange = { state.targetBelt = it },
             label = stringResource(R.string.exam_target_belt),
-            trailingIcon = painterResource(R.drawable.ic_tkd_dropdown),
+            trailingIcon = painterResource(UiR.drawable.ic_form_dropdown),
             options = Belt.entries.drop(athlete.belt.ordinal + 1),
             required = true,
         )
@@ -283,7 +288,7 @@ private fun GoalCard(athlete: TkdAthlete, state: BeltExamState) {
             helperText = athlete.schoolAddress.takeIf { state.place == athlete.school },
             leading = { Icon(painterResource(R.drawable.ic_tkd_place), contentDescription = null, tint = colors.onSurfaceVariant) },
         )
-        DateTimeFields(
+        FormDateTimeFields(
             date = state.date,
             onDateChange = { state.date = it },
             time = state.time,
@@ -297,7 +302,7 @@ private fun GoalCard(athlete: TkdAthlete, state: BeltExamState) {
 @Composable
 private fun FeeCard(state: BeltExamState) {
     val colors = MaterialTheme.colorScheme
-    TkdFormCard {
+    FormCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.exam_fee_title), modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
             PaymentStatusChip(if (state.paid) PaymentStatus.PAID else PaymentStatus.PENDING)
@@ -326,7 +331,7 @@ private fun FeeCard(state: BeltExamState) {
 private fun ResultCard(athlete: TkdAthlete, state: BeltExamState) {
     val colors = MaterialTheme.colorScheme
     val target = state.targetBelt
-    TkdFormCard(spacing = 8) {
+    FormCard(spacing = 8) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(R.string.exam_result), modifier = Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
             Text(stringResource(R.string.exam_result_hint), style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)

@@ -1,11 +1,10 @@
 package com.invex.sportkid.feature.tkd
 
+import com.invex.sportkid.core.ui.FormCard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,9 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -44,11 +40,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.invex.sportkid.core.designsystem.component.SkAvatar
 import com.invex.sportkid.core.designsystem.component.SkButton
 import com.invex.sportkid.core.designsystem.component.SkButtonSize
 import com.invex.sportkid.core.designsystem.component.SkCard
-import com.invex.sportkid.core.designsystem.component.SkChip
 import com.invex.sportkid.core.designsystem.component.SkDetailTopBar
 import com.invex.sportkid.core.designsystem.component.SkPill
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
@@ -58,6 +52,7 @@ import com.invex.sportkid.core.model.Belt
 import com.invex.sportkid.core.model.MedalResult
 import com.invex.sportkid.core.model.Sport
 import com.invex.sportkid.core.ui.AthleteDot
+import com.invex.sportkid.core.ui.AthleteSportHeader
 import com.invex.sportkid.core.ui.MedalBadge
 import com.invex.sportkid.core.ui.ageOn
 import com.invex.sportkid.core.ui.color
@@ -108,76 +103,29 @@ fun TaekwondoScreen(
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun SummaryCard(athlete: TkdAthlete, today: LocalDate, exams: Int, tournaments: Int, onSelectSport: (Sport) -> Unit) {
     val colors = MaterialTheme.colorScheme
-    val ring = athlete.color()
-    TkdFormCard {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            SkAvatar(
-                photo = athlete.photoRes?.let { painterResource(it) },
-                name = athlete.fullName,
-                size = 64.dp,
-                ringColor = ring,
-                ringWidth = 3.dp,
-            ) {
-                Box(
-                    Modifier.align(Alignment.BottomEnd).size(20.dp).background(colors.surfaceContainerLowest, CircleShape),
-                    contentAlignment = Alignment.Center,
-                ) { AthleteDot(ring, size = 14.dp) }
-            }
-            Spacer(Modifier.width(SportKidTheme.spacing.lg))
-            Column(Modifier.weight(1f)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        athlete.fullName,
-                        modifier = Modifier.weight(1f),
-                        style = MaterialTheme.typography.titleLarge,
-                        color = colors.onSurface,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    SkPill(
-                        stringResource(R.string.tkd_age, athlete.birthDate.ageOn(today)),
-                        containerColor = colors.surfaceContainer,
-                        contentColor = colors.onSurfaceVariant,
-                        contentPadding = PaddingValues(horizontal = SportKidTheme.spacing.sm, vertical = 2.dp),
-                    )
-                }
-                Text(athlete.federation, style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                FlowRow(Modifier.padding(top = 6.dp), horizontalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.xs)) {
-                    SkPill(
-                        pluralStringResource(R.plurals.tkd_exams_count, exams, exams).replaceFirstChar(Char::titlecase),
-                        icon = painterResource(R.drawable.ic_tkd_exams),
-                    )
-                    SkPill(
-                        pluralStringResource(R.plurals.tkd_tournaments_count, tournaments, tournaments).replaceFirstChar(Char::titlecase),
-                        containerColor = colors.tertiaryContainer,
-                        contentColor = colors.onTertiaryContainer,
-                        icon = painterResource(R.drawable.ic_tkd_tournaments),
-                    )
-                }
-            }
-        }
-        LazyRow(Modifier.selectableGroup(), horizontalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.sm)) {
-            items(athlete.sports) { sport ->
-                SkChip(
-                    text = stringResource(sport.labelRes),
-                    selected = sport == Sport.TAEKWONDO,
-                    onClick = { if (sport != Sport.TAEKWONDO) onSelectSport(sport) },
-                    icon = painterResource(sport.iconRes),
-                    iconSize = 16.dp,
-                    height = 36.dp,
-                    horizontalPadding = SportKidTheme.spacing.lg,
-                    textStyle = MaterialTheme.typography.labelLarge,
-                    selectedContainerColor = sport.colors().content,
-                    selectedContentColor = Color.White,
-                    containerColor = colors.surfaceContainerLow,
-                    contentColor = colors.onSurfaceVariant,
-                )
-            }
-        }
+    AthleteSportHeader(
+        name = athlete.fullName,
+        photo = athlete.photoRes?.let { painterResource(it) },
+        ringColor = athlete.color(),
+        age = athlete.birthDate.ageOn(today),
+        subtitle = athlete.federation,
+        sport = Sport.TAEKWONDO,
+        sports = athlete.sports,
+        onSelectSport = onSelectSport,
+    ) {
+        SkPill(
+            pluralStringResource(R.plurals.tkd_exams_count, exams, exams).replaceFirstChar(Char::titlecase),
+            icon = painterResource(R.drawable.ic_tkd_exams),
+        )
+        SkPill(
+            pluralStringResource(R.plurals.tkd_tournaments_count, tournaments, tournaments).replaceFirstChar(Char::titlecase),
+            containerColor = colors.tertiaryContainer,
+            contentColor = colors.onTertiaryContainer,
+            icon = painterResource(R.drawable.ic_tkd_tournaments),
+        )
     }
 }
 
@@ -211,7 +159,7 @@ private fun BeltCard(athlete: TkdAthlete) {
     val tkd = Sport.TAEKWONDO.colors().content
     val position = athlete.belt.ordinal + 1
     val total = Belt.entries.size
-    TkdFormCard(spacing = 0) {
+    FormCard(spacing = 0) {
         Row(verticalAlignment = Alignment.Top) {
             Column(Modifier.weight(1f)) {
                 Text(
@@ -405,7 +353,7 @@ private fun PromotionItem(promotion: BeltPromotion, isCurrent: Boolean) {
     val colors = MaterialTheme.colorScheme
     val beltColor = promotion.belt.color()
     Box {
-        TkdFormCard(spacing = 6) {
+        FormCard(spacing = 6) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 SkPill(
                     stringResource(UiR.string.belt_name, stringResource(promotion.belt.shortLabelRes())),

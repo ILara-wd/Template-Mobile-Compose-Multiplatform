@@ -58,6 +58,12 @@
     <string name="photo_upload_browse">Examinar galería</string>
     <string name="photo_attached_cd">Foto adjunta</string>
 
+    <string name="athlete_age">%1$d años</string>
+
+    <!-- Formularios de evento -->
+    <string name="form_paid">Pagado</string>
+    <string name="form_pending">Pendiente</string>
+
     <!-- Diálogos de fecha y hora -->
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>

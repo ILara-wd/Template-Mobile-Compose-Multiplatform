@@ -5,8 +5,6 @@
     <string name="tkd_age">%1$d años</string>
     <string name="tkd_sport_school">Taekwondo · %1$s</string>
     <string name="tkd_amount">$%1$s MXN</string>
-    <string name="tkd_paid">Pagado</string>
-    <string name="tkd_pending">Pendiente</string>
     <string name="tkd_sync_note">Se sincronizará automáticamente con todos los tutores</string>
     <string name="tkd_required_suffix">%1$s *</string>
 

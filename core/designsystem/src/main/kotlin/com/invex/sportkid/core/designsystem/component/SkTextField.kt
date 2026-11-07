@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
@@ -83,6 +85,8 @@ fun SkTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     leading: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
 ) {
     val colors = MaterialTheme.colorScheme
     FieldScaffold(label, labelIcon, helperText, modifier) {
@@ -90,7 +94,8 @@ fun SkTextField(
             value = value,
             onValueChange = onValueChange,
             singleLine = true,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(color = colors.onSurface),
+            visualTransformation = visualTransformation,
+            textStyle = textStyle.copy(color = colors.onSurface),
             cursorBrush = SolidColor(colors.primary),
             keyboardOptions = keyboardOptions,
             decorationBox = { inner ->

@@ -1,5 +1,9 @@
 package com.invex.sportkid.feature.tkd
 
+import com.invex.sportkid.core.ui.FormCard
+import com.invex.sportkid.core.ui.FormDateTimeFields
+import com.invex.sportkid.core.ui.FeeRow
+import com.invex.sportkid.core.ui.FormSaveBar
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -164,7 +168,8 @@ fun TournamentFormScreen(
             }
         },
         bottomBar = {
-            TkdSaveBar(
+            FormSaveBar(
+                containerColor = Sport.TAEKWONDO.colors().content,
                 text = stringResource(R.string.tournament_save_cta),
                 icon = painterResource(Sport.TAEKWONDO.iconRes),
                 enabled = state.canSave,
@@ -181,7 +186,7 @@ fun TournamentFormScreen(
                 .padding(horizontal = SportKidTheme.spacing.lg, vertical = SportKidTheme.spacing.sm),
             verticalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.lg),
         ) {
-            TkdFormCard {
+            FormCard {
                 TkdAthleteStrip(athlete, today) {
                     SkPill(
                         stringResource(UiR.string.belt_name, stringResource(athlete.belt.shortLabelRes())),
@@ -246,7 +251,7 @@ private fun DetailsCard(state: TournamentFormState) {
     val colors = MaterialTheme.colorScheme
     val iconTint = colors.onSurfaceVariant
     val tkd = Sport.TAEKWONDO.colors().content
-    TkdFormCard {
+    FormCard {
         SkTextField(
             value = state.name,
             onValueChange = { state.name = it },
@@ -261,7 +266,7 @@ private fun DetailsCard(state: TournamentFormState) {
             placeholder = stringResource(R.string.tournament_place_placeholder),
             leading = { Icon(painterResource(R.drawable.ic_tkd_place), contentDescription = null, tint = tkd) },
         )
-        DateTimeFields(
+        FormDateTimeFields(
             date = state.date,
             onDateChange = { state.date = it },
             time = state.time,
@@ -323,7 +328,7 @@ internal fun TournamentModality.iconRes(): Int = when (this) {
 @Composable
 private fun ResultCard(result: MedalResult, onSelect: (MedalResult) -> Unit, athleteName: String) {
     val colors = MaterialTheme.colorScheme
-    TkdFormCard {
+    FormCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {
                 Text(stringResource(R.string.tournament_result), style = MaterialTheme.typography.titleSmall, color = colors.onSurface)
@@ -350,7 +355,7 @@ private fun PhotoCard(
     athleteName: String,
 ) {
     val colors = MaterialTheme.colorScheme
-    TkdFormCard(spacing = 8) {
+    FormCard(spacing = 8) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 buildAnnotatedString {
