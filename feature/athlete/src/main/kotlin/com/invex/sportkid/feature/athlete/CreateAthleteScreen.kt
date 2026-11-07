@@ -1,6 +1,6 @@
 package com.invex.sportkid.feature.athlete
 
-import androidx.compose.foundation.Image
+import com.invex.sportkid.core.designsystem.component.SkAvatar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,19 +29,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringArrayResource
@@ -49,7 +47,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.invex.sportkid.core.designsystem.R as DesignR
 import com.invex.sportkid.core.designsystem.component.SkButton
 import com.invex.sportkid.core.designsystem.component.SkCard
 import com.invex.sportkid.core.designsystem.component.SkColorSwatchPicker
@@ -284,33 +281,15 @@ private fun PhotoCard(photo: Painter?, ringColor: Color, onClick: () -> Unit) {
 @Composable
 private fun Avatar(photo: Painter?, ringColor: Color) {
     val colors = MaterialTheme.colorScheme
-    Box {
-        Surface(
-            Modifier.size(96.dp),
-            shape = CircleShape,
-            color = Color.Transparent,
-            shadowElevation = SkElevation.level2,
-        ) {
-            Box(
-                Modifier
-                    .background(Brush.linearGradient(listOf(ringColor, lerp(ringColor, Color.White, 0.55f))))
-                    .padding(SportKidTheme.spacing.xs)
-                    .clip(CircleShape)
-                    .background(colors.surfaceContainerLowest),
-                contentAlignment = Alignment.Center,
-            ) {
-                if (photo != null) {
-                    Image(photo, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-                } else {
-                    Icon(
-                        painterResource(DesignR.drawable.sk_ic_person),
-                        contentDescription = null,
-                        tint = colors.outline,
-                        modifier = Modifier.size(40.dp),
-                    )
-                }
-            }
-        }
+    SkAvatar(
+        photo = photo,
+        size = 96.dp,
+        ringBrush = Brush.linearGradient(listOf(ringColor, lerp(ringColor, Color.White, 0.55f))),
+        ringWidth = SportKidTheme.spacing.xs,
+        placeholderColor = colors.surfaceContainerLowest,
+        placeholderContentColor = colors.outline,
+        shadowElevation = SkElevation.level2,
+    ) {
         SkIconCircle(
             icon = painterResource(R.drawable.ic_athlete_camera),
             contentDescription = stringResource(R.string.athlete_photo_change),

@@ -1,6 +1,6 @@
 package com.invex.sportkid.feature.agenda
 
-import androidx.compose.foundation.Image
+import com.invex.sportkid.core.designsystem.component.SkAvatar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,16 +30,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -251,14 +249,7 @@ private fun Filters(state: AgendaState, athletes: List<AgendaAthlete>, modifier:
                         size = 10.dp,
                         modifier = Modifier.border(2.dp, colors.surfaceContainerLowest.copy(alpha = 0.6f), CircleShape),
                     )
-                    athlete.avatarRes?.let {
-                        Image(
-                            painterResource(it),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.size(16.dp).clip(CircleShape),
-                        )
-                    }
+                    athlete.avatarRes?.let { SkAvatar(photo = painterResource(it), size = 16.dp) }
                 },
             )
         }

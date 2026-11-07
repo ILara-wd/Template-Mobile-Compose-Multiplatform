@@ -1,9 +1,8 @@
 package com.invex.sportkid.feature.agenda
 
+import com.invex.sportkid.core.designsystem.component.SkAvatar
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.selection.toggleable
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DatePicker
@@ -44,16 +42,15 @@ import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -190,7 +187,12 @@ private fun AthleteCard(athlete: AgendaAthlete, selected: Boolean, onClick: () -
         Box {
             Column(Modifier.padding(SportKidTheme.spacing.lg), verticalArrangement = Arrangement.spacedBy(SportKidTheme.spacing.md)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    AthleteAvatar(athlete, size = 48)
+                    SkAvatar(
+                        photo = athlete.avatarRes?.let { painterResource(it) },
+                        name = athlete.name,
+                        size = 48.dp,
+                        ringColor = athlete.color(),
+                    )
                     Spacer(Modifier.width(SportKidTheme.spacing.sm))
                     Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                         Text(
@@ -232,27 +234,6 @@ private fun AthleteCard(athlete: AgendaAthlete, selected: Boolean, onClick: () -
                     modifier = Modifier.align(Alignment.TopEnd).padding(SportKidTheme.spacing.sm),
                 )
             }
-        }
-    }
-}
-
-/** Avatar con anillo de 2dp del color del hijo (README §1.2). */
-@Composable
-private fun AthleteAvatar(athlete: AgendaAthlete, size: Int) {
-    val ring = athlete.color()
-    Box(
-        Modifier
-            .size(size.dp)
-            .border(2.dp, ring, CircleShape)
-            .padding(2.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.primaryContainer),
-        contentAlignment = Alignment.Center,
-    ) {
-        if (athlete.avatarRes != null) {
-            Image(painterResource(athlete.avatarRes), contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
-        } else {
-            Text(athlete.name.take(1), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
         }
     }
 }

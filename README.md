@@ -192,7 +192,7 @@ Estado: ✅ implementado · ⏳ pendiente (todavía no lo usa ninguna pantalla).
 | Icono en círculo | `SkIconCircle` | 40dp por defecto (también 24, 32 y 36dp), contenedor y tinte configurables (icono de deporte en la card de evento, costo, recordatorio clave). | ✅ |
 | Card | `SkCard` | `surfaceContainerLowest`, `shape.large`, elevación nivel 1, acento lateral opcional de 6dp (`SkCardAccentWidth`), clic opcional. | ✅ |
 | Selector de color | `SkColorSwatchPicker` | Grid de 4 columnas; el seleccionado crece a 1.05 con check claro u oscuro según la luminancia. | ✅ |
-| Avatar | `SkAvatar` | 40/56/96dp. Foto o iniciales sobre `primaryContainer`, con **anillo de 2dp del color del hijo**. Hoy cada pantalla lo dibuja con `Image` + `border`; falta extraerlo. | ⏳ |
+| Avatar | `SkAvatar` | Foto (recorte circular) o, sin foto, iniciales de `name` (o icono de persona) sobre `primaryContainer`. Anillo opcional de 2dp (`ringColor`: color del hijo, o `primaryContainer` para el usuario) o degradado (`ringBrush`, 4dp en el alta de P04). Sombra y slot `badge` opcionales (cámara en P04). Tamaños usados: 16 (chip de filtro), 36 (top bar), 48 (selector de deportista) y 96dp (foto en P04). | ✅ |
 | Punto de color | `AthleteDot` (`core:ui`) | 8dp por defecto (4dp en el calendario, 6dp en el día seleccionado, 10dp en filtros). | ✅ |
 | Barra de progreso | `SkLinearProgress` | 6dp, pill, track `surfaceContainerHighest`. | ⏳ |
 | Progreso circular | `SkCircularProgress` | 64dp, trazo 6dp ("3 de 5 estilos"). | ⏳ |

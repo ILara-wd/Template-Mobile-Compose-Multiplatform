@@ -1,15 +1,11 @@
 package com.invex.sportkid.core.designsystem.component
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,9 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -74,15 +68,11 @@ fun SkMainTopBar(
                 SkProfileButton(onClick = onProfileClick)
             } else {
                 IconButton(onClick = onProfileClick) {
-                    Image(
-                        avatar,
+                    SkAvatar(
+                        photo = avatar,
+                        size = 36.dp,
+                        ringColor = colors.primaryContainer,
                         contentDescription = stringResource(R.string.sk_action_profile),
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(36.dp)
-                            .border(2.dp, colors.primaryContainer, CircleShape)
-                            .padding(2.dp)
-                            .clip(CircleShape),
                     )
                 }
             }
