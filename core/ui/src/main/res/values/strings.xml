@@ -9,11 +9,33 @@
     <string name="belt_yellow">Cinta amarilla (8° Kup)</string>
     <string name="belt_orange">Cinta naranja (7° Kup)</string>
     <string name="belt_green">Cinta verde (6° Kup)</string>
-    <string name="belt_blue">Cinta azul (4° Kup)</string>
-    <string name="belt_brown">Cinta marrón (3° Kup)</string>
-    <string name="belt_red">Cinta roja (2° Kup)</string>
+    <string name="belt_blue">Cinta azul (5° Kup)</string>
+    <string name="belt_brown">Cinta marrón (4° Kup)</string>
+    <string name="belt_red">Cinta roja (3° Kup)</string>
     <string name="belt_red_black">Cinta roja‑negra (1° Kup)</string>
     <string name="belt_black">Cinta negra (1° Dan)</string>
+
+    <!-- Nombre corto (línea de tiempo, insignias) y grado de cada cinta -->
+    <string name="belt_short_white">Blanca</string>
+    <string name="belt_short_yellow">Amarilla</string>
+    <string name="belt_short_orange">Naranja</string>
+    <string name="belt_short_green">Verde</string>
+    <string name="belt_short_blue">Azul</string>
+    <string name="belt_short_brown">Marrón</string>
+    <string name="belt_short_red">Roja</string>
+    <string name="belt_short_red_black">Roja‑negra</string>
+    <string name="belt_short_black">Negra</string>
+    <string name="belt_grade_white">10° Kup</string>
+    <string name="belt_grade_yellow">8° Kup</string>
+    <string name="belt_grade_orange">7° Kup</string>
+    <string name="belt_grade_green">6° Kup</string>
+    <string name="belt_grade_blue">5° Kup</string>
+    <string name="belt_grade_brown">4° Kup</string>
+    <string name="belt_grade_red">3° Kup</string>
+    <string name="belt_grade_red_black">1° Kup</string>
+    <string name="belt_grade_black">1° Dan</string>
+    <string name="belt_name">Cinta %1$s</string>
+    <string name="belt_with_grade">Cinta %1$s · %2$s</string>
 
     <string name="sport_status_active">Activo</string>
     <string name="sport_toggle_add">Agregar</string>

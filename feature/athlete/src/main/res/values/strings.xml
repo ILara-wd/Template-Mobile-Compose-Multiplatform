@@ -44,4 +44,80 @@
     <string name="athlete_save">Guardar deportista</string>
     <string name="athlete_dialog_ok">Aceptar</string>
     <string name="athlete_dialog_cancel">Cancelar</string>
+
+    <!-- P08 Deportistas -->
+    <string name="athletes_title">Deportistas</string>
+    <string name="athletes_subtitle">Progreso deportivo y logros activos</string>
+    <plurals name="athletes_active_count">
+        <item quantity="one">%d hijo activo</item>
+        <item quantity="many">%d hijos activos</item>
+        <item quantity="other">%d hijos activos</item>
+    </plurals>
+    <string name="athletes_age">%1$d años</string>
+    <plurals name="athletes_gold">
+        <item quantity="one">%d oro</item>
+        <item quantity="many">%d oros</item>
+        <item quantity="other">%d oros</item>
+    </plurals>
+    <plurals name="athletes_silver">
+        <item quantity="one">%d plata</item>
+        <item quantity="many">%d platas</item>
+        <item quantity="other">%d platas</item>
+    </plurals>
+    <plurals name="athletes_bronze">
+        <item quantity="one">%d bronce</item>
+        <item quantity="many">%d bronces</item>
+        <item quantity="other">%d bronces</item>
+    </plurals>
+    <string name="athletes_open_profile">Ver perfil de %1$s</string>
+    <string name="athletes_swim_progress">Progreso de estilos</string>
+    <string name="athletes_swim_mastered">%1$d / %2$d dominados</string>
+    <string name="athletes_swim_in_progress">%1$s en proceso</string>
+    <string name="athletes_percent">%1$d%%</string>
+    <string name="athletes_in_days">En %1$d días</string>
+    <string name="athletes_tomorrow">Mañana</string>
+    <string name="athletes_today">Hoy</string>
+    <string name="athletes_add">Agregar deportista</string>
+    <string name="athletes_family_synced">Familia %1$s conectada</string>
+    <string name="athletes_family_synced_detail">Todos los tutores sincronizados en tiempo real</string>
+
+    <!-- Perfil de deportista (P08 detalle, tab TKD = P09) -->
+    <string name="profile_title">Perfil del deportista</string>
+    <string name="profile_more">Más opciones</string>
+    <string name="profile_edit">Editar perfil</string>
+    <string name="profile_age_birth">%1$d años · Nació el %2$s</string>
+    <string name="profile_category">Sub-%1$d</string>
+    <string name="profile_styles">%1$d/%2$d estilos</string>
+    <plurals name="profile_medals">
+        <item quantity="one">%d medalla</item>
+        <item quantity="many">%d medallas</item>
+        <item quantity="other">%d medallas</item>
+    </plurals>
+    <string name="profile_share_qr">Compartir (QR)</string>
+    <string name="profile_tutors">Tutores (%1$d)</string>
+    <string name="profile_tkd_overline">Disciplina oficial</string>
+    <string name="profile_tkd_title">Grado y cinta</string>
+    <string name="profile_goal">Meta: Cinta %1$s (%2$s)</string>
+    <string name="profile_goal_progress">%1$d%% completado</string>
+    <string name="profile_next_exam">Próximo examen: %1$s</string>
+    <plurals name="profile_days_left">
+        <item quantity="one">Falta %d día</item>
+        <item quantity="many">Faltan %d días</item>
+        <item quantity="other">Faltan %d días</item>
+    </plurals>
+    <string name="profile_next_event">Próximo evento</string>
+    <string name="profile_event_when">%1$s · %2$s</string>
+    <string name="profile_pay_fee">Pagar cuota</string>
+    <string name="profile_event_details">Ver detalles de examen y temario</string>
+    <string name="profile_stats_title">Estadísticas y méritos</string>
+    <string name="profile_season">Temporada %1$d</string>
+    <string name="profile_stat_fights">Combates\n(ganados / total)</string>
+    <string name="profile_stat_forms">Formas\ndominadas</string>
+    <string name="profile_stat_attendance">Asistencia\ndel mes</string>
+    <string name="profile_belt_history">Trayectoria de cintas</string>
+    <string name="profile_belt_current">Actual</string>
+    <string name="profile_equipment_title">Equipamiento registrado</string>
+    <string name="profile_equipment_approved">Aprobado</string>
+    <string name="profile_quick_log">Registrar evento</string>
+    <string name="profile_tab_empty">El seguimiento de %1$s estará disponible pronto.</string>
 </resources>
