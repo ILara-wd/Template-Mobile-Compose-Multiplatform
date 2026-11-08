@@ -176,7 +176,7 @@ Estado: ✅ implementado · ⏳ pendiente (todavía no lo usa ninguna pantalla).
 | Botón primario | `SkButton` | Pill, `labelLarge` en una línea, icono líder o final opcional ("Validar código →"). Color `primary`/`onPrimary` por defecto, configurable (`containerColor`/`contentColor`: color del deporte en los CTA de TKD, `tertiary` en "Torneo"). Tamaños (`SkButtonSize`): **Small 40dp** (acción "Guardar" en la top bar, elevación nivel 1), **Medium 48dp** (CTA fijo de formularios de evento; padding horizontal 16dp) y **Large 56dp** (CTA principal, default). Deshabilitado: 38% `onSurface`. Falta el estado cargando (spinner 20dp, ancho fijo). | ✅ |
 | Botón elevado | `SkElevatedButton` | Pill blanca de 56dp con icono a color sin teñir ("Continuar con Google"). | ✅ |
 | Botón de logro | `SkAccentButton` | Igual al primario con `tertiary`. Solo para CTAs de celebración. | ⏳ |
-| Botón tonal | `SkTonalButton` | Contenedor y contenido configurables (`secondaryContainer` por defecto), icono opcional, `shape.medium` por defecto y tamaños de `SkButtonSize` (Small 40dp por defecto). Usos: "Compartir (QR)" (`primaryContainer`/`primary`), "Tutores (2)" (`surfaceContainerHigh`), "Pagar cuota" (`tertiary`/`onTertiary`) y "Agregar deportista" (pill de 48dp, `primaryContainer`). | ✅ |
+| Botón tonal | `SkTonalButton` | Contenedor y contenido configurables (`secondaryContainer` por defecto), icono opcional, `shape.medium` por defecto y tamaños de `SkButtonSize` (Small 40dp por defecto). Usos: "Compartir (QR)" (`primaryContainer`/`primary`), "Tutores (2)" (`surfaceContainerHigh`), "Pagar cuota" (`tertiary`/`onTertiary`) y "Agregar deportista" (pill de 48dp, `primaryContainer`). `textStyle` y `maxLines` opcionales para textos largos ("Comprobantes fiscales" en 2 líneas, P16). | ✅ |
 | Botón outlined | `SkOutlinedButton` | 48dp, borde `outline` ("Generar nuevo", "Cancelar"). | ⏳ |
 | Botón de texto | `SkTextButton` | `labelMedium` por defecto (`textStyle` configurable), color `onSurfaceVariant` por defecto e icono inicial ("Quitar acceso") o final opcional ("Explorar demo ›"; "Ver detalles de examen y temario ›" en `labelLarge` `primary`). | ✅ |
 | Botón de icono | — | Se usa `IconButton` de M3 directamente: área de 48dp e icono de 24dp (atrás, cerrar, notificaciones, adjuntar). | ✅ |
@@ -237,8 +237,8 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | M23 | Chip de código | `CopyableCodeChip` | `core:designsystem` | Caja `surfaceContainer` con icono, código con tracking ("K7QM-4PZX") y pill "Copiar" (`primaryContainer`). Copia al portapapeles y avisa con `onCopied`; P17 muestra un toast "¡Código copiado al portapapeles!". |
 | M24 | Cuenta regresiva | `CountdownText` | `core:designsystem` | Pill `tertiaryContainer` con reloj: "Expira en 23:59 h". Se actualiza cada minuto, cambia a `errorContainer` con menos de 1 h y al vencer dice "Código expirado". |
 | M25 | Fila de miembro | `MemberRow` | `feature:athlete` | Avatar de 48dp con badge del rol, nombre, pill de rol (`FamilyRole`: Propietaria `primary`, Editor `secondaryContainer`, Lector `surfaceContainerHigh`), correo, estado y "Quitar acceso" en `error` (solo si quien ve es la propietaria). |
-| M26 | Tarjeta de vista previa de tema | `ThemePreviewCard` | `feature:settings` | Mini mock (top bar, card y FAB) pintado con el esquema del tema, nombre y check si está seleccionado. |
-| M27 | Fila de ajustes | `SettingsRow` | `core:designsystem` | Icono, título, subtítulo y trailing (chevron, switch o valor). |
+| M26 | Tarjeta de vista previa de tema | `PaletteCard` / `MiniPreview` | `feature:settings` | Mini mock (top bar, card y FAB con el icono del deporte de la paleta) pintado con el esquema real del tema en el modo elegido; nombre, matiz y swatch. Elegida: nombre y matiz en `primary`, check de 20dp y sombra mayor. "Automático" usa un degradado y la pill "Android 12+". |
+| M27 | Fila de ajustes | `SettingsRow` / `SettingsSection` | `core:designsystem` | Icono en círculo de 40dp (36 en Acerca de), título, subtítulo y trailing: chevron con `onClick`, `SkSwitch` con `checked` (toda la fila alterna) o un slot (valor en pill, swatch). `SettingsSection`: card de 16dp con encabezado en MAYÚSCULAS y badge opcional ("FMTKD", "Al día"). |
 | M28 | Indicador de sincronización | `SyncIndicator` | `core:ui` | Icono de 20dp en la top bar: `cloud_done`, `sync` (animado), `cloud_off` o `sync_problem`. |
 | M29 | Etiqueta de deporte | `SportTag` | `core:ui` | Pill con icono (color del deporte) y nombre (`sport.on*Container`) sobre el contenedor del deporte ("Taekwondo", "Natación"). |
 | M30 | Selector de resultado | `MedalResultPicker` | `core:ui` | 5 tarjetas iguales (oro, plata, bronce, diploma y espera) con icono en círculo de 36dp; la elegida en `primaryContainer`. Selección única (role RadioButton). |
@@ -250,7 +250,7 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 
 | ID | Organismo | Composable | Módulo | Composición |
 |---|---|---|---|---|
-| O1 | Top bar principal | `SkMainTopBar` | `core:designsystem` | Marca "SportKid" (`titleLarge` `primary`), notificaciones y avatar del usuario con anillo `primaryContainer`, que abre Ajustes. Falta `SyncIndicator` (M28). |
+| O1 | Top bar principal | `SkMainTopBar` | `core:designsystem` | Marca "SportKid" (`titleLarge` `primary`), notificaciones y avatar del usuario con anillo `primaryContainer`, que abre Ajustes. Falta `SyncIndicator` (M28). Con `title` muestra el nombre de la pestaña en lugar de la marca ("Gastos"). |
 | O2 | Top bar de detalle o formulario | `SkDetailTopBar` | `core:designsystem` | Atrás o cerrar (`SkNavigationIcon`), título `titleMedium` con subtítulo opcional en `primary` ("Taekwondo" / "Mateo Gómez") y acciones a la derecha (`SkButton` Small "Guardar", avatar). |
 | O3 | Bottom navigation | `SkBottomBar` | `app` | 4 destinos: Inicio, Agenda, Deportistas y Gastos. El activo va en pill `secondaryContainer`. |
 | O4 | Sheet de registro rápido | `QuickAddSheet` | `feature:home` | Título y grid 2×3 de tiles: Entrenamiento, Examen de cinta, Torneo TKD, Competencia de natación y Carrera. |
@@ -276,8 +276,8 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | O24 | Unirse con código | `JoinCodeScreen` | `feature:sharing` | Visor oscuro con marco, línea de lectura animada y "Buscando QR"; Linterna y Subir galería; campo de 8 caracteres con guion automático, errores de §5.6 y "Validar código →". Falta conectar el escáner de Google. |
 | O25 | Vista previa y descarga | `JoinPreviewScreen` | `feature:sharing` | Banner "Detección exitosa", card del deportista (avatar de 80dp, deportes con su avance, medallas, eventos y rol que recibirás) y descarga con porcentaje, barra y un renglón por bloque (sincronizado, en curso "8 de 12…", en espera). |
 | O26 | Lista de miembros | `MembersScreen` | `feature:athlete` | Contexto del deportista, roles (M19), "Miembros activos (3 de 5 tutores)", `MemberRow`, diálogo de confirmación al quitar acceso, card de invitación por enlace o QR y nota de seguridad. |
-| O27 | Resumen de gastos | `ExpensesSummary` | `feature:expenses` | Selector de periodo, filtros, total, barras por deporte (Vico), card ámbar de pendientes y lista agrupada. |
-| O28 | Grid de temas | `ThemePicker` | `feature:settings` | `SkSegmentedButton` de modo y un grid 2×3 de `ThemePreviewCard`. "Automático" se oculta en Android 11 o menor. |
+| O27 | Resumen de gastos | `ExpensesScreen` | `feature:expenses` | Periodo (mes anterior y menú "Cambiar"), filtros por hijo y deporte, total en `displaySmall` con barra apilada por color de deporte y desglose con porcentaje, alerta `tertiaryContainer` de pendientes con "Pagar ahora", momentos del mes, historial por día (card con acento del deporte, monto y estado Pagado/Pendiente) y botones "Comprobantes fiscales" / "Registrar gasto". Sin gráfica Vico por ahora. |
+| O28 | Grid de temas | `ThemeScreen` | `feature:settings` | `SkSegmentedControl` Sistema / Claro / Oscuro con iconos, grid 2×3 de M26, banner de colores fijos (deporte e hijos) y "Aplicar tema" / "Tema aplicado". "Automático" se oculta en Android 11 o menor. El tema se guarda en `ThemePrefs` (`app`). |
 | O29 | Empty state | `SkEmptyState` | `core:designsystem` | Ilustración de 160dp, título, descripción y CTA. |
 | O30 | Banner offline | `OfflineBanner` | `core:ui` | Banda de 32dp en `surfaceContainerHighest`, icono `cloud_off` y "Sin conexión · tus cambios se sincronizarán". |
 | O31 | Overlay de celebración | `CelebrationOverlay` | `core:ui` | Confeti en `tertiary` y en los colores de medalla, más la insignia que entra animada (examen aprobado, récord). Respeta "reducir animaciones". |
@@ -315,12 +315,12 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | P13 | Competencia de natación | T3 | Contexto del deportista, datos del evento (nombre, sede, alberca 25/50 m, M10, M8), O20 y M15 (`SwimMeetFormScreen`) | `feature:swimming` |
 | P14 | Tab Atletismo | T2 | M31 (categoría y "2 oros · 1 plata"), "Registrar carrera", O21, O22, carreras disputadas (distancia y tipo, tiempo oficial, lugar y pago) y FAB `tertiary` (`AthleticsScreen`). Se abre desde "Ver progreso completo" en el perfil | `feature:athletics` |
 | P15 | Carrera | T3 | Contexto del deportista, datos de la carrera (nombre, sede, M10, M8), M13, M14, M9 con M16, posición (1°/2°/3°, Finalista, Por definir) y M15 con cámara (`RaceFormScreen`). CTA y acentos en `tertiary`. También desde "Carrera atlética" en O4 | `feature:athletics` |
-| P16 | Gastos | T1 | O27 | `feature:expenses` |
+| P16 | Gastos | T1 | O27 (`ExpensesScreen`), pestaña Gastos de la bottom navigation | `feature:expenses` |
 | P17 | Compartir QR | T4 | Deportista en pill, O23, callout de sincronización, permisos compartidos, "Compartir enlace de invitación" y "Generar nuevo código" (`ShareQrScreen`). Se abre desde "Compartir (QR)" del perfil y desde "Invitar" en P19 | `feature:sharing` |
 | P18 | Unirse con QR | T4 | O24 y O25 (`JoinCodeScreen` → `JoinPreviewScreen`). Se abre desde "Tengo un código QR" en P03 | `feature:sharing` |
 | P19 | Miembros | T5 | O26 (`MembersScreen`). Se abre desde "Tutores (n)" del perfil | `feature:athlete` |
-| P20 | Ajustes | T5 | `SettingsRow` por sección | `feature:settings` |
-| P21 | Tema | T5 | O28 | `feature:settings` |
+| P20 | Ajustes | T5 | Cuenta y familia con cerrar sesión, y secciones M27: apariencia (tema y modo oscuro), Taekwondo (si algún hijo lo practica), notificaciones (anticipación en diálogo), nube familiar y acerca de (`SettingsScreen`). Se abre desde el avatar de la top bar principal | `feature:settings` |
+| P21 | Tema | T5 | O28 (`ThemeScreen`). Se abre desde "Tema y apariencia" en P20 | `feature:settings` |
 
 ---
 

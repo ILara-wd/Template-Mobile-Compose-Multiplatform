@@ -28,6 +28,7 @@ import com.invex.sportkid.core.designsystem.theme.SportKidTheme
  * O1. Top bar de las pantallas principales (Inicio, Agenda, Deportistas, Gastos): marca,
  * notificaciones y avatar del usuario, que abre Ajustes.
  *
+ * Con [title] muestra el nombre de la pestaña en `onSurface` en lugar de la marca ("Gastos").
  * Sin [avatar] se muestra el círculo `primary` con el icono de persona.
  */
 @Composable
@@ -36,6 +37,7 @@ fun SkMainTopBar(
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
     avatar: Painter? = null,
+    title: String? = null,
 ) {
     val colors = MaterialTheme.colorScheme
     Surface(
@@ -52,9 +54,9 @@ fun SkMainTopBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                stringResource(R.string.sk_brand_name),
+                title ?: stringResource(R.string.sk_brand_name),
                 style = MaterialTheme.typography.titleLarge.copy(letterSpacing = (-0.5).sp),
-                color = colors.primary,
+                color = if (title == null) colors.primary else colors.onSurface,
             )
             Spacer(Modifier.weight(1f))
             IconButton(onClick = onNotificationsClick) {

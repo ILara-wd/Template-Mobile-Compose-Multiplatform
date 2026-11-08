@@ -15,7 +15,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import com.invex.sportkid.core.designsystem.theme.AppPalette
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
+import com.invex.sportkid.core.designsystem.theme.ThemeMode
+import com.invex.sportkid.feature.expenses.ExpensesScreen
+import com.invex.sportkid.feature.settings.SettingsSamples
+import com.invex.sportkid.feature.settings.SettingsScreen
+import com.invex.sportkid.feature.settings.ThemeScreen
 import com.invex.sportkid.feature.agenda.AgendaScreen
 import com.invex.sportkid.feature.agenda.NewTrainingScreen
 import com.invex.sportkid.feature.athlete.AthleteProfileScreen
@@ -50,16 +56,29 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val debugStart = if (BuildConfig.DEBUG) DebugStart.from(intent) else null
+        val prefs = ThemePrefs(this)
         setContent {
-            SportKidTheme {
-                SportKidApp(onExit = ::finish, debugStart = debugStart)
+            var palette by rememberSaveable { mutableStateOf(prefs.palette) }
+            var mode by rememberSaveable { mutableStateOf(prefs.mode) }
+            SportKidTheme(palette = palette, themeMode = mode) {
+                SportKidApp(
+                    onExit = ::finish,
+                    debugStart = debugStart,
+                    palette = palette,
+                    mode = mode,
+                    onThemeChange = { newPalette, newMode ->
+                        palette = newPalette
+                        mode = newMode
+                        prefs.save(newPalette, newMode)
+                    },
+                )
             }
         }
     }
 }
 
 /** Flujo P01 → P04 y la app principal (T1). Navegación por estado hasta agregar Navigation Compose. */
-private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet, Athletics, RaceForm, ShareQr, JoinCode, JoinPreview, Members }
+private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet, Athletics, RaceForm, ShareQr, JoinCode, JoinPreview, Members, Settings, Theme }
 
 /**
  * Solo en debug: abre una pantalla directamente para el catálogo de UI y las capturas
@@ -89,7 +108,13 @@ private data class DebugStart(
 }
 
 @Composable
-private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
+private fun SportKidApp(
+    onExit: () -> Unit,
+    palette: AppPalette,
+    mode: ThemeMode,
+    onThemeChange: (AppPalette, ThemeMode) -> Unit,
+    debugStart: DebugStart? = null,
+) {
     var destination by rememberSaveable { mutableStateOf(debugStart?.destination ?: Destination.Splash) }
     var tab by rememberSaveable { mutableStateOf(debugStart?.tab ?: MainTab.Agenda) }
     var showQuickAdd by rememberSaveable { mutableStateOf(debugStart?.quickAdd ?: false) }
@@ -106,6 +131,8 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
     var joinStatus by rememberSaveable { mutableStateOf<InviteStatus?>(null) }
     var removedMembers by rememberSaveable { mutableStateOf(listOf<String>()) }
     val context = LocalContext.current
+    // Ajustes (P20) se abre desde el avatar de la top bar principal.
+    var settingsReturn by rememberSaveable { mutableStateOf(Destination.Main) }
 
     BackHandler(enabled = destination == Destination.CreateAthlete) {
         destination = createAthleteReturn
@@ -135,6 +162,8 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
     BackHandler(enabled = destination == Destination.Members) { destination = Destination.AthleteProfile }
     BackHandler(enabled = destination == Destination.JoinCode) { destination = Destination.Welcome }
     BackHandler(enabled = destination == Destination.JoinPreview) { destination = Destination.JoinCode }
+    BackHandler(enabled = destination == Destination.Settings) { destination = settingsReturn }
+    BackHandler(enabled = destination == Destination.Theme) { destination = Destination.Settings }
 
     when (destination) {
         Destination.Splash -> SplashScreen(
@@ -166,7 +195,14 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
             onSave = { destination = Destination.Main }, // TODO: persistir el deportista.
         )
 
-        Destination.Main -> MainShell(tab = tab, onTabChange = { tab = it }) { current, modifier ->
+        Destination.Main -> MainShell(
+            tab = tab,
+            onTabChange = { tab = it },
+            onProfileClick = {
+                settingsReturn = Destination.Main
+                destination = Destination.Settings
+            },
+        ) { current, modifier ->
             when (current) {
                 MainTab.Agenda -> AgendaScreen(onNewEvent = { showQuickAdd = true }, modifier = modifier)
                 MainTab.Athletes -> AthletesScreen(
@@ -181,7 +217,9 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
                     },
                     modifier = modifier,
                 )
-                else -> ComingSoon(current, modifier) // TODO: P05 Inicio, P16 Gastos.
+                // TODO: registrar gasto, comprobantes y exportar.
+                MainTab.Expenses -> ExpensesScreen(modifier = modifier)
+                else -> ComingSoon(current, modifier) // TODO: P05 Inicio.
             }
         }
 
@@ -308,6 +346,26 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
                 onRemoveMember = { removedMembers = removedMembers + it.id },
             )
         }
+
+        // TODO: secuencia de cintas, términos, soporte y persistir las demás preferencias.
+        Destination.Settings -> SettingsScreen(
+            account = SettingsSamples.account.copy(photoRes = R.drawable.img_sample_user_avatar),
+            palette = palette,
+            mode = mode,
+            versionName = BuildConfig.VERSION_NAME,
+            versionCode = BuildConfig.VERSION_CODE,
+            onBack = { destination = settingsReturn },
+            onOpenTheme = { destination = Destination.Theme },
+            onModeChange = { onThemeChange(palette, it) },
+            onSignOut = { destination = Destination.Login }, // TODO: cerrar sesión en Firebase Auth.
+        )
+
+        Destination.Theme -> ThemeScreen(
+            palette = palette,
+            mode = mode,
+            onApply = onThemeChange,
+            onBack = { destination = Destination.Settings },
+        )
 
         // TODO: escáner de Google (play-services-code-scanner), linterna y QR desde la galería.
         Destination.JoinCode -> JoinCodeScreen(

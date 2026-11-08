@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="expenses_title">Gastos</string>
+    <string name="expenses_period">Periodo activo</string>
+    <string name="expenses_prev_month">Mes anterior</string>
+    <string name="expenses_change">Cambiar</string>
+    <string name="expenses_all_athletes">Todos los deportistas</string>
+    <string name="expenses_all_sports">Todos</string>
+
+    <string name="expenses_total">Gasto total acumulado</string>
+    <string name="expenses_amount">$%1$s</string>
+    <string name="expenses_amount_mxn">$%1$s MXN</string>
+    <string name="expenses_currency">MXN</string>
+    <plurals name="expenses_count">
+        <item quantity="one">%1$d evento o cuota registrada este mes</item>
+        <item quantity="other">%1$d eventos y cuotas registradas este mes</item>
+    </plurals>
+    <string name="expenses_percent">%1$d%%</string>
+    <string name="expenses_detail">(%1$s)</string>
+    <string name="expenses_and">" y "</string>
+    <string name="expenses_category_monthly">mensualidad</string>
+    <string name="expenses_category_tournament">torneo</string>
+    <string name="expenses_category_exam">examen</string>
+    <string name="expenses_category_race">inscripciones</string>
+
+    <string name="expenses_pending_title">Pendiente de pago: %1$s</string>
+    <string name="expenses_pending_badge">Próximo</string>
+    <plurals name="expenses_pending_count">
+        <item quantity="one">%1$d concepto por liquidar</item>
+        <item quantity="other">%1$d conceptos por liquidar</item>
+    </plurals>
+    <string name="expenses_pending_detail">%1$s · %2$s de %3$s</string>
+    <string name="expenses_pay_now">Pagar ahora</string>
+
+    <string name="expenses_moments">Momentos del mes</string>
+    <string name="expenses_receipts_gallery">Galería de recibos</string>
+    <string name="expenses_moment_caption">%1$s · %2$s</string>
+
+    <string name="expenses_history">Historial de transacciones</string>
+    <string name="expenses_export">Exportar</string>
+    <string name="expenses_athlete_sport">· %1$s</string>
+    <string name="expenses_and_names">%1$s y %2$s</string>
+    <string name="expenses_paid">Pagado</string>
+    <string name="expenses_pending">Pendiente</string>
+    <string name="expenses_empty">No hay gastos en este periodo con los filtros elegidos.</string>
+
+    <string name="expenses_tax_receipts">Comprobantes fiscales</string>
+    <string name="expenses_register">Registrar gasto</string>
+</resources>

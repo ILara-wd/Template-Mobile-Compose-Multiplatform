@@ -59,6 +59,16 @@ fun LocalDate.fullLabel(): String =
 fun LocalDate.compactLabel(): String =
     stringResource(R.string.date_full, dayOfMonth, stringArrayResource(R.array.date_months_short)[monthValue - 1].lowercase(), year)
 
+/** "Sábado 22 nov 2024" (encabezados de día en Gastos). */
+@Composable
+fun LocalDate.weekdayDateLabel(): String = stringResource(
+    R.string.date_weekday_full,
+    stringArrayResource(R.array.date_weekdays)[weekdayIndex],
+    dayOfMonth,
+    stringArrayResource(R.array.date_months_short)[monthValue - 1],
+    year,
+)
+
 /** "Ene 2024". */
 @Composable
 fun LocalDate.monthYearShortLabel(): String =

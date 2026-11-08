@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -157,6 +158,8 @@ fun SkTonalButton(
     size: SkButtonSize = SkButtonSize.Small,
     shape: Shape = MaterialTheme.shapes.medium,
     enabled: Boolean = true,
+    textStyle: TextStyle = MaterialTheme.typography.labelLarge,
+    maxLines: Int = 1,
 ) {
     Button(
         onClick = onClick,
@@ -171,7 +174,7 @@ fun SkTonalButton(
             Icon(icon, contentDescription = null)
             Spacer(Modifier.width(size.iconGap))
         }
-        Text(text, style = MaterialTheme.typography.labelLarge, maxLines = 1)
+        Text(text, style = textStyle, maxLines = maxLines, textAlign = TextAlign.Center, overflow = TextOverflow.Ellipsis)
     }
 }
 

@@ -34,6 +34,8 @@
      "captura": {"extras": {"sk_screen": "Athletics", "sk_athlete": "sofia"}, "scrolls": 2}},
     {"id": "P15", "nombre": "Registrar carrera", "composable": "RaceFormScreen", "figma": "107:7861",
      "captura": {"extras": {"sk_screen": "RaceForm", "sk_athlete": "sofia"}, "scrolls": 2}},
+    {"id": "P16", "nombre": "Gastos", "composable": "ExpensesScreen", "figma": "131:2600",
+     "captura": {"extras": {"sk_screen": "Main", "sk_tab": "Expenses"}, "scrolls": 3}},
     {"id": "P17", "nombre": "Compartir QR", "composable": "ShareQrScreen", "figma": "131:1957",
      "captura": {"extras": {"sk_screen": "ShareQr", "sk_athlete": "mateo"}, "scrolls": 1}},
     {"id": "P18", "nombre": "Escanear o ingresar código", "composable": "JoinCodeScreen", "figma": "131:2317",
@@ -41,6 +43,10 @@
     {"id": "P18b", "nombre": "Vista previa y sincronización", "composable": "JoinPreviewScreen", "figma": "131:2164",
      "captura": {"extras": {"sk_screen": "JoinPreview"}, "espera": 1, "scrolls": 1}},
     {"id": "P19", "nombre": "Miembros y accesos", "composable": "MembersScreen", "figma": "131:2427",
-     "captura": {"extras": {"sk_screen": "Members", "sk_athlete": "mateo"}, "scrolls": 2}}
+     "captura": {"extras": {"sk_screen": "Members", "sk_athlete": "mateo"}, "scrolls": 2}},
+    {"id": "P20", "nombre": "Ajustes", "composable": "SettingsScreen", "figma": "131:2948",
+     "captura": {"extras": {"sk_screen": "Settings"}, "scrolls": 2}},
+    {"id": "P21", "nombre": "Tema y apariencia", "composable": "ThemeScreen", "figma": "131:3188",
+     "captura": {"extras": {"sk_screen": "Theme"}, "scrolls": 2}}
   ]
 }

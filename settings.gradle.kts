@@ -32,4 +32,6 @@ include(":feature:tkd")
 include(":feature:swimming")
 include(":feature:athletics")
 include(":feature:sharing")
+include(":feature:settings")
+include(":feature:expenses")
  

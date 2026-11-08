@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Temas (AppPalette) -->
+    <string name="palette_automatic">Automático</string>
+    <string name="palette_automatic_detail">Dinámico de fondo</string>
+    <string name="palette_ocean">Océano</string>
+    <string name="palette_ocean_detail">Predeterminado</string>
+    <string name="palette_dojang">Dojang</string>
+    <string name="palette_dojang_detail">Granate marcial</string>
+    <string name="palette_alberca">Alberca</string>
+    <string name="palette_alberca_detail">Turquesa vital</string>
+    <string name="palette_pista">Pista</string>
+    <string name="palette_pista_detail">Terracota veloz</string>
+    <string name="palette_bosque">Bosque</string>
+    <string name="palette_bosque_detail">Verde natural</string>
+
+    <!-- Modo (ThemeMode) -->
+    <string name="mode_system">Sistema</string>
+    <string name="mode_light">Claro</string>
+    <string name="mode_dark">Oscuro</string>
+
+    <!-- P21 Tema y apariencia -->
+    <string name="theme_title">Tema y apariencia</string>
+    <string name="theme_intro_title">Apariencia y colores</string>
+    <string name="theme_intro_body">Elige el estilo visual principal de SportKid y personaliza tu experiencia deportiva.</string>
+    <string name="theme_mode_label">Modo de pantalla</string>
+    <string name="theme_palette_title">Paleta cromática principal</string>
+    <string name="theme_palette_body">Define el matiz de botones, títulos y acentos del sistema</string>
+    <plurals name="theme_palette_count">
+        <item quantity="one">%1$d tema</item>
+        <item quantity="other">%1$d temas</item>
+    </plurals>
+    <string name="theme_requires_android12">Android 12+</string>
+    <string name="theme_fixed_title">Los colores de cada deporte y de tus hijos no cambian con el tema.</string>
+    <string name="theme_fixed_body">Taekwondo (%1$s), Natación (%2$s), Atletismo (%3$s) y los anillos de tus hijos se mantienen idénticos para que los reconozcas de inmediato.</string>
+    <string name="theme_apply">Aplicar tema</string>
+    <string name="theme_applied">Tema aplicado</string>
+    <string name="theme_sync_note">Los cambios se sincronizan en todos tus dispositivos</string>
+
+    <!-- P20 Ajustes -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_role">Tutora principal</string>
+    <string name="settings_family">Familia %1$s • %2$s</string>
+    <plurals name="settings_athletes">
+        <item quantity="one">%1$d deportista</item>
+        <item quantity="other">%1$d deportistas</item>
+    </plurals>
+    <string name="settings_athlete_sport">%1$s (%2$s)</string>
+    <string name="settings_and">" &amp; "</string>
+    <string name="settings_athletes_active">Activos</string>
+    <string name="settings_sign_out">Cerrar sesión</string>
+    <string name="settings_sign_out_title">¿Cerrar sesión?</string>
+    <string name="settings_sign_out_body">Tus datos siguen guardados en la nube familiar. Podrás volver a entrar con tu cuenta de Google.</string>
+    <string name="settings_cancel">Cancelar</string>
+
+    <string name="settings_appearance">Apariencia y visualización</string>
+    <string name="settings_theme">Tema y apariencia</string>
+    <string name="settings_theme_value">%1$s (%2$s)</string>
+    <string name="settings_dark_mode">Modo oscuro</string>
+    <string name="settings_dark_mode_system">Sincronizado con el sistema</string>
+    <string name="settings_dark_mode_manual">Ajuste manual</string>
+
+    <string name="settings_tkd">Ajustes de Taekwondo</string>
+    <string name="settings_tkd_federation">FMTKD</string>
+    <string name="settings_belts">Secuencia de cintas</string>
+    <string name="settings_belts_detail">Personalizar orden y grados Kup / Dan</string>
+    <string name="settings_exam_costs">Costo estimado en exámenes</string>
+    <string name="settings_exam_costs_detail">Calcular derechos y cinta nueva</string>
+
+    <string name="settings_notifications">Notificaciones y alertas</string>
+    <string name="settings_reminders">Eventos y pagos pendientes</string>
+    <string name="settings_reminders_detail">Torneos, colegiaturas y citas</string>
+    <string name="settings_lead">Anticipación de aviso</string>
+    <string name="settings_lead_none">Sin aviso previo</string>
+    <string name="settings_lead_hour">1 hora antes del evento</string>
+    <string name="settings_lead_day">1 día antes del evento (09:00 hrs)</string>
+    <string name="settings_lead_two_days">2 días antes del evento (09:00 hrs)</string>
+    <string name="settings_qr_expiry">Vencimiento de pases QR</string>
+    <string name="settings_qr_expiry_detail">Acceso de abuelos y tutores de apoyo</string>
+
+    <string name="settings_cloud">Nube familiar</string>
+    <string name="settings_cloud_up_to_date">Al día</string>
+    <string name="settings_cloud_syncing">Sincronizando</string>
+    <string name="settings_synced">Sincronizado con éxito</string>
+    <string name="settings_syncing">Sincronizando…</string>
+    <string name="settings_synced_now">Hace un momento desde este teléfono</string>
+    <plurals name="settings_synced_minutes">
+        <item quantity="one">Hace %1$d minuto desde este teléfono</item>
+        <item quantity="other">Hace %1$d minutos desde este teléfono</item>
+    </plurals>
+    <plurals name="settings_tutors">
+        <item quantity="one">%1$d tutor: %2$s</item>
+        <item quantity="other">%1$d tutores: %2$s</item>
+    </plurals>
+    <string name="settings_sync_now">Sincronizar ahora</string>
+
+    <string name="settings_about">Acerca de SportKid</string>
+    <string name="settings_version">Versión de la app</string>
+    <string name="settings_version_value">v%1$s (Build %2$d)</string>
+    <string name="settings_terms">Términos y privacidad familiar</string>
+    <string name="settings_support">Soporte y retroalimentación</string>
+    <string name="settings_footer">Diseñado con dedicación para familias en movimiento</string>
+</resources>

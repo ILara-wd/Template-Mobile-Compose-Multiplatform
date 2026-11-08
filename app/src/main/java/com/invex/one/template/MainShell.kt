@@ -67,6 +67,7 @@ fun MainShell(
     tab: MainTab,
     onTabChange: (MainTab) -> Unit,
     modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit = {},
     content: @Composable (MainTab, Modifier) -> Unit,
 ) {
     Scaffold(
@@ -75,8 +76,10 @@ fun MainShell(
         topBar = {
             SkMainTopBar(
                 onNotificationsClick = {}, // TODO: centro de notificaciones.
-                onProfileClick = {}, // TODO: Ajustes.
+                onProfileClick = onProfileClick,
                 avatar = painterResource(R.drawable.img_sample_user_avatar),
+                // Gastos (P16) muestra el nombre de la pestaña; las demás, la marca.
+                title = if (tab == MainTab.Expenses) stringResource(tab.label) else null,
             )
         },
         bottomBar = { SkBottomBar(selected = tab, onSelect = onTabChange) },
