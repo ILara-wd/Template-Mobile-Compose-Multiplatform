@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- P17 Compartir QR -->
+    <string name="share_title">Compartir a %1$s</string>
+    <string name="share_athlete_age">· %1$d años</string>
+    <string name="share_sports_separator">" · "</string>
+    <string name="share_secure_cd">Perfil protegido</string>
+    <string name="share_pass_title">Pase de acceso familiar</string>
+    <string name="share_pass_body">Escanea desde la app SportKid del cotutor o comparte la clave temporal para sincronizar el perfil.</string>
+    <string name="share_qr_cd">Código QR de invitación %1$s</string>
+    <string name="share_sync_title">Sincronización en tiempo real</string>
+    <string name="share_sync_body">Tu pareja o tutor podrá ver y editar la información deportiva de %1$s de manera colaborativa. Este código es de un solo uso por seguridad.</string>
+    <string name="share_permissions_title">Permisos compartidos</string>
+    <string name="share_permissions_badge">Lectura y edición</string>
+    <string name="share_permission_calendar">Calendario y competencias</string>
+    <string name="share_permission_calendar_detail">Entrenamientos, torneos y alertas de salida</string>
+    <string name="share_permission_history">Historial de cintas y tiempos</string>
+    <string name="share_permission_history_detail">Marcas personales, medallas y avances</string>
+    <string name="share_permission_expenses">Gastos y comprobantes</string>
+    <string name="share_permission_expenses_detail">Cuotas mensuales, equipo federado y pagos</string>
+    <string name="share_permission_included_cd">Incluido</string>
+    <string name="share_send_link">Compartir enlace de invitación</string>
+    <string name="share_regenerate">Generar nuevo código</string>
+    <string name="share_copied">¡Código copiado al portapapeles!</string>
+    <string name="share_footer">Cifrado y protegido bajo cuenta familiar de SportKid</string>
+    <string name="share_link_message">Únete al expediente deportivo de %1$s en SportKid: abre la app, entra a \"Tengo un código QR\" y escribe %2$s. Es válido por %3$d horas y se puede usar una sola vez.</string>
+
+    <!-- P18 Escanear o ingresar código -->
+    <string name="join_title">Escanear o ingresar código</string>
+    <string name="join_overline">Acceso familiar</string>
+    <string name="join_intro">Sincroniza el expediente deportivo de tu hijo o hija escaneando el código de tu pareja o ingresándolo manualmente.</string>
+    <string name="join_scanner_cd">Escanear código QR con la cámara</string>
+    <string name="join_scanner_searching">Buscando QR</string>
+    <string name="join_scanner_hint">Apunta al código QR en la pantalla del otro tutor</string>
+    <string name="join_flashlight">Linterna</string>
+    <string name="join_gallery">Subir galería</string>
+    <string name="join_or_type">O escribe el código</string>
+    <string name="join_code_label">Código alfanumérico</string>
+    <string name="join_code_length">%1$d caracteres</string>
+    <string name="join_code_placeholder" translatable="false">K7QM-4PZX</string>
+    <string name="join_code_help">Generado automáticamente con validez de %1$d horas.</string>
+    <string name="join_validate">Validar código</string>
+    <string name="join_error_expired">Este código expiró. Pide uno nuevo.</string>
+    <string name="join_error_used">Este código ya fue usado.</string>
+    <string name="join_error_invalid">Código no válido. Revisa e intenta de nuevo.</string>
+    <string name="join_where_title">¿Dónde encuentro este código?</string>
+    <string name="join_where_body">Pídele al tutor principal que abra el perfil del deportista en su app y presione el botón %1$s en la esquina superior.</string>
+    <string name="join_where_button">Compartir (QR)</string>
+    <string name="join_trouble_title">¿Problemas al escanear?</string>
+    <string name="join_trouble_body">Solicita una invitación por correo</string>
+
+    <!-- P18 Vista previa y sincronización -->
+    <string name="preview_title">Vista previa y sincronización</string>
+    <string name="preview_banner_overline">Detección exitosa</string>
+    <string name="preview_banner_title">¡Código validado exitosamente!</string>
+    <string name="preview_age">%1$d años</string>
+    <string name="preview_tutor">Tutor: %1$s (%2$s)</string>
+    <string name="preview_styles">%1$d/%2$d estilos</string>
+    <string name="preview_detail">· %1$s</string>
+    <plurals name="preview_medals">
+        <item quantity="one">%1$d medalla</item>
+        <item quantity="other">%1$d medallas</item>
+    </plurals>
+    <string name="preview_medals_label">Logros acumulados</string>
+    <plurals name="preview_events">
+        <item quantity="one">%1$d evento</item>
+        <item quantity="other">%1$d eventos</item>
+    </plurals>
+    <string name="preview_events_label">Historial activo</string>
+    <string name="preview_permission">Se agregará a tu panel familiar con permisos de %1$s.</string>
+    <string name="preview_sync_title">Descargando información de %1$s…</string>
+    <string name="preview_sync_subtitle">Sincronizando registros y multimedia</string>
+    <string name="preview_sync_done_title">Información de %1$s descargada</string>
+    <string name="preview_sync_done_subtitle">Todo está sincronizado</string>
+    <string name="preview_sync_percent">%1$d%%</string>
+    <string name="preview_step_profile">Perfil y datos médicos base</string>
+    <string name="preview_step_events">Historial de eventos y agenda</string>
+    <string name="preview_step_media">Galería de fotos y comprobantes</string>
+    <string name="preview_step_reminders">Notificaciones y recordatorios</string>
+    <string name="preview_step_synced">Sincronizado</string>
+    <string name="preview_step_progress">%1$d de %2$d…</string>
+    <string name="preview_step_waiting">En espera</string>
+    <string name="preview_open_profile">Ir al perfil de %1$s</string>
+    <string name="preview_footer">Sincronización en la nube asegurada vía SportKid Sync</string>
+</resources>
