@@ -350,6 +350,7 @@ private fun PermissionsCard() {
     }
 }
 
+/** Permiso que recibe el cotutor: icono en tile, título, detalle y check de incluido. */
 @Composable
 private fun PermissionRow(icon: Painter, iconTint: Color, title: String, detail: String) {
     val colors = MaterialTheme.colorScheme
@@ -406,6 +407,7 @@ private fun CopiedToast(visible: Boolean) {
     }
 }
 
+/** Nota de seguridad al pie: candado y "Cifrado y protegido…". */
 @Composable
 private fun Footer(modifier: Modifier = Modifier) {
     Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {

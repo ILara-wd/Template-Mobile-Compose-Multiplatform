@@ -151,6 +151,7 @@ fun JoinCodeScreen(
     }
 }
 
+/** Overline "Acceso familiar" con icono y la explicación de cómo unirse. */
 @Composable
 private fun Intro() {
     val colors = MaterialTheme.colorScheme
@@ -256,6 +257,7 @@ private fun ScanLine(modifier: Modifier = Modifier) {
     )
 }
 
+/** Botón tonal bajo el visor (Linterna, Subir galería). */
 @Composable
 private fun ScannerAction(text: String, icon: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
     SkTonalButton(
@@ -269,6 +271,7 @@ private fun ScannerAction(text: String, icon: Int, onClick: () -> Unit, modifier
     )
 }
 
+/** Separador "O escribe el código" entre el escáner y el campo manual. */
 @Composable
 private fun OrDivider(modifier: Modifier = Modifier) {
     val line = MaterialTheme.colorScheme.surfaceContainerHigh
@@ -380,6 +383,7 @@ private fun CodeCard(code: String, onCodeChange: (String) -> Unit, status: Invit
     }
 }
 
+/** Callout "¿Dónde encuentro este código?" con el botón a buscar resaltado. */
 @Composable
 private fun WhereToFind(modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
@@ -409,6 +413,7 @@ private fun WhereToFind(modifier: Modifier = Modifier) {
     )
 }
 
+/** Fila "¿Problemas al escanear?" que pide una invitación por correo. */
 @Composable
 private fun TroubleRow(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme

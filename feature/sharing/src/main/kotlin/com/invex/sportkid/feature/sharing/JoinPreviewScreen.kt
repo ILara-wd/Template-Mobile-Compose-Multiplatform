@@ -144,6 +144,7 @@ fun JoinPreviewScreen(
     }
 }
 
+/** Banner "Detección exitosa" que confirma el código validado. */
 @Composable
 private fun SuccessBanner() {
     val colors = MaterialTheme.colorScheme
@@ -169,6 +170,7 @@ private fun SuccessBanner() {
 }
 
 @OptIn(ExperimentalLayoutApi::class)
+/** Card del deportista al que te unes: avatar, edad, tutor, deportes, logros y el permiso que recibirás. */
 @Composable
 private fun AthletePreviewCard(preview: JoinPreview, today: LocalDate) {
     val colors = MaterialTheme.colorScheme
@@ -274,6 +276,7 @@ private fun AthletePreviewCard(preview: JoinPreview, today: LocalDate) {
     }
 }
 
+/** Icono pequeño con una línea de texto (fecha de nacimiento, tutor). */
 @Composable
 private fun IconLine(icon: Painter, text: String, style: TextStyle, color: Color, modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -308,6 +311,7 @@ private fun SportRow(snapshot: SportSnapshot) {
     }
 }
 
+/** Métrica con icono en círculo, valor y etiqueta ("4 medallas · Logros acumulados"). */
 @Composable
 private fun MetricTile(icon: Painter, containerColor: Color, iconTint: Color, value: String, label: String, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
@@ -364,6 +368,7 @@ private fun SyncCard(firstName: String, steps: List<SyncStep>) {
     }
 }
 
+/** Icono de sincronización que gira mientras descarga y cambia a check al terminar. */
 @Composable
 private fun SyncIcon(spinning: Boolean) {
     val rotation = if (spinning) {
@@ -389,6 +394,7 @@ private fun SyncIcon(spinning: Boolean) {
     }
 }
 
+/** Renglón de un bloque de la descarga: sincronizado, en curso ("8 de 12…") o en espera. */
 @Composable
 private fun StepRow(step: SyncStep) {
     val colors = MaterialTheme.colorScheme

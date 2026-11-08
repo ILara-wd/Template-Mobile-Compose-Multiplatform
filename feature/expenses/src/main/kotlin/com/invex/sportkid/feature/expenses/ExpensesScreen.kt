@@ -356,6 +356,7 @@ private fun TotalCard(expenses: List<Expense>) {
     }
 }
 
+/** Renglón del desglose: punto y nombre del deporte, conceptos, monto y porcentaje del total. */
 @Composable
 private fun BreakdownRow(sport: Sport, items: List<Expense>, total: Int) {
     val colors = MaterialTheme.colorScheme
@@ -450,6 +451,7 @@ private fun PendingCard(pending: List<Expense>, athletes: Map<String, ExpenseAth
     }
 }
 
+/** "Momentos del mes": fotos de los hijos con su nombre y lugar, y el enlace a la galería de recibos. */
 @Composable
 private fun Moments(moments: List<ExpenseMoment>, athletes: Map<String, ExpenseAthlete>, onGallery: () -> Unit, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
@@ -485,6 +487,7 @@ private fun Moments(moments: List<ExpenseMoment>, athletes: Map<String, ExpenseA
     }
 }
 
+/** Título de sección con una acción de texto alineada a la derecha. */
 @Composable
 private fun SectionHeader(title: String, action: @Composable () -> Unit) {
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -537,6 +540,7 @@ private fun History(expenses: List<Expense>, athletes: Map<String, ExpenseAthlet
     }
 }
 
+/** Card de un gasto: acento del deporte, icono, concepto, hijo o hijos, monto y estado de pago. */
 @Composable
 private fun ExpenseRow(expense: Expense, athletes: Map<String, ExpenseAthlete>) {
     val colors = MaterialTheme.colorScheme

@@ -500,6 +500,7 @@ private fun spinAngle(): Float {
     return angle
 }
 
+/** Diálogo para elegir con cuánta anticipación llegan los recordatorios. */
 @Composable
 private fun LeadDialog(selected: ReminderLead, onSelect: (ReminderLead) -> Unit, onDismiss: () -> Unit) {
     AlertDialog(

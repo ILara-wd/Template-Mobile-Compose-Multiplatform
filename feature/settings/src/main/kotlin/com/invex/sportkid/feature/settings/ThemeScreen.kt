@@ -300,6 +300,7 @@ private fun PaletteCard(palette: AppPalette, mode: ThemeMode, selected: Boolean,
     }
 }
 
+/** Muestra de 16dp del color principal de la paleta (degradado en "Automático"). */
 @Composable
 private fun Swatch(palette: AppPalette) {
     val modifier = Modifier
