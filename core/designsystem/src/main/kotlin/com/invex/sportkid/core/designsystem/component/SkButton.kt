@@ -46,7 +46,7 @@ enum class SkButtonSize(internal val height: Dp, internal val horizontalPadding:
     Large(LargeButtonHeight, 24.dp, 10.dp),
 }
 
-/** Botón primario pill (Figma: "Guardar deportista", "Guardar entrenamiento"). */
+/** Botón primario pill con icono inicial o final opcional (Figma: "Guardar deportista", "Validar código →"). */
 @Composable
 fun SkButton(
     text: String,
@@ -57,6 +57,7 @@ fun SkButton(
     size: SkButtonSize = SkButtonSize.Large,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
+    trailingIcon: Painter? = null,
 ) {
     Button(
         onClick = onClick,
@@ -74,6 +75,10 @@ fun SkButton(
             Spacer(Modifier.width(size.iconGap))
         }
         Text(text, style = MaterialTheme.typography.labelLarge, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        if (trailingIcon != null) {
+            Spacer(Modifier.width(size.iconGap))
+            Icon(trailingIcon, contentDescription = null)
+        }
     }
 }
 
@@ -107,7 +112,7 @@ fun SkElevatedButton(
     }
 }
 
-/** Link de acción secundaria con icono final opcional (Figma: "Explorar como invitado →"). */
+/** Link de acción secundaria con icono inicial o final opcional (Figma: "Explorar como invitado →", "Quitar acceso"). */
 @Composable
 fun SkTextButton(
     text: String,
@@ -116,6 +121,7 @@ fun SkTextButton(
     trailingIcon: Painter? = null,
     color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     textStyle: TextStyle = MaterialTheme.typography.labelMedium,
+    leadingIcon: Painter? = null,
 ) {
     TextButton(
         onClick = onClick,
@@ -123,6 +129,10 @@ fun SkTextButton(
         colors = ButtonDefaults.textButtonColors(contentColor = color),
         contentPadding = PaddingValues(horizontal = SportKidTheme.spacing.lg, vertical = SportKidTheme.spacing.xs),
     ) {
+        if (leadingIcon != null) {
+            Icon(leadingIcon, contentDescription = null)
+            Spacer(Modifier.width(SportKidTheme.spacing.xs))
+        }
         Text(text, style = textStyle)
         if (trailingIcon != null) {
             Spacer(Modifier.width(SportKidTheme.spacing.xs))

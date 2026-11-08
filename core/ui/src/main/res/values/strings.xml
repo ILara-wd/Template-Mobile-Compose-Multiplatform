@@ -62,6 +62,11 @@
 
     <string name="athlete_age">%1$d años</string>
 
+    <!-- Roles del círculo familiar -->
+    <string name="family_role_owner">Propietaria</string>
+    <string name="family_role_editor">Editor</string>
+    <string name="family_role_viewer">Lector / Entrenador</string>
+
     <!-- Formularios de evento -->
     <string name="form_paid">Pagado</string>
     <string name="form_pending">Pendiente</string>

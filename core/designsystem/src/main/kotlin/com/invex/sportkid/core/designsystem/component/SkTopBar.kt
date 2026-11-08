@@ -116,10 +116,26 @@ fun SkProfileButton(
     }
 }
 
+/** Ayuda o soporte en la top bar (icono `help` de 20dp, `onSurfaceVariant`). */
+@Composable
+fun SkHelpButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Icon(
+            painterResource(R.drawable.sk_ic_help),
+            contentDescription = stringResource(R.string.sk_action_help),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
 @SkPreviews
 @Composable
 private fun SkDetailTopBarPreview() = SportKidTheme {
     SkDetailTopBar(title = "Crear deportista", onBack = {}) {
+        SkHelpButton(onClick = {})
         SkProfileButton(onClick = {})
     }
 }

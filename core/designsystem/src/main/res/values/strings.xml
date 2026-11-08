@@ -7,4 +7,13 @@
     <string name="sk_action_notifications">Notificaciones</string>
     <string name="sk_brand_name" translatable="false">SportKid</string>
     <string name="sk_required">obligatorio</string>
+    <string name="sk_action_help">Ayuda y soporte</string>
+
+    <!-- M23 CopyableCodeChip -->
+    <string name="sk_code_copy">Copiar</string>
+    <string name="sk_code_copy_cd">Copiar el código %1$s</string>
+
+    <!-- M24 CountdownText -->
+    <string name="sk_countdown_expires_in">Expira en %1$02d:%2$02d h</string>
+    <string name="sk_countdown_expired">Código expirado</string>
 </resources>

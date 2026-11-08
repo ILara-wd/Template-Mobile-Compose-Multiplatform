@@ -54,6 +54,7 @@ dependencies {
     implementation(project(":feature:tkd"))
     implementation(project(":feature:swimming"))
     implementation(project(":feature:athletics"))
+    implementation(project(":feature:sharing"))
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

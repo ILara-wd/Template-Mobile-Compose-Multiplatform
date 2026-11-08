@@ -124,4 +124,29 @@
     <string name="profile_equipment_approved">Aprobado</string>
     <string name="profile_quick_log">Registrar evento</string>
     <string name="profile_tab_empty">El seguimiento de %1$s estará disponible pronto.</string>
+    <!-- P19 Miembros y accesos -->
+    <string name="members_title">Miembros y accesos</string>
+    <string name="members_overline">Círculo familiar seguro</string>
+    <string name="members_invite">Invitar</string>
+    <string name="members_athlete_subtitle">Gestión de tutores, abuelos y cuerpo técnico</string>
+    <string name="members_roles_body">Los %1$s pueden registrar entrenamientos, torneos y fotos. Solo la %2$s puede gestionar miembros y dar de baja el expediente.</string>
+    <string name="members_roles_editors">editores</string>
+    <string name="members_roles_owner">propietaria</string>
+    <string name="members_active">Miembros activos</string>
+    <string name="members_count">(%1$d de %2$d tutores)</string>
+    <string name="members_plans">Planes familiares</string>
+    <string name="members_you_created">Tú · Creadora del perfil</string>
+    <string name="members_owner_locked_cd">La propietaria no se puede quitar</string>
+    <string name="members_linked_on">Vinculado el %1$s · Activo</string>
+    <string name="members_viewer_access">Acceso a calendario y marcas</string>
+    <string name="members_remove">Quitar acceso</string>
+    <string name="members_remove_cd">Quitar acceso a %1$s</string>
+    <string name="members_remove_title">¿Quitar acceso a %1$s?</string>
+    <string name="members_remove_body">Ya no podrá ver ni editar la información de %1$s. Puedes invitarle de nuevo cuando quieras.</string>
+    <string name="members_cancel">Cancelar</string>
+    <string name="members_invite_title">Invitación directa por enlace o QR</string>
+    <string name="members_invite_body">Ideal para abuelos, pediatras o cuidadores auxiliares.</string>
+    <string name="members_share_link">Compartir enlace familiar</string>
+    <string name="members_show_qr_cd">Mostrar código QR de tutor</string>
+    <string name="members_security">Todos los accesos están protegidos con autenticación de dos pasos y registro transparente de visualización.</string>
 </resources>

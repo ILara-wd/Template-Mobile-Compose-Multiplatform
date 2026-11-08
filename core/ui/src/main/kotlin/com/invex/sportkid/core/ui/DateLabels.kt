@@ -54,6 +54,11 @@ fun LocalDate.shortLabelWithYear(): String = stringResource(
 fun LocalDate.fullLabel(): String =
     stringResource(R.string.date_full, dayOfMonth, stringArrayResource(R.array.date_months)[monthValue - 1].lowercase(), year)
 
+/** "15 may 2015". */
+@Composable
+fun LocalDate.compactLabel(): String =
+    stringResource(R.string.date_full, dayOfMonth, stringArrayResource(R.array.date_months_short)[monthValue - 1].lowercase(), year)
+
 /** "Ene 2024". */
 @Composable
 fun LocalDate.monthYearShortLabel(): String =

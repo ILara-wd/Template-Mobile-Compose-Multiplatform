@@ -5,13 +5,17 @@ import com.invex.sportkid.feature.athletics.AthleticsAthlete
 import com.invex.sportkid.feature.athletics.AthleticsSamples
 import com.invex.sportkid.feature.athlete.AthleteProfile
 import com.invex.sportkid.feature.athlete.AthleteSamples
+import com.invex.sportkid.feature.sharing.JoinPreview
+import com.invex.sportkid.feature.sharing.ShareAthlete
+import com.invex.sportkid.feature.sharing.SharingSamples
 import com.invex.sportkid.feature.swimming.SwimAthlete
 import com.invex.sportkid.feature.swimming.SwimSamples
 import com.invex.sportkid.feature.tkd.TkdAthlete
 import com.invex.sportkid.feature.tkd.TkdSamples
 
 /**
- * Traduce el perfil del hijo (feature:athlete) al contexto de cada deporte (feature:tkd, feature:swimming, feature:athletics).
+ * Traduce el perfil del hijo (feature:athlete) al contexto de cada deporte (feature:tkd, feature:swimming, feature:athletics)
+ * y al de compartir (feature:sharing).
  * Vive en `app` porque los features no dependen entre sí. TODO: un modelo `Athlete` en core:model.
  */
 internal fun AthleteProfile.toTkdAthlete(): TkdAthlete? = tkd?.let { tkd ->
@@ -78,3 +82,26 @@ internal fun athleticsAthleteFor(id: String?): AthleticsAthlete? {
     val athletes = AthleteSamples.athletes()
     return (athletes.firstOrNull { it.id == id && Sport.ATHLETICS in it.sports } ?: athletes.firstOrNull { Sport.ATHLETICS in it.sports })?.toAthleticsAthlete()
 }
+
+/** Perfil del hijo → deportista que se comparte o al que te unes (feature:sharing). */
+internal fun AthleteProfile.toShareAthlete(): ShareAthlete = ShareAthlete(
+    id = id,
+    firstName = firstName,
+    fullName = fullName,
+    colorIndex = colorIndex,
+    birthDate = birthDate,
+    sports = sports,
+    photoRes = avatarRes,
+)
+
+/** Hijo por id, o el primero. */
+internal fun athleteFor(id: String?): AthleteProfile? =
+    AthleteSamples.athletes().let { athletes -> athletes.firstOrNull { it.id == id } ?: athletes.firstOrNull() }
+
+/** Vista previa de la demo al validar un código: el expediente de Mateo. */
+internal fun joinPreviewFor(athlete: AthleteProfile): JoinPreview = SharingSamples.preview(
+    athlete = athlete.toShareAthlete(),
+    belt = athlete.tkd?.belt,
+    stylesMastered = athlete.swim?.mastered?.size,
+    medals = athlete.medals.total,
+)

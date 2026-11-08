@@ -18,9 +18,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.invex.sportkid.core.designsystem.R
 import com.invex.sportkid.core.designsystem.preview.SkPreviews
@@ -30,6 +32,10 @@ import com.invex.sportkid.core.designsystem.theme.SportKidTheme
  * M19. Callout informativo: icono, título opcional y texto. Sin título es una burbuja compacta
  * ("Torneo programado: el resultado se actualizará…"); con título y [emphasized] el icono va
  * en un círculo `primary` ("Actualización automática").
+ *
+ * Para otras variantes (icono en un círculo de otro color, texto neutro, card de 16dp) usa
+ * [leading], [bodyColor], [shape] y [contentPadding]: "Sincronización en tiempo real" (P17),
+ * "¿Dónde encuentro este código?" (P18) y roles del círculo familiar (P19).
  */
 @Composable
 fun SkInfoCallout(
@@ -40,25 +46,34 @@ fun SkInfoCallout(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     emphasized: Boolean = false,
+    bodyColor: Color? = null,
+    shape: Shape? = null,
+    contentPadding: Dp? = null,
+    spacing: Dp = SportKidTheme.spacing.sm,
+    leading: (@Composable () -> Unit)? = null,
 ) {
     val colors = MaterialTheme.colorScheme
-    Surface(modifier.fillMaxWidth(), shape = if (title != null) MaterialTheme.shapes.medium else MaterialTheme.shapes.small, color = containerColor) {
+    Surface(
+        modifier.fillMaxWidth(),
+        shape = shape ?: if (title != null) MaterialTheme.shapes.medium else MaterialTheme.shapes.small,
+        color = containerColor,
+    ) {
         Row(
-            Modifier.padding(if (title != null) SportKidTheme.spacing.lg else SportKidTheme.spacing.sm),
-            verticalAlignment = if (title != null) Alignment.Top else Alignment.CenterVertically,
+            Modifier.padding(contentPadding ?: if (title != null) SportKidTheme.spacing.lg else SportKidTheme.spacing.sm),
+            verticalAlignment = if (title != null || leading != null) Alignment.Top else Alignment.CenterVertically,
         ) {
-            if (emphasized) {
-                SkIconCircle(icon = icon, contentDescription = null, size = 32.dp, containerColor = colors.primary, iconTint = colors.onPrimary)
-            } else {
-                Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = colors.primary)
+            when {
+                leading != null -> leading()
+                emphasized -> SkIconCircle(icon = icon, contentDescription = null, size = 32.dp, containerColor = colors.primary, iconTint = colors.onPrimary)
+                else -> Icon(icon, contentDescription = null, modifier = Modifier.size(16.dp), tint = colors.primary)
             }
-            Spacer(Modifier.width(SportKidTheme.spacing.sm))
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Spacer(Modifier.width(spacing))
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(if (leading != null) 4.dp else 2.dp)) {
                 if (title != null) Text(title, style = MaterialTheme.typography.titleSmall, color = contentColor)
                 Text(
                     text,
                     style = MaterialTheme.typography.bodySmall,
-                    color = if (title != null) colors.primary else contentColor,
+                    color = bodyColor ?: if (title != null) colors.primary else contentColor,
                 )
             }
         }

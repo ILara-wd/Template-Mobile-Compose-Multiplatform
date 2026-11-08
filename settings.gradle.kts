@@ -31,4 +31,5 @@ include(":feature:home")
 include(":feature:tkd")
 include(":feature:swimming")
 include(":feature:athletics")
+include(":feature:sharing")
  

@@ -1,5 +1,6 @@
 package com.invex.one.template
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,9 +10,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import com.invex.sportkid.core.designsystem.theme.SportKidTheme
 import com.invex.sportkid.feature.agenda.AgendaScreen
 import com.invex.sportkid.feature.agenda.NewTrainingScreen
@@ -19,6 +22,8 @@ import com.invex.sportkid.feature.athlete.AthleteProfileScreen
 import com.invex.sportkid.feature.athlete.AthleteSamples
 import com.invex.sportkid.feature.athlete.AthletesScreen
 import com.invex.sportkid.feature.athlete.CreateAthleteScreen
+import com.invex.sportkid.feature.athlete.MemberSamples
+import com.invex.sportkid.feature.athlete.MembersScreen
 import com.invex.sportkid.feature.athletics.AthleticsScreen
 import com.invex.sportkid.feature.athletics.RaceFormScreen
 import com.invex.sportkid.feature.auth.LoginScreen
@@ -26,6 +31,13 @@ import com.invex.sportkid.feature.auth.SplashScreen
 import com.invex.sportkid.feature.auth.WelcomeScreen
 import com.invex.sportkid.feature.home.QuickAddAction
 import com.invex.sportkid.feature.home.QuickAddSheet
+import com.invex.sportkid.feature.sharing.InviteCode
+import com.invex.sportkid.feature.sharing.InviteStatus
+import com.invex.sportkid.feature.sharing.JoinCodeScreen
+import com.invex.sportkid.feature.sharing.JoinPreviewScreen
+import com.invex.sportkid.feature.sharing.ShareQrScreen
+import com.invex.sportkid.feature.sharing.SharingSamples
+import com.invex.sportkid.feature.sharing.rememberSimulatedSync
 import com.invex.sportkid.feature.swimming.SwimMeetFormScreen
 import com.invex.sportkid.feature.swimming.SwimmingScreen
 import com.invex.sportkid.feature.tkd.BeltExamScreen
@@ -47,7 +59,7 @@ class MainActivity : ComponentActivity() {
 }
 
 /** Flujo P01 → P04 y la app principal (T1). Navegación por estado hasta agregar Navigation Compose. */
-private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet, Athletics, RaceForm }
+private enum class Destination { Splash, Login, Welcome, CreateAthlete, Main, NewTraining, AthleteProfile, Taekwondo, BeltExam, Tournament, Swimming, SwimMeet, Athletics, RaceForm, ShareQr, JoinCode, JoinPreview, Members }
 
 /**
  * Solo en debug: abre una pantalla directamente para el catálogo de UI y las capturas
@@ -87,6 +99,13 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
     // Los formularios de deporte regresan a donde se abrieron (agenda o vista del deporte).
     var formReturn by rememberSaveable { mutableStateOf(Destination.Main) }
     var profileSport by rememberSaveable { mutableStateOf(debugStart?.sport) }
+    // Compartir (P17) se abre desde el perfil o desde Miembros; Unirse (P18) desde Bienvenida.
+    var shareReturn by rememberSaveable { mutableStateOf(Destination.AthleteProfile) }
+    var inviteValue by rememberSaveable { mutableStateOf(SharingSamples.CODE) }
+    var inviteExpiresAt by rememberSaveable { mutableLongStateOf(SharingSamples.code().expiresAtMillis) }
+    var joinStatus by rememberSaveable { mutableStateOf<InviteStatus?>(null) }
+    var removedMembers by rememberSaveable { mutableStateOf(listOf<String>()) }
+    val context = LocalContext.current
 
     BackHandler(enabled = destination == Destination.CreateAthlete) {
         destination = createAthleteReturn
@@ -112,6 +131,10 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
     BackHandler(enabled = destination == Destination.BeltExam || destination == Destination.Tournament) {
         destination = formReturn
     }
+    BackHandler(enabled = destination == Destination.ShareQr) { destination = shareReturn }
+    BackHandler(enabled = destination == Destination.Members) { destination = Destination.AthleteProfile }
+    BackHandler(enabled = destination == Destination.JoinCode) { destination = Destination.Welcome }
+    BackHandler(enabled = destination == Destination.JoinPreview) { destination = Destination.JoinCode }
 
     when (destination) {
         Destination.Splash -> SplashScreen(
@@ -133,8 +156,8 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
                 createAthleteReturn = Destination.Welcome
                 destination = Destination.CreateAthlete
             },
-            onScanQr = {}, // TODO: P18 Unirse con QR.
-            onEnterCode = {},
+            onScanQr = { destination = Destination.JoinCode },
+            onEnterCode = { destination = Destination.JoinCode },
             onExploreDemo = { destination = Destination.Main },
         )
 
@@ -178,7 +201,12 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
                     onQuickLog = { showQuickAdd = true },
                     initialSport = profileSport,
                     onOpenSportDetail = openSport,
-                    // TODO: P17 Compartir QR, P19 Tutores, edición, pago y detalle del examen.
+                    onShareQr = {
+                        shareReturn = Destination.AthleteProfile
+                        destination = Destination.ShareQr
+                    },
+                    onTutors = { destination = Destination.Members },
+                    // TODO: edición, pago y detalle del examen.
                 )
             }
         }
@@ -241,6 +269,70 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
         Destination.Tournament -> tkdAthleteFor(profileId)?.let { athlete ->
             TournamentFormScreen(athlete = athlete, onClose = { destination = formReturn }, onSave = { destination = formReturn })
         }
+
+        // TODO: pedir y renovar el código al backend de invitaciones.
+        Destination.ShareQr -> athleteFor(profileId)?.let { athlete ->
+            ShareQrScreen(
+                athlete = athlete.toShareAthlete(),
+                code = InviteCode(inviteValue, inviteExpiresAt),
+                onBack = { destination = shareReturn },
+                onShareLink = { context.shareText(it) },
+                onRegenerate = {
+                    val code = InviteCode.generate()
+                    inviteValue = code.value
+                    inviteExpiresAt = code.expiresAtMillis
+                },
+            )
+        }
+
+        // TODO: quitar acceso en el backend; hoy solo se oculta en la sesión.
+        Destination.Members -> athleteFor(profileId)?.let { athlete ->
+            MembersScreen(
+                athlete = athlete,
+                members = MemberSamples.members().filterNot { it.id in removedMembers },
+                onBack = { destination = Destination.AthleteProfile },
+                onInvite = {
+                    shareReturn = Destination.Members
+                    destination = Destination.ShareQr
+                },
+                onShareLink = {
+                    context.shareText(
+                        context.getString(
+                            com.invex.sportkid.feature.sharing.R.string.share_link_message,
+                            athlete.firstName,
+                            InviteCode.format(inviteValue),
+                            InviteCode.VALIDITY_HOURS,
+                        ),
+                    )
+                },
+                onRemoveMember = { removedMembers = removedMembers + it.id },
+            )
+        }
+
+        // TODO: escáner de Google (play-services-code-scanner), linterna y QR desde la galería.
+        Destination.JoinCode -> JoinCodeScreen(
+            onBack = { destination = Destination.Welcome },
+            onValidate = { code ->
+                joinStatus = SharingSamples.validate(code)
+                if (joinStatus == InviteStatus.VALID) destination = Destination.JoinPreview
+            },
+            status = joinStatus,
+            onCodeChange = { joinStatus = null },
+        )
+
+        // TODO: descargar el expediente real; la demo simula el avance.
+        Destination.JoinPreview -> athleteFor("mateo")?.let { athlete ->
+            JoinPreviewScreen(
+                preview = joinPreviewFor(athlete),
+                steps = rememberSimulatedSync(),
+                onBack = { destination = Destination.JoinCode },
+                onOpenProfile = {
+                    profileId = athlete.id
+                    profileSport = null
+                    destination = Destination.AthleteProfile
+                },
+            )
+        }
     }
 
     if (showQuickAdd && (destination == Destination.Main || destination == Destination.AthleteProfile)) {
@@ -267,4 +359,10 @@ private fun SportKidApp(onExit: () -> Unit, debugStart: DebugStart? = null) {
             },
         )
     }
+}
+
+/** Abre la hoja de compartir del sistema con [text]. */
+private fun Context.shareText(text: String) {
+    val send = Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text)
+    startActivity(Intent.createChooser(send, null))
 }
