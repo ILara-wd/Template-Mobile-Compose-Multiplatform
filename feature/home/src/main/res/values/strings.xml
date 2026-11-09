@@ -16,4 +16,36 @@
     <string name="quick_add_race">Carrera atlética</string>
     <string name="quick_add_race_desc">3K, 5K infantil o pista escolar</string>
     <string name="quick_add_tip">Los gastos y recordatorios se vinculan automáticamente al calendario familiar.</string>
+
+    <!-- P05 Inicio -->
+    <string name="home_filter_all">Todos</string>
+    <string name="home_athlete_age">%1$d años</string>
+    <string name="home_week_overline">Semana deportiva activa</string>
+    <plurals name="home_week_title">
+        <item quantity="one">¡%1$d evento programado!</item>
+        <item quantity="other">¡%1$d eventos programados!</item>
+    </plurals>
+    <string name="home_week_empty_title">Semana libre</string>
+    <string name="home_week_empty_body">No hay compromisos próximos. Registra uno con el botón Registrar.</string>
+    <string name="home_week_next">Próximo compromiso %1$s a las %2$s.</string>
+    <string name="home_when_today">hoy</string>
+    <string name="home_when_tomorrow">mañana</string>
+    <string name="home_when_this_week">este %1$s</string>
+    <string name="home_when_date">el %1$s</string>
+    <string name="home_upcoming">Próximos eventos</string>
+    <string name="home_see_calendar">Ver calendario</string>
+    <string name="home_event_when">%1$s · %2$s</string>
+    <string name="home_amount_mxn">$%1$s MXN</string>
+    <string name="home_amount">$%1$s</string>
+    <string name="home_no_events">Sin eventos próximos para este filtro.</string>
+    <string name="home_achievements">Últimos logros</string>
+    <string name="home_expenses_title">Gastos de %1$s</string>
+    <string name="home_see_detail">Ver detalle</string>
+    <string name="home_currency">MXN</string>
+    <plurals name="home_activities">
+        <item quantity="one">%1$d actividad activa</item>
+        <item quantity="other">%1$d actividades activas</item>
+    </plurals>
+    <string name="home_percent_total">%1$d%% total</string>
+    <string name="home_register">Registrar</string>
 </resources>

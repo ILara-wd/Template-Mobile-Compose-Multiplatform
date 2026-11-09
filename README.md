@@ -255,9 +255,9 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | O3 | Bottom navigation | `SkBottomBar` | `app` | 4 destinos: Inicio, Agenda, Deportistas y Gastos. El activo va en pill `secondaryContainer`. |
 | O4 | Sheet de registro rápido | `QuickAddSheet` | `feature:home` | Título y grid 2×3 de tiles: Entrenamiento, Examen de cinta, Torneo TKD, Competencia de natación y Carrera. |
 | O5 | Card de evento | `EventCard` | `core:ui` | Acento lateral de 6dp del deporte, horario, `AthleteTag` (punto y nombre del hijo), título, subtítulo, icono del deporte en círculo de 36dp, lugar, franja de costo en `surfaceContainerLow` con `PaymentStatusChip` y, si está pendiente, la franja "Toca para saldar o adjuntar comprobante". |
-| O6 | Lista de próximos | `UpcomingEventsSection` | `feature:home` | `SectionHeader` con hasta 3 `EventCard` y el link "Ver agenda ›". |
-| O7 | Carrusel de logros | `AchievementsCarousel` | `feature:home` | Cards de 160dp en `tertiaryContainer` con foto de medalla, `MedalBadge` o `BeltBadge`, y dato ("5K · 28:41"). |
-| O8 | Card de gastos del mes | `MonthlyExpensesCard` | `feature:home` | Overline, total `displaySmall`, barra apilada por color de deporte y leyenda. |
+| O6 | Lista de próximos | `Upcoming` / `UpcomingEventCard` | `feature:home` | Título con contador y "Ver calendario ›", y hasta 3 cards: acento de 6dp, icono del deporte en tile de 44dp, overline del deporte, `AthleteTag`, título, caja con fecha y lugar, costo y `PaymentStatusChip`. Diseño propio de Inicio, distinto de O5. |
+| O7 | Carrusel de logros | `Achievements` / `AchievementCard` | `feature:home` | `LazyRow` de cards de 256dp: icono por tipo (medalla `tertiaryContainer`, cinta neutra, récord `primaryContainer`), `AthleteTag`, título, lugar y franja con el resultado. |
+| O8 | Card de gastos del mes | `ExpensesCard` | `feature:home` | Título "Gastos de noviembre" y "Ver detalle →" (abre Gastos), total en `displaySmall` con "n actividades activas", barra apilada por color de deporte y una tarjeta por deporte con monto y porcentaje. |
 | O9 | Calendario mensual | `MonthCalendar` | `feature:agenda` | Grid de 7 columnas con hasta 3 `SkDot` por día (color del hijo). El día de hoy va en outline y el seleccionado en `primary`. |
 | O10 | Lista de agenda | `AgendaDayList` | `feature:agenda` | Encabezados por día y `EventCard` con swipe para "Marcar pagado". |
 | O11 | Formulario base de evento | `FormCard` / `FormSaveBar` | `core:ui` | No es un scaffold único: cada formulario arma su `Scaffold` con `SkDetailTopBar` (cerrar + "Guardar") y comparte `FormCard`, M10, M8 y `FormSaveBar` (CTA fijo de 48dp con nota opcional; color configurable: el del deporte en TKD, `primary` en natación). |
@@ -304,7 +304,7 @@ Las moléculas **genéricas** viven en `core:designsystem`. Las que conocen mode
 | P02 | Login | T4 | Ilustración y `SkButton` "Continuar con Google" | `feature:auth` |
 | P03 | Bienvenida | T4 | 2 cards de opción: "Crear deportista" y "Tengo un código QR" | `feature:auth` |
 | P04 | Alta / edición de deportista | T3 | Avatar picker, selector de color, chips de deporte y secciones por deporte | `feature:athlete` |
-| P05 | Inicio | T1 | O6, O7, O8, `SkExtendedFab` y O4 | `feature:home` |
+| P05 | Inicio | T1 | Chips por hijo (filtran todo), banner de la semana con el próximo compromiso, O6, O7, O8 y `SkExtendedFab` "Registrar" que abre O4 (`HomeScreen`). Pestaña inicial de la app | `feature:home` |
 | P06 | Agenda | T1 | O9, O10 y filtros | `feature:agenda` |
 | P07 | Evento / entrenamiento | T3 | O11 | `feature:agenda` |
 | P08 | Deportistas y perfil | T1 / T2 | O12, O13 y O14 | `feature:athlete` |

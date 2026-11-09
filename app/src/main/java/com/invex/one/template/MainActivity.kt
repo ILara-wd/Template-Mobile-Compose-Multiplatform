@@ -35,6 +35,7 @@ import com.invex.sportkid.feature.athletics.RaceFormScreen
 import com.invex.sportkid.feature.auth.LoginScreen
 import com.invex.sportkid.feature.auth.SplashScreen
 import com.invex.sportkid.feature.auth.WelcomeScreen
+import com.invex.sportkid.feature.home.HomeScreen
 import com.invex.sportkid.feature.home.QuickAddAction
 import com.invex.sportkid.feature.home.QuickAddSheet
 import com.invex.sportkid.feature.sharing.InviteCode
@@ -116,7 +117,7 @@ private fun SportKidApp(
     debugStart: DebugStart? = null,
 ) {
     var destination by rememberSaveable { mutableStateOf(debugStart?.destination ?: Destination.Splash) }
-    var tab by rememberSaveable { mutableStateOf(debugStart?.tab ?: MainTab.Agenda) }
+    var tab by rememberSaveable { mutableStateOf(debugStart?.tab ?: MainTab.Home) }
     var showQuickAdd by rememberSaveable { mutableStateOf(debugStart?.quickAdd ?: false) }
     var profileId by rememberSaveable { mutableStateOf(debugStart?.athleteId) }
     // Alta de deportista desde Bienvenida (onboarding) o desde la pestaña Deportistas.
@@ -204,6 +205,12 @@ private fun SportKidApp(
             },
         ) { current, modifier ->
             when (current) {
+                MainTab.Home -> HomeScreen(
+                    onRegister = { showQuickAdd = true },
+                    onOpenAgenda = { tab = MainTab.Agenda },
+                    onOpenExpenses = { tab = MainTab.Expenses },
+                    modifier = modifier,
+                )
                 MainTab.Agenda -> AgendaScreen(onNewEvent = { showQuickAdd = true }, modifier = modifier)
                 MainTab.Athletes -> AthletesScreen(
                     onOpenProfile = {
@@ -219,7 +226,6 @@ private fun SportKidApp(
                 )
                 // TODO: registrar gasto, comprobantes y exportar.
                 MainTab.Expenses -> ExpensesScreen(modifier = modifier)
-                else -> ComingSoon(current, modifier) // TODO: P05 Inicio.
             }
         }
 

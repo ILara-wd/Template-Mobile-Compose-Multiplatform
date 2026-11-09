@@ -6,5 +6,4 @@
     <string name="nav_agenda">Agenda</string>
     <string name="nav_athletes">Deportistas</string>
     <string name="nav_expenses">Gastos</string>
-    <string name="tab_coming_soon">%1$s estará disponible pronto.</string>
 </resources>

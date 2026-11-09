@@ -10,6 +10,8 @@
      "captura": {"extras": {"sk_screen": "Welcome"}, "scrolls": 0}},
     {"id": "P04", "nombre": "Crear deportista", "composable": "CreateAthleteScreen", "figma": "99:4064",
      "captura": {"extras": {"sk_screen": "CreateAthlete"}, "scrolls": 2}},
+    {"id": "P05", "nombre": "Inicio", "composable": "HomeScreen", "figma": "136:3411",
+     "captura": {"extras": {"sk_screen": "Main", "sk_tab": "Home"}, "scrolls": 2}},
     {"id": "P06", "nombre": "Agenda", "composable": "AgendaScreen", "figma": "103:4389",
      "captura": {"extras": {"sk_screen": "Main", "sk_tab": "Agenda"}, "scrolls": 1}},
     {"id": "O4", "nombre": "¿Qué quieres registrar? (registro rápido)", "composable": "QuickAddSheet", "figma": "103:5010",
