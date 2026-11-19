@@ -16,7 +16,7 @@ Piezas del catálogo (todas relativas a la raíz del repo):
 | `docs/ui-catalogo/pantallas.json` | Lista de pantallas: id (P14, O4…), nombre, composable, nodo de Figma (archivo `KqTFktvrRvCzO2idPga5xf`) y cómo abrirla (`captura.extras`, `scrolls`, `espera`). |
 | `docs/ui-catalogo/img/` | Capturas `<id>-<n>.jpg` de 360 px de ancho. |
 | `scripts/ui-catalogo/capturar.py` | Abre cada pantalla en el emulador y la captura. |
-| `scripts/ui-catalogo/generar.py` + `plantilla.html` | Leen el código, el README y el manifiesto, y escriben `index.html`. |
+| `scripts/ui-catalogo/generar.py` + `plantilla.html` | Leen el código, el README, el manifiesto y los `res/drawable*` de cada módulo, y escriben `index.html`. |
 
 ## A. Consultar antes de implementar
 
@@ -25,7 +25,8 @@ Piezas del catálogo (todas relativas a la raíz del repo):
 1. Para cada pieza del diseño, busca candidatos por nombre y por función:
    - en el README (§1.6 átomos, §2 moléculas M1–M31, §3 organismos O1–O29, §4.2 pantallas);
    - en el código: `grep -rn "fun Sk\|^fun [A-Z]" core/designsystem core/ui --include=*.kt`;
-   - en el catálogo (pestaña Componentes), que también lista los **locales** de cada feature.
+   - en el catálogo (pestaña Componentes), que también lista los **locales** de cada feature;
+   - para íconos e imágenes, en la pestaña **Assets** (o `ls core/*/src/main/res/drawable`): si el ícono ya existe en `core`, reutilízalo en vez de exportarlo otra vez de Figma.
 2. Compara al menos dos candidatos leyendo su firma (parámetros y slots). Elige el que necesite menos cambios aunque su nombre no encaje. Ejemplos ya resueltos: `FormCard`, `FeeRow`, `FormDateTimeFields`, `FormSaveBar`, `PhotoUploadArea(onCamera)` y `AthleteSportHeader` sirven para cualquier deporte.
 3. Clasifica cada pieza:
    - **Reutilizar**: existe en `core:designsystem` o `core:ui` y lo cubre. Da el nombre y los parámetros clave.
@@ -66,5 +67,6 @@ Piezas del catálogo (todas relativas a la raíz del repo):
 ## C. Responder preguntas sobre el catálogo
 
 - "¿Dónde se usa X?": la ficha del componente en el catálogo, o `grep -rn "X(" --include=*.kt core feature app`.
+- "¿Qué assets no se usan?": pestaña Assets, filtro «Sin uso».
 - "¿Qué pantallas faltan?": compara `pantallas.json` con README §4.2.
 - Para enseñar el catálogo, abre `docs/ui-catalogo/index.html` en el navegador (`open docs/ui-catalogo/index.html`). No lo publiques fuera del repo sin permiso.

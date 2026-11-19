@@ -7,6 +7,8 @@ Todo sale del código, así que el catálogo no se desactualiza a mano:
   (M9, O21…) = la fila del README que nombra al componente. Usos = llamadas en el código.
 - Pantallas: docs/ui-catalogo/pantallas.json (id, nombre, composable, nodo de Figma, captura) y las
   imágenes de docs/ui-catalogo/img/ que genera capturar.py.
+- Assets: res/drawable* de cada módulo; los <vector> se convierten a SVG y las imágenes se
+  enlazan por ruta relativa (el catálogo se abre desde el repo). Usos = R.drawable.x y @drawable/x.
 - Tokens: Color.kt, SportColors.kt, Type.kt, Spacing.kt y Shape.kt.
 
 Uso: python3 scripts/ui-catalogo/generar.py
@@ -15,6 +17,7 @@ import datetime as dt
 import json
 import re
 import subprocess
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -149,6 +152,145 @@ def tokens() -> dict:
     }
 
 
+ANDROID = "{http://schemas.android.com/apk/res/android}"
+AAPT = "{http://schemas.android.com/aapt}"
+
+
+def res_dirs() -> list[tuple[str, Path]]:
+    """Carpetas drawable* de cada módulo, con el nombre del módulo (core:ui, feature:tkd…)."""
+    out = []
+    for module, _ in SOURCES:
+        kind, _, name = module.partition(":")
+        base = ROOT / (f"{kind}/{name}" if name else kind) / "src/main/res"
+        out += [(module, d) for d in sorted(base.glob("drawable*")) if d.is_dir()]
+    return out
+
+
+def android_color(value: str | None) -> tuple[str, float] | None:
+    """#RGB, #ARGB, #RRGGBB o #AARRGGBB → (#RRGGBB, alfa). Referencias (@color, ?attr) → gris."""
+    if not value:
+        return None
+    if not value.startswith("#"):
+        return "#888888", 1.0
+    h = value[1:]
+    if len(h) in (3, 4):
+        h = "".join(c * 2 for c in h)
+    alpha = int(h[:2], 16) / 255 if len(h) == 8 else 1.0
+    return "#" + h[-6:].upper(), alpha
+
+
+def vector_to_svg(path: Path) -> tuple[str, bool, str]:
+    """Convierte un <vector> de Android a SVG. Devuelve (svg, monocromo, tamaño en dp).
+
+    Si todos los trazos usan un solo color, se cambia por currentColor: así se pintan con el color
+    del tema, como hace Icon(tint) en la app.
+    """
+    root = ET.parse(path).getroot()
+    a = lambda el, k, d=None: el.get(ANDROID + k, d)
+    vw, vh = a(root, "viewportWidth", "24"), a(root, "viewportHeight", "24")
+    dp = lambda k: f'{float(a(root, k, "0").replace("dp", "")):.1f}'.removesuffix(".0")
+    size = f'{dp("width")}×{dp("height")} dp'
+    paths, defs, colors = [], [], set()
+
+    def walk(el, transform=""):
+        for child in el:
+            if child.tag == "group":
+                tx, ty = a(child, "translateX", "0"), a(child, "translateY", "0")
+                sx, sy, rot = a(child, "scaleX", "1"), a(child, "scaleY", "1"), a(child, "rotation", "0")
+                px, py = a(child, "pivotX", "0"), a(child, "pivotY", "0")
+                t = (f"translate({tx} {ty}) translate({px} {py}) rotate({rot}) scale({sx} {sy}) translate(-{px} -{py})")
+                walk(child, f"{transform} {t}".strip())
+            elif child.tag == "path":
+                attrs = [f'd="{a(child, "pathData", "")}"']
+                for kind in ("fill", "stroke"):
+                    grad = next((g for at in child.findall(AAPT + "attr") if at.get("name") == f"android:{kind}Color"
+                                 for g in at.findall("gradient")), None)
+                    if grad is not None:
+                        gid = f"g{len(defs)}"
+                        stops = "".join(
+                            f'<stop offset="{a(s, "offset", "0")}" stop-color="{android_color(a(s, "color"))[0]}" '
+                            f'stop-opacity="{android_color(a(s, "color"))[1]:.3g}"/>' for s in grad.findall("item"))
+                        defs.append(f'<linearGradient id="{gid}" gradientUnits="userSpaceOnUse" x1="{a(grad, "startX", "0")}" '
+                                    f'y1="{a(grad, "startY", "0")}" x2="{a(grad, "endX", "0")}" y2="{a(grad, "endY", "0")}">{stops}</linearGradient>')
+                        attrs.append(f'{kind}="url(#{gid})"')
+                        colors.add("gradient")
+                        continue
+                    col = android_color(a(child, f"{kind}Color"))
+                    if col is None or col[1] == 0:
+                        attrs.append(f'{kind}="none"')
+                        continue
+                    colors.add(col[0])
+                    alpha = col[1] * float(a(child, f"{kind}Alpha", "1"))
+                    attrs.append(f'{kind}="{col[0]}"' + (f' {kind}-opacity="{alpha:.3g}"' if alpha < 1 else ""))
+                if a(child, "strokeColor"):
+                    attrs.append(f'stroke-width="{a(child, "strokeWidth", "0")}"')
+                    for k, svg in (("strokeLineCap", "stroke-linecap"), ("strokeLineJoin", "stroke-linejoin")):
+                        if a(child, k):
+                            attrs.append(f'{svg}="{a(child, k)}"')
+                if a(child, "fillType") == "evenOdd":
+                    attrs.append('fill-rule="evenodd"')
+                if transform:
+                    attrs.append(f'transform="{transform}"')
+                paths.append(f'<path {" ".join(attrs)}/>')
+
+    walk(root)
+    mono = len(colors) == 1 and "gradient" not in colors
+    body = "".join(paths)
+    if mono:
+        body = body.replace(f'"{next(iter(colors))}"', '"currentColor"')
+    svg = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {vw} {vh}">'
+           f'{"<defs>" + "".join(defs) + "</defs>" if defs else ""}{body}</svg>')
+    return svg, mono, size
+
+
+def drawables(texts: dict[str, str], screen_by_file: dict[str, list[str]]) -> list[dict]:
+    """Assets de res/drawable*: vectores convertidos a SVG y bitmaps referenciados por ruta relativa."""
+    items = []
+    for module, d in res_dirs():
+        for f in sorted(d.iterdir()):
+            if f.suffix == ".xml":
+                try:
+                    svg, mono, size = vector_to_svg(f)
+                except ET.ParseError:
+                    continue
+                items.append({"name": f.stem, "module": module, "kind": "Vector", "svg": svg, "mono": mono, "size": size})
+            elif f.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp"):
+                rel = Path("../..") / f.relative_to(ROOT)
+                items.append({"name": f.stem, "module": module, "kind": "Imagen", "src": rel.as_posix(),
+                              "size": f"{f.stat().st_size // 1024} KB · {d.name}"})
+            else:
+                continue
+            items[-1]["file"] = str(f.relative_to(ROOT))
+
+    # R.drawable.x se resuelve al del propio módulo; si no existe ahí, al de core (o al primero que haya).
+    by_name: dict[str, list[dict]] = {}
+    for it in items:
+        by_name.setdefault(it["name"], []).append(it)
+        it["uses"], it["files"] = 0, set()
+    module_of = lambda rel: next((m for m, base in SOURCES if (ROOT / rel).is_relative_to(base)), "")
+    ref = re.compile(r"R\.drawable\.(\w+)\b")
+    for rel, src in texts.items():
+        mod = module_of(rel)
+        for m in ref.finditer(src):
+            cands = by_name.get(m.group(1))
+            if not cands:
+                continue
+            target = next((c for c in cands if c["module"] == mod), None) \
+                or next((c for c in cands if c["module"].startswith("core:")), cands[0])
+            target["uses"] += 1
+            target["files"].add(rel)
+    # Referencias desde XML de recursos (p. ej. el ícono adaptativo del launcher).
+    for xml in (x for res in {d.parent for _, d in res_dirs()} for x in res.rglob("*.xml")):
+        for name in re.findall(r"@drawable/(\w+)", xml.read_text(encoding="utf-8")):
+            for c in by_name.get(name, []):
+                c["uses"] += 1
+                c["files"].add(str(xml.relative_to(ROOT)))
+    for it in items:
+        it["screens"] = sorted({sid for rel in it["files"] for sid in screen_by_file.get(rel, [])})
+        it["files"] = sorted(it["files"])
+    return items
+
+
 def main() -> None:
     manifest = json.loads((CATALOGO / "pantallas.json").read_text(encoding="utf-8"))
     comps, texts = scan()
@@ -224,12 +366,14 @@ def main() -> None:
         "screens": screens,
         "components": out,
         "tokens": tokens(),
+        "assets": drawables(texts, screen_by_file),
     }
     template = (Path(__file__).parent / "plantilla.html").read_text(encoding="utf-8")
     payload = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     (CATALOGO / "index.html").write_text(template.replace("/*__DATA__*/null", payload), encoding="utf-8")
     counts = {t: sum(1 for c in out if c["tier"] == t) for t in order}
-    print(f"index.html: {len(screens)} pantallas, {len(out)} componentes {counts}")
+    assets = {k: sum(1 for a in data["assets"] if a["kind"] == k) for k in ("Vector", "Imagen")}
+    print(f"index.html: {len(screens)} pantallas, {len(out)} componentes {counts}, assets {assets}")
 
 
 if __name__ == "__main__":
