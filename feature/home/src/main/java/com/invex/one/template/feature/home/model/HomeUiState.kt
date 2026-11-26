@@ -1,23 +1,14 @@
 package com.invex.one.template.feature.home.model
 
-import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Immutable
 import kotlin.math.roundToInt
 
 @Immutable
 data class HomeUiState(
-    val player: PlayerSummary,
+    val level: Int,
     val quickStats: QuickStats,
     val dailyChallenge: DailyChallenge,
     val mostPlayed: List<RecentGame>,
-)
-
-@Immutable
-data class PlayerSummary(
-    val level: Int,
-    val streakDays: Int,
-    val coins: Int,
-    @param:DrawableRes val avatar: Int,
 )
 
 @Immutable

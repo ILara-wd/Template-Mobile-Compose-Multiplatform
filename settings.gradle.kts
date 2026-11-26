@@ -23,4 +23,5 @@ rootProject.name = "Template"
 include(":app")
 include(":core:designsystem")
 include(":feature:home")
+include(":feature:records")
  

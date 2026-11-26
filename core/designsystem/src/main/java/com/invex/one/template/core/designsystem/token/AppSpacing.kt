@@ -12,6 +12,7 @@ data class AppSpacing(
     val xs: Dp = 6.dp,
     val sm: Dp = 8.dp,
     val smd: Dp = 10.dp,
+    val mdLg: Dp = 14.dp,
     val md: Dp = 12.dp,
     val lg: Dp = 16.dp,
     val xl: Dp = 24.dp,
@@ -28,6 +29,8 @@ object AppSize {
     val logo = 32.dp
     val iconTile = 40.dp
     val iconTileGlyph = 20.dp
+    val rankBadge = 44.dp
+    val statTileIcon = 32.dp
     val navIndicatorWidth = 56.dp
     val navIndicatorHeight = 32.dp
     val navItemMinWidth = 64.dp

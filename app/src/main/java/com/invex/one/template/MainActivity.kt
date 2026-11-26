@@ -26,7 +26,10 @@ import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.molecule.NavBarItem
 import com.invex.one.template.core.designsystem.organism.AppBottomBar
 import com.invex.one.template.core.designsystem.theme.AppTheme
+import com.invex.one.template.data.SamplePlayer
 import com.invex.one.template.feature.home.HomeRoute
+import com.invex.one.template.feature.records.RecordsRoute
+import com.invex.one.template.ui.MiniJuegosTopBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +57,13 @@ fun TemplateApp() {
     Scaffold(
         containerColor = AppTheme.colors.background,
         contentWindowInsets = WindowInsets(0),
+        topBar = {
+            MiniJuegosTopBar(
+                section = stringResource(current.label),
+                player = SamplePlayer,
+                onProfileClick = { /* TODO: profile */ },
+            )
+        },
         bottomBar = {
             AppBottomBar {
                 AppDestination.entries.forEach { destination ->
@@ -71,10 +81,13 @@ fun TemplateApp() {
             AppDestination.Home -> HomeRoute(
                 onPlayGame = { /* TODO: navigate to game */ },
                 onSeeHistory = { current = AppDestination.Records },
-                onProfileClick = { /* TODO: profile */ },
                 contentPadding = innerPadding,
             )
-            else -> Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+            AppDestination.Records -> RecordsRoute(
+                onGlobalRankingClick = { /* TODO: global ranking */ },
+                contentPadding = innerPadding,
+            )
+            AppDestination.Games -> Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
                 Text(stringResource(current.label), style = AppTheme.typography.title, color = AppTheme.colors.onSurface)
             }
         }

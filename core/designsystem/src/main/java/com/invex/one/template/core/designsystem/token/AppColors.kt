@@ -17,17 +17,20 @@ data class AppColors(
     val onPrimaryContainer: Color,
     val primaryFixed: Color,
     val onPrimaryFixed: Color,
+    val onPrimaryFixedVariant: Color,
 
     val secondary: Color,
     val secondaryContainer: Color,
     val secondaryFixed: Color,
     val onSecondaryFixed: Color,
+    val onSecondaryFixedVariant: Color,
 
     val tertiary: Color,
     val tertiaryContainer: Color,
     val onTertiaryContainer: Color,
     val tertiaryFixed: Color,
     val onTertiaryFixed: Color,
+    val onTertiaryFixedVariant: Color,
 
     val background: Color,
     val surface: Color,
@@ -49,17 +52,20 @@ val LightAppColors = AppColors(
     onPrimaryContainer = ColorPalette.Green20,
     primaryFixed = ColorPalette.Green80,
     onPrimaryFixed = ColorPalette.Green10,
+    onPrimaryFixedVariant = ColorPalette.Green30,
 
     secondary = ColorPalette.Blue40,
     secondaryContainer = ColorPalette.Blue60,
     secondaryFixed = ColorPalette.Blue90,
     onSecondaryFixed = ColorPalette.Blue10,
+    onSecondaryFixedVariant = ColorPalette.Blue30,
 
     tertiary = ColorPalette.Orange40,
     tertiaryContainer = ColorPalette.Orange70,
     onTertiaryContainer = ColorPalette.Orange30,
     tertiaryFixed = ColorPalette.Orange90,
     onTertiaryFixed = ColorPalette.Orange10,
+    onTertiaryFixedVariant = ColorPalette.Orange28,
 
     background = ColorPalette.Indigo98,
     surface = ColorPalette.Indigo98,

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Template</string>
+    <string name="app_title">MiniJuegos Hub</string>
     <string name="nav_home">Inicio</string>
     <string name="nav_games">Juegos</string>
     <string name="nav_records">Récords</string>
+    <string name="topbar_streak">%1$d\nDÍAS</string>
+    <string name="profile_content_description">Perfil</string>
 </resources>

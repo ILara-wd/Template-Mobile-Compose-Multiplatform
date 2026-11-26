@@ -11,20 +11,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.invex.one.template.core.designsystem.theme.AppTheme
 
-/** Uppercase category tag (e.g. "PUZLE NUMÉRICO"). */
+enum class TagSize { Medium, Small }
+
+/** Uppercase category tag (e.g. "PUZLE NUMÉRICO"). `Medium` pads 10dp, `Small` 8dp. */
 @Composable
 fun CategoryTag(
     text: String,
     containerColor: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
+    size: TagSize = TagSize.Medium,
 ) {
     PillLabel(
         text = text.uppercase(),
         containerColor = containerColor,
         contentColor = contentColor,
         style = AppTheme.typography.label,
-        horizontalPadding = AppTheme.spacing.smd,
+        horizontalPadding = if (size == TagSize.Medium) AppTheme.spacing.smd else AppTheme.spacing.sm,
         modifier = modifier,
     )
 }

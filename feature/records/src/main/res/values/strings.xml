@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="records_title">Scores más altos</string>
+    <string name="records_subtitle">Tus mejores marcas personales</string>
+    <string name="records_global_ranking">Ranking global</string>
+
+    <string name="records_summary_best">Récord global</string>
+    <string name="records_summary_games">Partidas</string>
+    <string name="records_summary_streak">Racha actual</string>
+    <plurals name="records_streak_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+
+    <string name="records_list_title">Podio y marcas</string>
+    <plurals name="records_games_count">
+        <item quantity="one">%1$d JUEGO</item>
+        <item quantity="other">%1$d JUEGOS</item>
+    </plurals>
+    <string name="records_rank">%1$dº</string>
+    <string name="records_round_value">Ronda %1$d</string>
+
+    <string name="records_unit_points">puntos</string>
+    <string name="records_unit_moles">topos</string>
+    <string name="records_unit_completed">completados</string>
+    <string name="records_unit_sequence">secuencia</string>
+    <string name="records_unit_apples">manzanas</string>
+    <string name="records_unit_bounces">rebotes</string>
+
+    <string name="records_category_puzzle">Puzzle</string>
+    <string name="records_category_arcade">Arcade</string>
+    <string name="records_category_logic">Lógica</string>
+    <string name="records_category_memory">Memoria</string>
+    <string name="records_category_classic">Clásico</string>
+    <string name="records_category_sports">Deportes</string>
+</resources>

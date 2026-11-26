@@ -1,5 +1,6 @@
 package com.invex.one.template.feature.home.component
 
+import com.invex.one.template.core.designsystem.format.formatScore
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

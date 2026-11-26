@@ -11,7 +11,10 @@ import com.invex.one.template.core.designsystem.R
 
 /** Font families bundled in `res/font` (static instances, so they work on minSdk 24). */
 object AppFonts {
-    val Outfit = FontFamily(Font(R.font.outfit_semibold, FontWeight.SemiBold))
+    val Outfit = FontFamily(
+        Font(R.font.outfit_semibold, FontWeight.SemiBold),
+        Font(R.font.outfit_bold, FontWeight.Bold),
+    )
     val PlusJakartaSans = FontFamily(
         Font(R.font.plus_jakarta_sans_medium, FontWeight.Medium),
         Font(R.font.plus_jakarta_sans_bold, FontWeight.Bold),
@@ -43,6 +46,8 @@ private fun style(
 /** Text styles from Figma. Names describe the role, not the screen where they appear. */
 @Immutable
 data class AppTypography(
+    /** Outfit Bold 28/36 -0.01em — screen headlines. */
+    val headline: TextStyle = style(AppFonts.Outfit, FontWeight.Bold, 28, 36, -0.28),
     /** Outfit SemiBold 18/24 — screen, section and card titles. */
     val title: TextStyle = style(AppFonts.Outfit, FontWeight.SemiBold, 18, 24),
     /** Plus Jakarta Sans Bold 16/22 — emphasized body / highlight titles. */

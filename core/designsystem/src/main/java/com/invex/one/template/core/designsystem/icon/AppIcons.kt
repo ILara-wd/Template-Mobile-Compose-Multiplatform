@@ -23,6 +23,13 @@ object AppIcons {
     val Home = R.drawable.ic_home
     val Gamepad = R.drawable.ic_gamepad
     val Trophy = R.drawable.ic_trophy
+    val Globe = R.drawable.ic_globe
+    val TrophyFilled = R.drawable.ic_trophy_filled
+    val GamepadFilled = R.drawable.ic_gamepad_filled
+    val FlameFilled = R.drawable.ic_flame_filled
+    val MedalGold = R.drawable.ic_medal_gold
+    val MedalSilver = R.drawable.ic_medal_silver
+    val MedalBronze = R.drawable.ic_medal_bronze
 
     val BrandLogo = R.drawable.brand_logo
 }
