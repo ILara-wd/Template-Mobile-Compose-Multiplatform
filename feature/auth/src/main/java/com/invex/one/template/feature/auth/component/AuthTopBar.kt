@@ -8,7 +8,7 @@ import com.invex.one.template.feature.auth.R
 
 /** Header shared by login and registration. */
 @Composable
-internal fun AuthTopBar(onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AuthTopBar(onBack: (() -> Unit)?, modifier: Modifier = Modifier) {
     BrandTopBar(
         brandName = stringResource(R.string.login_brand),
         backContentDescription = stringResource(R.string.login_back),

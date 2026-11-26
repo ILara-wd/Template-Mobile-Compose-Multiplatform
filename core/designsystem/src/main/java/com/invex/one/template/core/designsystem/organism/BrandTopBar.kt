@@ -15,17 +15,20 @@ import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.token.AppSize
 
-/** Secondary-screen header: back button, brand pill and profile mark (auth, profile…). */
+/**
+ * Secondary-screen header: back button, brand pill and profile mark (auth, profile…).
+ * Pass `onBack = null` on root screens to hide the back button.
+ */
 @Composable
 fun BrandTopBar(
     brandName: String,
     backContentDescription: String,
-    onBack: () -> Unit,
+    onBack: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     val colors = AppTheme.colors
     AppBarContainer(modifier) {
-        TonalIconButton(AppIcons.ArrowBack, backContentDescription, onClick = onBack)
+        onBack?.let { TonalIconButton(AppIcons.ArrowBack, backContentDescription, onClick = it) }
         Row(
             modifier = Modifier
                 .background(colors.surfaceContainerLow, AppTheme.shapes.pill)

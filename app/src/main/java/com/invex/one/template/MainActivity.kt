@@ -54,12 +54,75 @@ enum class AppDestination(@StringRes val label: Int, @DrawableRes val icon: Int)
     Records(R.string.nav_records, AppIcons.Trophy),
 }
 
-/** Full-screen flows shown above the tabs (account area). */
-enum class AuthScreen { Profile, Login, Register }
+/** Screens shown before the player enters the arcade. */
+enum class AuthScreen { Login, Register }
 
+/**
+ * App root. Login is the start screen: the tabs are only reachable after entering
+ * (login, Google, guest or registration). There is no auth backend yet, so the session
+ * lives in saved state and is lost when the process ends.
+ */
 @Composable
 fun TemplateApp() {
+    var signedIn by rememberSaveable { mutableStateOf(false) }
+    var authScreen by rememberSaveable { mutableStateOf(AuthScreen.Login) }
+
+    if (signedIn) {
+        SignedInApp(
+            onSignOut = {
+                authScreen = AuthScreen.Login
+                signedIn = false
+            },
+        )
+    } else {
+        AuthFlow(
+            screen = authScreen,
+            onScreenChange = { authScreen = it },
+            onSignedIn = { signedIn = true },
+        )
+    }
+}
+
+/** Login ⇄ Register. Login is the root, so it has no back button. */
+@Composable
+private fun AuthFlow(
+    screen: AuthScreen,
+    onScreenChange: (AuthScreen) -> Unit,
+    onSignedIn: () -> Unit,
+) {
+    when (screen) {
+        AuthScreen.Login -> LoginRoute(
+            gamesCount = GameCatalog.games.size,
+            streakDays = SamplePlayer.streakDays,
+            actions = LoginActions(
+                onBack = null,
+                // TODO: no auth backend yet; every entry path signs in directly.
+                onLogin = onSignedIn,
+                onGoogle = onSignedIn,
+                onGuest = onSignedIn,
+                onForgotPassword = { /* TODO: password recovery */ },
+                onSignUp = { onScreenChange(AuthScreen.Register) },
+            ),
+        )
+        AuthScreen.Register -> RegisterRoute(
+            actions = RegisterActions(
+                onBack = { onScreenChange(AuthScreen.Login) },
+                // TODO: no account backend yet; registering signs in directly.
+                onRegister = onSignedIn,
+                onGoogle = onSignedIn,
+                onSignIn = { onScreenChange(AuthScreen.Login) },
+                onTermsClick = { /* TODO: terms of service */ },
+                onPrivacyClick = { /* TODO: privacy policy */ },
+            ),
+        )
+    }
+}
+
+/** Tabs plus the full-screen flows opened from them (game, profile). */
+@Composable
+private fun SignedInApp(onSignOut: () -> Unit) {
     var current by rememberSaveable { mutableStateOf(AppDestination.Home) }
+    var showProfile by rememberSaveable { mutableStateOf(false) }
     // Game currently being played (id + title); null shows the tabs.
     var activeGameId by rememberSaveable { mutableStateOf<String?>(null) }
     var activeGameTitle by rememberSaveable { mutableStateOf("") }
@@ -68,58 +131,21 @@ fun TemplateApp() {
         activeGameTitle = title
     }
 
-    // Auth flow on top of the tabs: null = hidden.
-    var authScreen by rememberSaveable { mutableStateOf<AuthScreen?>(null) }
-
     activeGameId?.let { gameId ->
         GameHostScreen(gameId = gameId, title = activeGameTitle, onBack = { activeGameId = null })
         return
     }
-    when (authScreen) {
-        AuthScreen.Profile -> {
-            ProfileRoute(
-                actions = ProfileActions(
-                    onBack = { authScreen = null },
-                    onLogout = { authScreen = AuthScreen.Login },
-                    onChangePassword = { /* TODO: change password */ },
-                    onChangePhoto = { /* TODO: photo picker */ },
-                    onUpdateEmail = { /* TODO: email verification flow */ },
-                ),
-            )
-            return
-        }
-        AuthScreen.Login -> {
-            val close = { authScreen = null }
-            LoginRoute(
-                gamesCount = GameCatalog.games.size,
-                streakDays = SamplePlayer.streakDays,
-                actions = LoginActions(
-                    onBack = close,
-                    // TODO: no auth backend yet; every entry path just returns to the app.
-                    onLogin = close,
-                    onGoogle = close,
-                    onGuest = close,
-                    onForgotPassword = { /* TODO: password recovery */ },
-                    onSignUp = { authScreen = AuthScreen.Register },
-                ),
-            )
-            return
-        }
-        AuthScreen.Register -> {
-            RegisterRoute(
-                actions = RegisterActions(
-                    onBack = { authScreen = AuthScreen.Login },
-                    // TODO: no account backend yet; registering just returns to the app.
-                    onRegister = { authScreen = null },
-                    onGoogle = { authScreen = null },
-                    onSignIn = { authScreen = AuthScreen.Login },
-                    onTermsClick = { /* TODO: terms of service */ },
-                    onPrivacyClick = { /* TODO: privacy policy */ },
-                ),
-            )
-            return
-        }
-        null -> Unit
+    if (showProfile) {
+        ProfileRoute(
+            actions = ProfileActions(
+                onBack = { showProfile = false },
+                onLogout = onSignOut,
+                onChangePassword = { /* TODO: change password */ },
+                onChangePhoto = { /* TODO: photo picker */ },
+                onUpdateEmail = { /* TODO: email verification flow */ },
+            ),
+        )
+        return
     }
 
     Scaffold(
@@ -129,7 +155,7 @@ fun TemplateApp() {
             MiniJuegosTopBar(
                 section = stringResource(current.label),
                 player = SamplePlayer,
-                onProfileClick = { authScreen = AuthScreen.Profile },
+                onProfileClick = { showProfile = true },
             )
         },
         bottomBar = {

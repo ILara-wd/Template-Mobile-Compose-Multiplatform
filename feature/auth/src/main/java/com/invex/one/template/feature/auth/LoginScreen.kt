@@ -54,7 +54,8 @@ import com.invex.one.template.feature.auth.component.SyncedGamesCard
 
 /** Callbacks for every exit / navigation out of the login screen. */
 data class LoginActions(
-    val onBack: () -> Unit,
+    /** `null` when login is the root screen: no back button, system back leaves the app. */
+    val onBack: (() -> Unit)?,
     val onLogin: () -> Unit,
     val onGoogle: () -> Unit,
     val onGuest: () -> Unit,
@@ -72,7 +73,7 @@ fun LoginRoute(
     viewModel: LoginViewModel = viewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    BackHandler(onBack = actions.onBack)
+    actions.onBack?.let { BackHandler(onBack = it) }
     LoginScreen(
         state = state,
         gamesCount = gamesCount,
