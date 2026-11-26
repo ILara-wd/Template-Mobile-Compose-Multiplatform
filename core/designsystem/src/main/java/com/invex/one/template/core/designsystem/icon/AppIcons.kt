@@ -31,6 +31,22 @@ object AppIcons {
     val MedalSilver = R.drawable.ic_medal_silver
     val MedalBronze = R.drawable.ic_medal_bronze
     val PlayFilled = R.drawable.ic_play_filled
+    val PlayLarge = R.drawable.ic_play_large
+    val ArrowBack = R.drawable.ic_arrow_back
+    val Person = R.drawable.ic_person
+    val At = R.drawable.ic_at
+    val Lock = R.drawable.ic_lock
+    val Eye = R.drawable.ic_eye
+    val Check = R.drawable.ic_check
+    val Google = R.drawable.ic_google
+    val WifiOff = R.drawable.ic_wifi_off
+    val FlameSmall = R.drawable.ic_flame_small
+    val StarBadge = R.drawable.ic_star_badge
+    val GamepadLarge = R.drawable.ic_gamepad_large
+    val GamepadBrand = R.drawable.ic_gamepad_brand
+    val GamepadMini = R.drawable.ic_gamepad_mini
+    val BoltBadge = R.drawable.ic_bolt_badge
+    val Robot = R.drawable.ic_robot
 
     // Game artwork
     val Game2048 = R.drawable.ic_game_2048

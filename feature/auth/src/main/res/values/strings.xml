@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_back">Volver</string>
+    <string name="login_brand">Minijuegos</string>
+    <string name="login_profile">Perfil</string>
+
+    <string name="login_records_waiting">Tus récords te esperan</string>
+    <plurals name="login_streak">
+        <item quantity="one">%1$d Día en Racha</item>
+        <item quantity="other">%1$d Días en Racha</item>
+    </plurals>
+
+    <string name="login_title">¡Hola de nuevo!</string>
+    <string name="login_subtitle">Guarda tus récords, rachas y compite en el ranking global de los %1$d minijuegos.</string>
+
+    <string name="login_email_label">Correo o Nickname</string>
+    <string name="login_level_required">NIVEL %1$d REQUERIDO</string>
+    <string name="login_email_placeholder">ej. arcade_master@gmail.com</string>
+    <string name="login_password_label">Contraseña</string>
+    <string name="login_forgot_password">¿Olvidaste tu clave?</string>
+    <string name="login_password_placeholder">••••••••••••</string>
+    <string name="login_show_password">Mostrar contraseña</string>
+    <string name="login_hide_password">Ocultar contraseña</string>
+    <string name="login_remember">Recordar en este equipo</string>
+    <string name="login_remember_supporting">Entra directo al arcade sin volver a loguear</string>
+    <string name="login_submit">Entrar al Arcade</string>
+
+    <string name="login_or_continue">O continúa con</string>
+    <string name="login_google">Continuar con Google</string>
+    <string name="login_guest">Jugar como Invitado (Modo Offline)</string>
+
+    <plurals name="login_synced_games">
+        <item quantity="one">%1$d Minijuego Sincronizado</item>
+        <item quantity="other">%1$d Minijuegos Sincronizados</item>
+    </plurals>
+    <string name="login_synced_supporting">Puzzle, Velocidad, Tap Runner y más</string>
+
+    <string name="login_no_account">¿No tienes una cuenta aún?</string>
+    <string name="login_sign_up">Regístrate aquí</string>
+</resources>

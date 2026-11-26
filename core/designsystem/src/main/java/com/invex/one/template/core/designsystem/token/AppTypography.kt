@@ -14,6 +14,7 @@ object AppFonts {
     val Outfit = FontFamily(
         Font(R.font.outfit_semibold, FontWeight.SemiBold),
         Font(R.font.outfit_bold, FontWeight.Bold),
+        Font(R.font.outfit_extrabold, FontWeight.ExtraBold),
     )
     val PlusJakartaSans = FontFamily(
         Font(R.font.plus_jakarta_sans_medium, FontWeight.Medium),
@@ -46,12 +47,16 @@ private fun style(
 /** Text styles from Figma. Names describe the role, not the screen where they appear. */
 @Immutable
 data class AppTypography(
+    /** Outfit ExtraBold 32/40 -0.02em — hero greetings. */
+    val display: TextStyle = style(AppFonts.Outfit, FontWeight.ExtraBold, 32, 40, -0.64),
     /** Outfit Bold 28/36 -0.01em — screen headlines. */
     val headline: TextStyle = style(AppFonts.Outfit, FontWeight.Bold, 28, 36, -0.28),
     /** Outfit SemiBold 18/24 — screen, section and card titles. */
     val title: TextStyle = style(AppFonts.Outfit, FontWeight.SemiBold, 18, 24),
     /** Plus Jakarta Sans Bold 16/22 — emphasized body / highlight titles. */
     val subtitle: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Bold, 16, 22),
+    /** Plus Jakarta Sans Medium 14/20 — body copy and input text. */
+    val body: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 14, 20),
     /** Plus Jakarta Sans Medium 12/16 — supporting text. */
     val bodySmall: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 12, 16),
     /** Plus Jakarta Sans Bold 10/20 — tiny badges (XP). */

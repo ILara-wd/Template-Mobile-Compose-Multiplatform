@@ -30,6 +30,9 @@ import com.invex.one.template.core.designsystem.token.AppSize
  */
 enum class ButtonVariant { Primary, Accent }
 
+/** `Medium`: 44dp pill, button text. `Large`: 56dp, radius 12, title text (main CTAs). */
+enum class ButtonSize { Medium, Large }
+
 /** Pill button (44dp) filling the available width, with optional leading/trailing icons. */
 @Composable
 fun PrimaryButton(
@@ -37,11 +40,12 @@ fun PrimaryButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     variant: ButtonVariant = ButtonVariant.Primary,
+    size: ButtonSize = ButtonSize.Medium,
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
 ) {
     val colors = AppTheme.colors
-    val shape = AppTheme.shapes.pill
+    val shape = if (size == ButtonSize.Large) AppTheme.shapes.small else AppTheme.shapes.pill
     val container: Color
     val content: Color
     val depth: Modifier
@@ -49,7 +53,8 @@ fun PrimaryButton(
         ButtonVariant.Primary -> {
             container = colors.primary
             content = colors.onPrimary
-            depth = Modifier.appShadow(AppTheme.elevation.xs, shape, colors.shadow)
+            val elevation = if (size == ButtonSize.Large) AppTheme.elevation.md else AppTheme.elevation.xs
+            depth = Modifier.appShadow(elevation, shape, colors.shadow)
             AppTheme.spacing.sm
         }
         ButtonVariant.Accent -> {
@@ -62,7 +67,7 @@ fun PrimaryButton(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(AppSize.buttonHeight)
+            .height(if (size == ButtonSize.Large) AppSize.buttonHeightLarge else AppSize.buttonHeight)
             .then(depth)
             .clip(shape)
             .background(container)
@@ -71,7 +76,11 @@ fun PrimaryButton(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         leadingIcon?.let { AppIcon(it, tint = content) }
-        Text(text = text, style = AppTheme.typography.button, color = content)
+        Text(
+            text = text,
+            style = if (size == ButtonSize.Large) AppTheme.typography.title else AppTheme.typography.button,
+            color = content,
+        )
         trailingIcon?.let { AppIcon(it, tint = content) }
     }
 }

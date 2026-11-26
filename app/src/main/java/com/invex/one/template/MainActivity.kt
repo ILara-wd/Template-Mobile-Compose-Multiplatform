@@ -21,7 +21,10 @@ import com.invex.one.template.core.designsystem.molecule.NavBarItem
 import com.invex.one.template.core.designsystem.organism.AppBottomBar
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.data.SamplePlayer
+import com.invex.one.template.feature.auth.LoginActions
+import com.invex.one.template.feature.auth.LoginRoute
 import com.invex.one.template.feature.games.GamesRoute
+import com.invex.one.template.feature.games.data.GameCatalog
 import com.invex.one.template.feature.home.HomeRoute
 import com.invex.one.template.game.GameHostScreen
 import com.invex.one.template.feature.records.RecordsRoute
@@ -58,8 +61,27 @@ fun TemplateApp() {
         activeGameTitle = title
     }
 
+    var showLogin by rememberSaveable { mutableStateOf(false) }
+
     activeGameId?.let { gameId ->
         GameHostScreen(gameId = gameId, title = activeGameTitle, onBack = { activeGameId = null })
+        return
+    }
+    if (showLogin) {
+        val close = { showLogin = false }
+        LoginRoute(
+            gamesCount = GameCatalog.games.size,
+            streakDays = SamplePlayer.streakDays,
+            actions = LoginActions(
+                onBack = close,
+                // TODO: no auth backend yet; every entry path just returns to the app.
+                onLogin = close,
+                onGoogle = close,
+                onGuest = close,
+                onForgotPassword = { /* TODO: password recovery */ },
+                onSignUp = { /* TODO: registration */ },
+            ),
+        )
         return
     }
 
@@ -70,7 +92,7 @@ fun TemplateApp() {
             MiniJuegosTopBar(
                 section = stringResource(current.label),
                 player = SamplePlayer,
-                onProfileClick = { /* TODO: profile */ },
+                onProfileClick = { showLogin = true },
             )
         },
         bottomBar = {

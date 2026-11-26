@@ -14,4 +14,6 @@ data class AppElevation(
     val xs: Dp = 1.dp,
     val bar: Dp = 2.dp,
     val md: Dp = 4.dp,
+    /** Figma `0 10 15 -3 rgba(0,0,0,.1)` — hero elements. */
+    val lg: Dp = 8.dp,
 )

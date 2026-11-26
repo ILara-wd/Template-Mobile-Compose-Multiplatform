@@ -2,6 +2,7 @@ package com.invex.one.template.core.designsystem.organism
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,18 +25,16 @@ import com.invex.one.template.core.designsystem.token.AppAlpha
 import com.invex.one.template.core.designsystem.token.AppSize
 
 /**
- * Translucent app header: brand logo, app name + current section, trailing actions.
- * Draws behind the status bar (edge-to-edge) and pads its content below it.
+ * Translucent 64dp header container. Draws behind the status bar (edge-to-edge) and pads
+ * its content below it. Content is laid out in a row with 16dp horizontal padding.
  */
 @Composable
-fun AppTopBar(
-    title: String,
-    subtitle: String,
+fun AppBarContainer(
     modifier: Modifier = Modifier,
-    actions: @Composable RowScope.() -> Unit = {},
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(AppTheme.spacing.sm),
+    content: @Composable RowScope.() -> Unit,
 ) {
     val colors = AppTheme.colors
-    val spacing = AppTheme.spacing
     Column(
         modifier
             .fillMaxWidth()
@@ -48,17 +46,29 @@ fun AppTopBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(AppSize.topBarHeight)
-                .padding(horizontal = spacing.lg),
-            horizontalArrangement = Arrangement.spacedBy(spacing.sm),
+                .padding(horizontal = AppTheme.spacing.lg),
+            horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AppIcon(AppIcons.BrandLogo, Modifier.size(AppSize.logo))
-            BarTitle(title = title, subtitle = subtitle, modifier = Modifier.weight(1f))
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(spacing.xxs),
-                verticalAlignment = Alignment.CenterVertically,
-                content = actions,
-            )
-        }
+            content = content,
+        )
+    }
+}
+
+/** App header: brand logo, app name + current section, trailing actions. */
+@Composable
+fun AppTopBar(
+    title: String,
+    subtitle: String,
+    modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
+) {
+    AppBarContainer(modifier) {
+        AppIcon(AppIcons.BrandLogo, Modifier.size(AppSize.logo))
+        BarTitle(title = title, subtitle = subtitle, modifier = Modifier.weight(1f))
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.xxs),
+            verticalAlignment = Alignment.CenterVertically,
+            content = actions,
+        )
     }
 }

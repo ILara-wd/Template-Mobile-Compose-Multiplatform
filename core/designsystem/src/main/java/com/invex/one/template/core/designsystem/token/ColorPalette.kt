@@ -48,6 +48,8 @@ internal object ColorPalette {
 
     // Green-grey neutral variant
     val NeutralVariant30 = Color(0xFF3D4A3D)
+    val NeutralVariant50 = Color(0xFF6D7B6C)
+    val NeutralVariant80 = Color(0xFFBCCBB9)
 
     val White = Color(0xFFFFFFFF)
     val Black = Color(0xFF000000)
