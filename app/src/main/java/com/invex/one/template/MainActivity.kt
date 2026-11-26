@@ -1,94 +1,82 @@
 package com.invex.one.template
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import com.invex.one.template.ui.theme.TemplateTheme
+import androidx.compose.ui.res.stringResource
+import com.invex.one.template.core.designsystem.icon.AppIcons
+import com.invex.one.template.core.designsystem.molecule.NavBarItem
+import com.invex.one.template.core.designsystem.organism.AppBottomBar
+import com.invex.one.template.core.designsystem.theme.AppTheme
+import com.invex.one.template.feature.home.HomeRoute
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // The design is light-only: keep dark system-bar icons regardless of the system theme.
+        val lightBars = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+        enableEdgeToEdge(statusBarStyle = lightBars, navigationBarStyle = lightBars)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            TemplateTheme {
+            AppTheme {
                 TemplateApp()
             }
         }
     }
 }
 
-@PreviewScreenSizes
+enum class AppDestination(@StringRes val label: Int, @DrawableRes val icon: Int) {
+    Home(R.string.nav_home, AppIcons.Home),
+    Games(R.string.nav_games, AppIcons.Gamepad),
+    Records(R.string.nav_records, AppIcons.Trophy),
+}
+
 @Composable
 fun TemplateApp() {
-    var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
-
-    NavigationSuiteScaffold(
-        navigationSuiteItems = {
-            AppDestinations.entries.forEach {
-                item(
-                    icon = {
-                        Icon(
-                            it.icon,
-                            contentDescription = it.label
-                        )
-                    },
-                    label = { Text(it.label) },
-                    selected = it == currentDestination,
-                    onClick = { currentDestination = it }
-                )
+    var current by rememberSaveable { mutableStateOf(AppDestination.Home) }
+    Scaffold(
+        containerColor = AppTheme.colors.background,
+        contentWindowInsets = WindowInsets(0),
+        bottomBar = {
+            AppBottomBar {
+                AppDestination.entries.forEach { destination ->
+                    NavBarItem(
+                        icon = destination.icon,
+                        label = stringResource(destination.label),
+                        selected = destination == current,
+                        onClick = { current = destination },
+                    )
+                }
+            }
+        },
+    ) { innerPadding ->
+        when (current) {
+            AppDestination.Home -> HomeRoute(
+                onPlayGame = { /* TODO: navigate to game */ },
+                onSeeHistory = { current = AppDestination.Records },
+                onProfileClick = { /* TODO: profile */ },
+                contentPadding = innerPadding,
+            )
+            else -> Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
+                Text(stringResource(current.label), style = AppTheme.typography.title, color = AppTheme.colors.onSurface)
             }
         }
-    ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            Greeting(
-                name = "Android",
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
-    }
-}
-
-enum class AppDestinations(
-    val label: String,
-    val icon: ImageVector,
-) {
-    HOME("Home", Icons.Default.Home),
-    FAVORITES("Favorites", Icons.Default.Favorite),
-    PROFILE("Profile", Icons.Default.AccountBox),
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TemplateTheme {
-        Greeting("Android")
     }
 }
