@@ -1,15 +1,68 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Gradle
+.gradle/
+build/
+buildSrc/.gradle/
+buildSrc/build/
+*/build/
+
+# Local configuration file (sdk path, etc.)
 local.properties
+
+# Log files
+*.log
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof
+
+# Lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
+# Freeline
+freeline.py
+freeline/
+freeline_project_description.json
+
+# Instant Run
+.idea/libraries
+
+# Kotlin
+.kotlin/
+
+# macOS
+.DS_Store
+
+# Wrapper (mantener el jar del wrapper versionado)
+!gradle/wrapper/gradle-wrapper.jar
+
+# Ktlint / detekt reports
+**/reports/
+
+# Output APK / AAR
+*.apk
+*.aab
+*.ap_
+*.aar
+
+# Native
+*.so

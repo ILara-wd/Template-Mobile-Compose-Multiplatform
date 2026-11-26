@@ -1,5 +1,7 @@
 package com.invex.one.template
 
+import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -40,10 +42,33 @@ class MainActivity : ComponentActivity() {
         val lightBars = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
         enableEdgeToEdge(statusBarStyle = lightBars, navigationBarStyle = lightBars)
         super.onCreate(savedInstanceState)
+        val debuggable = applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0
+        val start = if (debuggable) DebugStart.from(intent) else DebugStart.Default
         setContent {
             AppTheme {
-                TemplateApp()
+                TemplateApp(start = start)
             }
+        }
+    }
+}
+
+/**
+ * Screen the app opens on. Debug builds read it from intent extras so tools (the UI catalog in
+ * `scripts/ui-catalogo`) can open any screen without tapping through the flow:
+ * `adb shell am start -S -n com.invex.one.template/.MainActivity --es mj_screen Profile`.
+ * Use `--es mj_game <id>` with `mj_screen Game` to open a game. Release builds ignore extras.
+ */
+data class DebugStart(val screen: StartScreen = StartScreen.Login, val gameId: String? = null) {
+    enum class StartScreen { Login, Register, Home, Games, Records, Profile, Game }
+
+    companion object {
+        val Default = DebugStart()
+
+        fun from(intent: Intent?): DebugStart {
+            val screen = intent?.getStringExtra("mj_screen")
+                ?.let { name -> StartScreen.entries.firstOrNull { it.name.equals(name, ignoreCase = true) } }
+                ?: return Default
+            return DebugStart(screen, intent.getStringExtra("mj_game") ?: GameCatalog.games.first().id)
         }
     }
 }
@@ -63,13 +88,23 @@ enum class AuthScreen { Login, Register }
  * lives in saved state and is lost when the process ends.
  */
 @Composable
-fun TemplateApp() {
-    var signedIn by rememberSaveable { mutableStateOf(false) }
-    var authScreen by rememberSaveable { mutableStateOf(AuthScreen.Login) }
+fun TemplateApp(start: DebugStart = DebugStart.Default) {
+    val startScreen = start.screen
+    var signedIn by rememberSaveable {
+        mutableStateOf(startScreen != DebugStart.StartScreen.Login && startScreen != DebugStart.StartScreen.Register)
+    }
+    var authScreen by rememberSaveable {
+        mutableStateOf(if (startScreen == DebugStart.StartScreen.Register) AuthScreen.Register else AuthScreen.Login)
+    }
+
+    // The debug start only applies to the first session; signing in again starts at Home.
+    var startConsumed by rememberSaveable { mutableStateOf(false) }
 
     if (signedIn) {
         SignedInApp(
+            start = if (startConsumed) DebugStart.Default else start,
             onSignOut = {
+                startConsumed = true
                 authScreen = AuthScreen.Login
                 signedIn = false
             },
@@ -120,12 +155,23 @@ private fun AuthFlow(
 
 /** Tabs plus the full-screen flows opened from them (game, profile). */
 @Composable
-private fun SignedInApp(onSignOut: () -> Unit) {
-    var current by rememberSaveable { mutableStateOf(AppDestination.Home) }
-    var showProfile by rememberSaveable { mutableStateOf(false) }
+private fun SignedInApp(start: DebugStart, onSignOut: () -> Unit) {
+    var current by rememberSaveable {
+        mutableStateOf(
+            when (start.screen) {
+                DebugStart.StartScreen.Games -> AppDestination.Games
+                DebugStart.StartScreen.Records -> AppDestination.Records
+                else -> AppDestination.Home
+            },
+        )
+    }
+    var showProfile by rememberSaveable { mutableStateOf(start.screen == DebugStart.StartScreen.Profile) }
     // Game currently being played (id + title); null shows the tabs.
-    var activeGameId by rememberSaveable { mutableStateOf<String?>(null) }
-    var activeGameTitle by rememberSaveable { mutableStateOf("") }
+    val startGame = start.gameId
+        ?.takeIf { start.screen == DebugStart.StartScreen.Game }
+        ?.let { id -> GameCatalog.games.firstOrNull { it.id == id } }
+    var activeGameId by rememberSaveable { mutableStateOf(startGame?.id) }
+    var activeGameTitle by rememberSaveable { mutableStateOf(startGame?.name.orEmpty()) }
     val openGame: (String, String) -> Unit = { id, title ->
         activeGameId = id
         activeGameTitle = title

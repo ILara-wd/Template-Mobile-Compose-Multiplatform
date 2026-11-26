@@ -21,6 +21,7 @@ design system propio en un módulo independiente y un módulo por feature.
 - [Minijuegos](#minijuegos)
 - [Convenciones](#convenciones)
 - [Cómo implementar una nueva pantalla de Figma](#cómo-implementar-una-nueva-pantalla-de-figma)
+- [Catálogo de UI](#catálogo-de-ui)
 - [Pendientes conocidos](#pendientes-conocidos)
 
 ---
@@ -326,6 +327,7 @@ Para agregar un juego:
    cuando el diseño no se pueda expresar con lo actual.
 6. Crea el feature con `Route` + `Screen` + `ViewModel` + `strings.xml` y conéctalo en `:app`.
 7. Verifica en el emulador contra la captura de Figma y documenta las desviaciones intencionales.
+8. Agrega la pantalla al [catálogo de UI](#catálogo-de-ui), captúrala y regenera el catálogo.
 
 Particularidades del archivo de Figma:
 
@@ -334,6 +336,27 @@ Particularidades del archivo de Figma:
   en esos casos se usa el tamaño del espacio del diseño.
 - Los frames repiten la barra superior con el subtítulo "Inicio" y sin pestaña seleccionada; en
   código el subtítulo y la pestaña siguen la navegación real.
+
+## Catálogo de UI
+
+`docs/ui-catalogo/index.html` es un catálogo navegable (pestañas *Pantallas*, *Componentes*,
+*Assets* y *Tokens*) generado a partir del código: capas Atomic Design, KDoc, firmas, usos por
+pantalla, iconos de `res/drawable*` y tokens de `token/`. **No se edita a mano.**
+
+```bash
+./gradlew :app:installDebug
+python3 scripts/ui-catalogo/capturar.py          # capturas del emulador (o solo algunas: P03 P04)
+python3 scripts/ui-catalogo/generar.py           # escribe docs/ui-catalogo/index.html
+open docs/ui-catalogo/index.html
+```
+
+- Las pantallas se declaran en `docs/ui-catalogo/pantallas.json` (id, composable, nodo de Figma y
+  extras para abrirla).
+- En builds debug, `MainActivity` acepta `--es mj_screen <Login|Register|Home|Games|Records|Profile|Game>`
+  (y `--es mj_game <id>` para un juego) para abrir cualquier pantalla sin navegar:
+  `adb shell am start -S -n com.invex.one.template/.MainActivity --es mj_screen Profile`.
+- Para Claude Code, la skill `catalogo-ui-minijuegos` (`.claude/skills/`) describe el flujo de
+  consulta antes de implementar y de actualización del catálogo.
 
 ## Pendientes conocidos
 

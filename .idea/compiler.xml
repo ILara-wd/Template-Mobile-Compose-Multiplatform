@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <bytecodeTargetLevel target="21" />
+    <bytecodeTargetLevel target="21">
+      <module name="SportKids.app" target="21" />
+      <module name="SportKids.core.designsystem" target="21" />
+      <module name="SportKids.core.ui" target="21" />
+      <module name="SportKids.feature.agenda" target="21" />
+      <module name="SportKids.feature.athlete" target="21" />
+      <module name="SportKids.feature.athletics" target="21" />
+      <module name="SportKids.feature.auth" target="21" />
+      <module name="SportKids.feature.expenses" target="21" />
+      <module name="SportKids.feature.home" target="21" />
+      <module name="SportKids.feature.settings" target="21" />
+      <module name="SportKids.feature.sharing" target="21" />
+      <module name="SportKids.feature.swimming" target="21" />
+      <module name="SportKids.feature.tkd" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
