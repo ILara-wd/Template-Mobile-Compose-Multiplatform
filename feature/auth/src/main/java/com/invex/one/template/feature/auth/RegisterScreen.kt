@@ -15,13 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +41,9 @@ import com.invex.one.template.core.designsystem.atom.PrimaryButton
 import com.invex.one.template.core.designsystem.atom.SecondaryButton
 import com.invex.one.template.core.designsystem.atom.StrengthMeter
 import com.invex.one.template.core.designsystem.icon.AppIcons
+import com.invex.one.template.core.designsystem.molecule.AppDatePickerDialog
 import com.invex.one.template.core.designsystem.molecule.AppPickerField
+import com.invex.one.template.core.designsystem.molecule.formatUtcDate
 import com.invex.one.template.core.designsystem.molecule.AppTextField
 import com.invex.one.template.core.designsystem.molecule.FieldLabel
 import com.invex.one.template.core.designsystem.molecule.FieldSupport
@@ -63,10 +59,6 @@ import com.invex.one.template.feature.auth.component.FieldStatus
 import com.invex.one.template.feature.auth.component.SignInLink
 import com.invex.one.template.feature.auth.component.TermsCheckbox
 import com.invex.one.template.feature.auth.component.WelcomeBonusBanner
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 /** Callbacks for every exit / navigation out of the registration screen. */
 data class RegisterActions(
@@ -187,7 +179,7 @@ fun RegisterScreen(
                     keyboardActions = nextField,
                 )
                 AppPickerField(
-                    value = state.birthdateMillis?.let(::formatBirthdate),
+                    value = state.birthdateMillis?.let { formatUtcDate(it, "dd/MM/yyyy") },
                     placeholder = stringResource(R.string.register_birthdate_placeholder),
                     onClick = { showDatePicker = true },
                     label = FieldLabel(stringResource(R.string.register_birthdate_label), AppIcons.Cake, prominent = true),
@@ -271,39 +263,15 @@ fun RegisterScreen(
     }
 
     if (showDatePicker) {
-        BirthdatePickerDialog(
+        AppDatePickerDialog(
             initialMillis = state.birthdateMillis,
+            confirmLabel = stringResource(R.string.register_birthdate_confirm),
+            dismissLabel = stringResource(R.string.register_birthdate_cancel),
             onConfirm = { callbacks.onBirthdateSelected(it); showDatePicker = false },
             onDismiss = { showDatePicker = false },
         )
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun BirthdatePickerDialog(initialMillis: Long?, onConfirm: (Long?) -> Unit, onDismiss: () -> Unit) {
-    val pickerState = rememberDatePickerState(
-        initialSelectedDateMillis = initialMillis,
-        selectableDates = object : androidx.compose.material3.SelectableDates {
-            override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis <= System.currentTimeMillis()
-        },
-    )
-    DatePickerDialog(
-        onDismissRequest = onDismiss,
-        confirmButton = {
-            TextButton(onClick = { onConfirm(pickerState.selectedDateMillis) }) {
-                Text(stringResource(R.string.register_birthdate_confirm))
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.register_birthdate_cancel)) }
-        },
-    ) { DatePicker(state = pickerState) }
-}
-
-/** Date picker values are UTC midnight; format in UTC so the day never shifts. */
-private fun formatBirthdate(millis: Long): String =
-    SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).apply { timeZone = TimeZone.getTimeZone("UTC") }.format(Date(millis))
 
 @Composable
 private fun PasswordStrength.label(): String = stringResource(

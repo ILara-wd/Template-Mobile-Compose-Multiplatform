@@ -51,16 +51,22 @@ data class AppTypography(
     val display: TextStyle = style(AppFonts.Outfit, FontWeight.ExtraBold, 32, 40, -0.64),
     /** Outfit Bold 28/36 -0.01em — screen headlines. */
     val headline: TextStyle = style(AppFonts.Outfit, FontWeight.Bold, 28, 36, -0.28),
+    /** Outfit Bold 22/28 -0.025em — profile names. */
+    val titleLarge: TextStyle = style(AppFonts.Outfit, FontWeight.Bold, 22, 28, -0.55),
     /** Outfit SemiBold 18/24 — screen, section and card titles. */
     val title: TextStyle = style(AppFonts.Outfit, FontWeight.SemiBold, 18, 24),
     /** Plus Jakarta Sans Bold 16/22 — emphasized body / highlight titles. */
     val subtitle: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Bold, 16, 22),
+    /** Plus Jakarta Sans Medium 16/22 — large input text. */
+    val bodyLarge: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 16, 22),
     /** Plus Jakarta Sans Medium 14/20 — body copy and input text. */
     val body: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 14, 20),
     /** Plus Jakarta Sans Medium 14 +0.1em — revealed passwords / secrets. */
     val secret: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 14, 20, 1.4),
     /** Plus Jakarta Sans Medium 12/16 — supporting text. */
     val bodySmall: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 12, 16),
+    /** Plus Jakarta Sans Bold 12/16 — emphasized supporting text. */
+    val bodySmallStrong: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Bold, 12, 16),
     /** Plus Jakarta Sans Bold 10/20 — tiny badges (XP). */
     val micro: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Bold, 10, 20),
     /** Outfit Bold 18/24 +0.025em — large accent CTAs. */

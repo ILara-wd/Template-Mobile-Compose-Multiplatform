@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.theme.appShadow
@@ -22,8 +23,10 @@ fun IconTile(
     containerColor: Color,
     modifier: Modifier = Modifier,
     size: Dp = AppSize.iconTile,
+    shape: Shape = AppTheme.shapes.small,
+    elevated: Boolean = true,
 ) {
-    IconTile(containerColor = containerColor, modifier = modifier, size = size) { AppIcon(icon) }
+    IconTile(containerColor, modifier, size, shape, elevated) { AppIcon(icon) }
 }
 
 /** Tile showing short text (initials) when no artwork exists yet. */
@@ -45,13 +48,14 @@ fun IconTile(
     containerColor: Color,
     modifier: Modifier = Modifier,
     size: Dp = AppSize.iconTile,
+    shape: Shape = AppTheme.shapes.small,
+    elevated: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
-    val shape = AppTheme.shapes.small
     Box(
         modifier = modifier
             .size(size)
-            .appShadow(AppTheme.elevation.xs, shape, AppTheme.colors.shadow)
+            .then(if (elevated) Modifier.appShadow(AppTheme.elevation.xs, shape, AppTheme.colors.shadow) else Modifier)
             .background(containerColor, shape),
         contentAlignment = Alignment.Center,
         content = content,

@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.text.style.TextOverflow
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.theme.appShadow
@@ -22,21 +24,22 @@ import com.invex.one.template.core.designsystem.token.AppSize
 /** `Surface`: white with soft shadow. `Tonal`: indigo container, flat. */
 enum class SecondaryButtonVariant { Surface, Tonal }
 
-/** Full-width 52dp button (radius 12) with a leading icon — social / alternative actions. */
+/** Full-width secondary button (default 52dp, radius 12) with optional leading icon. */
 @Composable
 fun SecondaryButton(
     text: String,
-    @DrawableRes leadingIcon: Int,
+    @DrawableRes leadingIcon: Int?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     variant: SecondaryButtonVariant = SecondaryButtonVariant.Surface,
+    shape: Shape = AppTheme.shapes.small,
+    height: Dp = AppSize.fieldHeight,
 ) {
     val colors = AppTheme.colors
-    val shape = AppTheme.shapes.small
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(AppSize.fieldHeight)
+            .height(height)
             .then(
                 if (variant == SecondaryButtonVariant.Surface) {
                     Modifier.appShadow(AppTheme.elevation.xs, shape, colors.shadow)
@@ -51,7 +54,7 @@ fun SecondaryButton(
         horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.sm, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        AppIcon(leadingIcon)
+        leadingIcon?.let { AppIcon(it) }
         Text(text, style = AppTheme.typography.subtitle, color = colors.onSurface, maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }

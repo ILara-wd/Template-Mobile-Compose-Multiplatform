@@ -64,6 +64,35 @@ object AppIcons {
     val ShieldLabel = R.drawable.ic_shield_label
     val Shield = R.drawable.ic_shield
     val Rocket = R.drawable.ic_rocket
+    val LevelBolt = R.drawable.ic_level_bolt
+    val Camera = R.drawable.ic_camera
+    val VerifiedBadge = R.drawable.ic_verified_badge
+    val CoinSquare = R.drawable.ic_coin_square
+    val FlameRed = R.drawable.ic_flame_red
+    val CharAstro = R.drawable.ic_char_astro
+    val CharValeria = R.drawable.ic_char_valeria
+    val CharCiberBot = R.drawable.ic_char_ciberbot
+    val CharDraco = R.drawable.ic_char_draco
+    val Tune = R.drawable.ic_tune
+    val GamepadMetric = R.drawable.ic_gamepad_metric
+    val TrophyMetric = R.drawable.ic_trophy_metric
+    val GamepadField = R.drawable.ic_gamepad_field
+    val CheckMini = R.drawable.ic_check_mini
+    val PersonOutline = R.drawable.ic_person_outline
+    val MailOutline = R.drawable.ic_mail_outline
+    val VerifiedSmall = R.drawable.ic_verified_small
+    val Edit = R.drawable.ic_edit
+    val CakeOutline = R.drawable.ic_cake_outline
+    val CalendarOutline = R.drawable.ic_calendar_outline
+    val GlobeOutline = R.drawable.ic_globe_outline
+    val ChevronDown = R.drawable.ic_chevron_down
+    val ChevronRightSmall = R.drawable.ic_chevron_right_small
+    val LockReset = R.drawable.ic_lock_reset
+    val Bell = R.drawable.ic_bell
+    val Save = R.drawable.ic_save
+    val Logout = R.drawable.ic_logout
+    val StarMetric = R.drawable.ic_star_metric
+    val Visibility = R.drawable.ic_visibility
 
     // Game artwork
     val Game2048 = R.drawable.ic_game_2048

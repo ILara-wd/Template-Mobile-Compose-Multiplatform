@@ -55,6 +55,26 @@ fun InlineIconButton(
     ) { AppIcon(icon) }
 }
 
+/** Small tonal icon button (28dp, radius 8) for inline field actions, e.g. "Actualizar correo". */
+@Composable
+fun SmallTonalIconButton(
+    @DrawableRes icon: Int,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+) {
+    Box(
+        modifier = modifier
+            .size(AppSize.iconSquare)
+            .clip(AppTheme.shapes.extraSmall)
+            .background(AppTheme.colors.surfaceContainerHighest)
+            .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
+            .semantics { this.contentDescription = contentDescription },
+        contentAlignment = Alignment.Center,
+    ) { AppIcon(icon) }
+}
+
 /** Filled circle with a centered glyph (brand marks, avatar stacks, small badges). */
 @Composable
 fun IconCircle(

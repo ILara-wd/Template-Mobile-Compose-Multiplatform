@@ -36,13 +36,16 @@ internal object ColorPalette {
 
     // Red (error / action)
     val Red20 = Color(0xFF93000A)
+    val Red40 = Color(0xFFBA1A1A)
     val Red90 = Color(0xFFFFDAD6)
 
     // Indigo neutrals (surfaces)
     val Indigo10 = Color(0xFF131B2E)
+    val Indigo20 = Color(0xFF283044)
     val Indigo90 = Color(0xFFDAE2FD)
     val Indigo92 = Color(0xFFE2E7FF)
     val Indigo94 = Color(0xFFEAEDFF)
+    val Indigo95 = Color(0xFFEEF0FF)
     val Indigo96 = Color(0xFFF2F3FF)
     val Indigo98 = Color(0xFFFAF8FF)
 

@@ -21,9 +21,10 @@ fun CategoryTag(
     contentColor: Color,
     modifier: Modifier = Modifier,
     size: TagSize = TagSize.Medium,
+    uppercase: Boolean = true,
 ) {
     PillLabel(
-        text = text.uppercase(),
+        text = if (uppercase) text.uppercase() else text,
         containerColor = containerColor,
         contentColor = contentColor,
         style = AppTheme.typography.label,

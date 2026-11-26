@@ -26,6 +26,8 @@ import com.invex.one.template.feature.auth.LoginRoute
 import com.invex.one.template.feature.auth.RegisterActions
 import com.invex.one.template.feature.auth.RegisterRoute
 import com.invex.one.template.feature.games.GamesRoute
+import com.invex.one.template.feature.profile.ProfileActions
+import com.invex.one.template.feature.profile.ProfileRoute
 import com.invex.one.template.feature.games.data.GameCatalog
 import com.invex.one.template.feature.home.HomeRoute
 import com.invex.one.template.game.GameHostScreen
@@ -52,8 +54,8 @@ enum class AppDestination(@StringRes val label: Int, @DrawableRes val icon: Int)
     Records(R.string.nav_records, AppIcons.Trophy),
 }
 
-/** Screens of the authentication flow shown above the tabs. */
-enum class AuthScreen { Login, Register }
+/** Full-screen flows shown above the tabs (account area). */
+enum class AuthScreen { Profile, Login, Register }
 
 @Composable
 fun TemplateApp() {
@@ -74,6 +76,18 @@ fun TemplateApp() {
         return
     }
     when (authScreen) {
+        AuthScreen.Profile -> {
+            ProfileRoute(
+                actions = ProfileActions(
+                    onBack = { authScreen = null },
+                    onLogout = { authScreen = AuthScreen.Login },
+                    onChangePassword = { /* TODO: change password */ },
+                    onChangePhoto = { /* TODO: photo picker */ },
+                    onUpdateEmail = { /* TODO: email verification flow */ },
+                ),
+            )
+            return
+        }
         AuthScreen.Login -> {
             val close = { authScreen = null }
             LoginRoute(
@@ -115,7 +129,7 @@ fun TemplateApp() {
             MiniJuegosTopBar(
                 section = stringResource(current.label),
                 player = SamplePlayer,
-                onProfileClick = { authScreen = AuthScreen.Login },
+                onProfileClick = { authScreen = AuthScreen.Profile },
             )
         },
         bottomBar = {

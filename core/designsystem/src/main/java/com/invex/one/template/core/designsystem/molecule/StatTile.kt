@@ -16,13 +16,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.invex.one.template.core.designsystem.atom.AppIcon
 import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.theme.appShadow
 import com.invex.one.template.core.designsystem.token.AppSize
 
-/** Compact KPI tile: tinted icon circle, big value and caption, centered. */
+/** `Default`: radius 12, 32dp icon circle, label caption. `Compact`: radius 18, 28dp icon square, body caption. */
+enum class StatTileStyle { Default, Compact }
+
+/** KPI tile: tinted icon, big value and caption, centered. */
 @Composable
 fun StatTile(
     @DrawableRes icon: Int,
@@ -30,26 +34,35 @@ fun StatTile(
     value: String,
     label: String,
     modifier: Modifier = Modifier,
+    style: StatTileStyle = StatTileStyle.Default,
 ) {
     val colors = AppTheme.colors
-    val shape = AppTheme.shapes.small
+    val compact = style == StatTileStyle.Compact
+    val shape = if (compact) AppTheme.shapes.mediumLarge else AppTheme.shapes.small
     Column(
         modifier = modifier
             .appShadow(AppTheme.elevation.xs, shape, colors.shadow)
             .background(colors.surfaceContainerLowest, shape)
-            .padding(AppTheme.spacing.md)
+            .padding(if (compact) AppTheme.spacing.sm else AppTheme.spacing.md)
             .semantics(mergeDescendants = true) {},
         verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.xxs),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
             Modifier
-                .size(AppSize.statTileIcon)
-                .background(iconContainerColor, AppTheme.shapes.pill),
+                .padding(bottom = if (compact) AppTheme.spacing.xxs else 0.dp)
+                .size(if (compact) AppSize.iconSquare else AppSize.statTileIcon)
+                .background(iconContainerColor, if (compact) AppTheme.shapes.extraSmall else AppTheme.shapes.pill),
             contentAlignment = Alignment.Center,
         ) { AppIcon(icon) }
         Text(value, style = AppTheme.typography.numeric, color = colors.onSurface, textAlign = TextAlign.Center, maxLines = 1)
-        Text(label, style = AppTheme.typography.label, color = colors.onSurfaceVariant, textAlign = TextAlign.Center, maxLines = 1)
+        Text(
+            label,
+            style = if (compact) AppTheme.typography.bodySmall else AppTheme.typography.label,
+            color = colors.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+        )
     }
 }
 

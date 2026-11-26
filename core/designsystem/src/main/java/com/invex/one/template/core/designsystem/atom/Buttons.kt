@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.theme.AppTheme
@@ -43,6 +44,8 @@ fun PrimaryButton(
     size: ButtonSize = ButtonSize.Medium,
     @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
+    /** Overrides the size-derived label style (e.g. compact label on a large CTA). */
+    textStyle: TextStyle? = null,
 ) {
     val colors = AppTheme.colors
     // Large primary CTAs use a 12dp radius; accent CTAs stay pill-shaped at every size.
@@ -83,7 +86,7 @@ fun PrimaryButton(
         leadingIcon?.let { AppIcon(it, tint = content) }
         Text(
             text = text,
-            style = when {
+            style = textStyle ?: when {
                 size == ButtonSize.Medium -> AppTheme.typography.button
                 variant == ButtonVariant.Accent -> AppTheme.typography.buttonLarge
                 else -> AppTheme.typography.title

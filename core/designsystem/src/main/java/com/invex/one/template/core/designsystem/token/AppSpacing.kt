@@ -40,6 +40,17 @@ object AppSize {
     val avatarOption = 62.5.dp
     val strengthBarHeight = 6.dp
     val heroTile = 80.dp
+    val avatarLarge = 96.dp
+    val iconSquare = 28.dp
+    val settingsIcon = 36.dp
+    val characterTile = 44.dp
+    val dividerHeight = 24.dp
+    val switchWidth = 48.dp
+    val switchHeight = 28.dp
+    val switchThumb = 20.dp
+    val switchWidthSmall = 44.dp
+    val switchHeightSmall = 24.dp
+    val switchThumbSmall = 16.dp
     val avatar = 32.dp
     val logo = 32.dp
     val iconTile = 40.dp

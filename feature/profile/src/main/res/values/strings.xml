@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="profile_brand">Minijuegos</string>
+    <string name="profile_back">Volver</string>
+
+    <string name="profile_level_badge">Nv. %1$d %2$s</string>
+    <string name="profile_change_photo">Cambiar foto de perfil</string>
+    <string name="profile_photo_description">Foto de perfil</string>
+    <string name="profile_verified">Cuenta verificada</string>
+    <string name="profile_member_since">Miembro desde %1$d</string>
+    <string name="profile_coins">Monedas</string>
+    <plurals name="profile_streak_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <string name="profile_streak_active">Racha activa</string>
+
+    <string name="profile_pick_character">Elige tu personaje</string>
+    <plurals name="profile_unlocked">
+        <item quantity="one">%1$d Desbloqueado</item>
+        <item quantity="other">%1$d Desbloqueados</item>
+    </plurals>
+
+    <string name="profile_edit_mode">Modo Edición</string>
+    <string name="profile_edit_mode_supporting">Edita tus campos y guarda al terminar</string>
+
+    <string name="profile_performance">Rendimiento arcade</string>
+    <string name="profile_season">Temporada %1$d</string>
+    <string name="profile_metric_games">Partidas</string>
+    <string name="profile_metric_record">Récord %1$s</string>
+    <string name="profile_metric_achievements">Logros</string>
+    <string name="profile_fraction">%1$d / %2$d</string>
+
+    <string name="profile_data_title">Datos de Jugador</string>
+    <string name="profile_status_active">Activo</string>
+    <string name="profile_gamertag_label">Gamertag / Apodo</string>
+    <string name="profile_gamertag_available">Disponible</string>
+    <string name="profile_gamertag_support">Visible en clasificaciones mundiales y duelos.</string>
+    <string name="profile_counter">%1$d/%2$d</string>
+    <string name="profile_name_label">Nombre Completo</string>
+    <string name="profile_name_placeholder">Tu nombre</string>
+    <string name="profile_email_label">Correo Electrónico</string>
+    <string name="profile_email_placeholder">tu@correo.com</string>
+    <string name="profile_email_verified">Verificado</string>
+    <string name="profile_update_email">Actualizar correo</string>
+    <string name="profile_birthdate_label">Fecha de Nacimiento</string>
+    <string name="profile_birthdate_placeholder">dd / mm / aaaa</string>
+    <string name="profile_birthdate_support">Requerido para torneos con premios y emparejamiento por edad.</string>
+    <plurals name="profile_age">
+        <item quantity="one">%1$d año • %2$s</item>
+        <item quantity="other">%1$d años • %2$s</item>
+    </plurals>
+    <string name="profile_age_senior">Senior 18+</string>
+    <string name="profile_age_junior">Junior 13-17</string>
+    <string name="profile_age_kids">Infantil</string>
+    <string name="profile_date_confirm">Aceptar</string>
+    <string name="profile_date_cancel">Cancelar</string>
+    <string name="profile_region_label">País y Región del Servidor</string>
+    <string name="profile_region_format">%1$s %2$s (%3$s)</string>
+
+    <string name="profile_region_spain">España</string>
+    <string name="profile_region_mexico">México</string>
+    <string name="profile_region_argentina">Argentina</string>
+    <string name="profile_region_colombia">Colombia</string>
+    <string name="profile_region_usa">Estados Unidos</string>
+    <string name="profile_server_eu_south">Servidor Europa Sur</string>
+    <string name="profile_server_north_america">Servidor Norteamérica</string>
+    <string name="profile_server_south_america">Servidor Sudamérica</string>
+
+    <string name="profile_security_title">Seguridad y Privacidad</string>
+    <string name="profile_change_password">Cambiar Contraseña</string>
+    <string name="profile_change_password_supporting">Actualizada hace 2 meses</string>
+    <string name="profile_public">Perfil Público en Arcade</string>
+    <string name="profile_public_supporting">Aparecer en marcadores globales</string>
+    <string name="profile_alerts">Alertas de Racha y Retos</string>
+    <string name="profile_alerts_supporting">Aviso antes de perder tu racha</string>
+
+    <string name="profile_save">Guardar Cambios</string>
+    <string name="profile_discard">Descartar Cambios</string>
+    <string name="profile_logout">Cerrar sesión en este dispositivo</string>
+</resources>

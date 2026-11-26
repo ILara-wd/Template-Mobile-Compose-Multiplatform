@@ -34,6 +34,7 @@ data class AppColors(
     val onTertiaryFixed: Color,
     val onTertiaryFixedVariant: Color,
 
+    val error: Color,
     val errorContainer: Color,
     val onErrorContainer: Color,
 
@@ -43,6 +44,8 @@ data class AppColors(
     val onSurfaceVariant: Color,
     val outline: Color,
     val outlineVariant: Color,
+    val inverseSurface: Color,
+    val inverseOnSurface: Color,
     val surfaceContainerLowest: Color,
     val surfaceContainerLow: Color,
     val surfaceContainer: Color,
@@ -76,6 +79,7 @@ val LightAppColors = AppColors(
     onTertiaryFixed = ColorPalette.Orange10,
     onTertiaryFixedVariant = ColorPalette.Orange28,
 
+    error = ColorPalette.Red40,
     errorContainer = ColorPalette.Red90,
     onErrorContainer = ColorPalette.Red20,
 
@@ -85,6 +89,8 @@ val LightAppColors = AppColors(
     onSurfaceVariant = ColorPalette.NeutralVariant30,
     outline = ColorPalette.NeutralVariant50,
     outlineVariant = ColorPalette.NeutralVariant80,
+    inverseSurface = ColorPalette.Indigo20,
+    inverseOnSurface = ColorPalette.Indigo95,
     surfaceContainerLowest = ColorPalette.White,
     surfaceContainerLow = ColorPalette.Indigo96,
     surfaceContainer = ColorPalette.Indigo94,
@@ -108,6 +114,10 @@ object AppAlpha {
     const val Overlay = 0.70f
     /** Hard "pressable" depth shadow under accent buttons. */
     const val Depth = 0.35f
+    /** Very soft ambient glow behind hero cards. */
+    const val Ambient = 0.10f
+    /** Half-transparent container over a card. */
+    const val Half = 0.50f
     /** Colored glow under large accent CTAs. */
     const val Glow = 0.30f
     /** Avatar ring around the profile picture. */

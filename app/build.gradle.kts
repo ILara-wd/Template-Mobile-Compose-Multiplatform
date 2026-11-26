@@ -47,6 +47,7 @@ dependencies {
     implementation(project(":feature:records"))
     implementation(project(":feature:games"))
     implementation(project(":feature:auth"))
+    implementation(project(":feature:profile"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

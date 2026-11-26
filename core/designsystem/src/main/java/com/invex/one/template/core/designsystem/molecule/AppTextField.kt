@@ -55,13 +55,14 @@ fun AppTextField(
     onValueChange: (String) -> Unit,
     label: FieldLabel,
     placeholder: String,
-    @DrawableRes leadingIcon: Int,
+    @DrawableRes leadingIcon: Int?,
     modifier: Modifier = Modifier,
     labelAction: (@Composable () -> Unit)? = null,
     trailing: (@Composable () -> Unit)? = null,
     support: FieldSupport? = null,
     height: Dp = AppSize.fieldHeight,
     textStyle: TextStyle = AppTheme.typography.body,
+    enabled: Boolean = true,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
@@ -72,6 +73,7 @@ fun AppTextField(
             value = value,
             onValueChange = onValueChange,
             singleLine = true,
+            enabled = enabled,
             textStyle = textStyle.copy(color = colors.onSurface),
             cursorBrush = SolidColor(colors.primary),
             visualTransformation = visualTransformation,
@@ -83,7 +85,7 @@ fun AppTextField(
             decorationBox = { innerTextField ->
                 FieldBox(leadingIcon, height, hasTrailing = trailing != null, trailing = trailing) {
                     if (value.isEmpty()) {
-                        Text(placeholder, style = AppTheme.typography.body, color = colors.outline, maxLines = 1)
+                        Text(placeholder, style = textStyle, color = colors.outline, maxLines = 1)
                     }
                     innerTextField()
                 }
@@ -99,19 +101,27 @@ fun AppPickerField(
     placeholder: String,
     onClick: () -> Unit,
     label: FieldLabel,
-    @DrawableRes leadingIcon: Int,
+    @DrawableRes leadingIcon: Int?,
     modifier: Modifier = Modifier,
+    labelAction: (@Composable () -> Unit)? = null,
+    @DrawableRes trailingIcon: Int? = null,
     support: FieldSupport? = null,
     height: Dp = AppSize.fieldHeight,
+    enabled: Boolean = true,
 ) {
     val colors = AppTheme.colors
-    FieldLayout(label, null, support, modifier) {
+    FieldLayout(label, labelAction, support, modifier) {
         Box(
             Modifier
                 .clip(AppTheme.shapes.small)
-                .clickable(role = Role.Button, onClickLabel = label.text, onClick = onClick),
+                .clickable(enabled = enabled, role = Role.Button, onClickLabel = label.text, onClick = onClick),
         ) {
-            FieldBox(leadingIcon, height, hasTrailing = false, trailing = null) {
+            FieldBox(
+                leadingIcon,
+                height,
+                hasTrailing = trailingIcon != null,
+                trailing = trailingIcon?.let { icon -> { AppIcon(icon, Modifier.padding(end = AppTheme.spacing.xs)) } },
+            ) {
                 Text(
                     value ?: placeholder,
                     style = AppTheme.typography.body,
@@ -165,7 +175,7 @@ private fun FieldLayout(
 
 @Composable
 private fun FieldBox(
-    @DrawableRes leadingIcon: Int,
+    @DrawableRes leadingIcon: Int?,
     height: Dp,
     hasTrailing: Boolean,
     trailing: (@Composable () -> Unit)?,
@@ -179,10 +189,10 @@ private fun FieldBox(
             .background(AppTheme.colors.surfaceContainerLow, AppTheme.shapes.small),
         contentAlignment = Alignment.CenterStart,
     ) {
-        AppIcon(leadingIcon, Modifier.padding(start = spacing.mdLg))
+        leadingIcon?.let { AppIcon(it, Modifier.padding(start = spacing.mdLg)) }
         Box(
             Modifier.padding(
-                start = AppSize.fieldTextInset,
+                start = if (leadingIcon != null) AppSize.fieldTextInset else spacing.lg,
                 end = if (hasTrailing) AppSize.fieldTrailingInset else spacing.lg,
             ),
         ) { content() }
