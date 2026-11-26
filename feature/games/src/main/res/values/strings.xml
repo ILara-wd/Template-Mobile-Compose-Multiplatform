@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="games_title">Todos los mini juegos</string>
+    <plurals name="games_available">
+        <item quantity="one">%1$d disponible</item>
+        <item quantity="other">%1$d disponibles</item>
+    </plurals>
+    <string name="games_filter_all">Todos</string>
+    <string name="games_play">Jugar</string>
+    <string name="games_empty">No hay juegos en esta categoría</string>
+
+    <string name="games_category_puzzle">Puzle</string>
+    <string name="games_category_reflexes">Reflejos</string>
+    <string name="games_category_arcade">Arcade</string>
+    <string name="games_category_logic">Lógica</string>
+    <string name="games_category_memory">Memoria</string>
+    <string name="games_category_retro">Retro</string>
+    <string name="games_category_action">Acción</string>
+</resources>

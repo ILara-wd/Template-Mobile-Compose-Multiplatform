@@ -24,4 +24,5 @@ include(":app")
 include(":core:designsystem")
 include(":feature:home")
 include(":feature:records")
+include(":feature:games")
  

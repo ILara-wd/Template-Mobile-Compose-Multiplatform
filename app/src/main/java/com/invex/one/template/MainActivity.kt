@@ -8,26 +8,22 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.molecule.NavBarItem
 import com.invex.one.template.core.designsystem.organism.AppBottomBar
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.data.SamplePlayer
+import com.invex.one.template.feature.games.GamesRoute
 import com.invex.one.template.feature.home.HomeRoute
+import com.invex.one.template.game.GameHostScreen
 import com.invex.one.template.feature.records.RecordsRoute
 import com.invex.one.template.ui.MiniJuegosTopBar
 
@@ -54,6 +50,19 @@ enum class AppDestination(@StringRes val label: Int, @DrawableRes val icon: Int)
 @Composable
 fun TemplateApp() {
     var current by rememberSaveable { mutableStateOf(AppDestination.Home) }
+    // Game currently being played (id + title); null shows the tabs.
+    var activeGameId by rememberSaveable { mutableStateOf<String?>(null) }
+    var activeGameTitle by rememberSaveable { mutableStateOf("") }
+    val openGame: (String, String) -> Unit = { id, title ->
+        activeGameId = id
+        activeGameTitle = title
+    }
+
+    activeGameId?.let { gameId ->
+        GameHostScreen(gameId = gameId, title = activeGameTitle, onBack = { activeGameId = null })
+        return
+    }
+
     Scaffold(
         containerColor = AppTheme.colors.background,
         contentWindowInsets = WindowInsets(0),
@@ -79,17 +88,18 @@ fun TemplateApp() {
     ) { innerPadding ->
         when (current) {
             AppDestination.Home -> HomeRoute(
-                onPlayGame = { /* TODO: navigate to game */ },
+                onPlayGame = openGame,
                 onSeeHistory = { current = AppDestination.Records },
+                contentPadding = innerPadding,
+            )
+            AppDestination.Games -> GamesRoute(
+                onPlayGame = openGame,
                 contentPadding = innerPadding,
             )
             AppDestination.Records -> RecordsRoute(
                 onGlobalRankingClick = { /* TODO: global ranking */ },
                 contentPadding = innerPadding,
             )
-            AppDestination.Games -> Box(Modifier.fillMaxSize().padding(innerPadding), contentAlignment = Alignment.Center) {
-                Text(stringResource(current.label), style = AppTheme.typography.title, color = AppTheme.colors.onSurface)
-            }
         }
     }
 }

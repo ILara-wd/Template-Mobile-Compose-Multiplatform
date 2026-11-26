@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,35 +14,65 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.theme.appShadow
+import com.invex.one.template.core.designsystem.theme.depthShadow
+import com.invex.one.template.core.designsystem.token.AppAlpha
 import com.invex.one.template.core.designsystem.token.AppSize
 
-/** Filled pill button (44dp) with optional trailing icon. Fills the available width. */
+/**
+ * `Primary`: dark green, white label, soft shadow (home cards).
+ * `Accent`: bright green, dark label, hard 3dp depth shadow (game catalog).
+ */
+enum class ButtonVariant { Primary, Accent }
+
+/** Pill button (44dp) filling the available width, with optional leading/trailing icons. */
 @Composable
 fun PrimaryButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    variant: ButtonVariant = ButtonVariant.Primary,
+    @DrawableRes leadingIcon: Int? = null,
     @DrawableRes trailingIcon: Int? = null,
 ) {
+    val colors = AppTheme.colors
     val shape = AppTheme.shapes.pill
+    val container: Color
+    val content: Color
+    val depth: Modifier
+    val gap = when (variant) {
+        ButtonVariant.Primary -> {
+            container = colors.primary
+            content = colors.onPrimary
+            depth = Modifier.appShadow(AppTheme.elevation.xs, shape, colors.shadow)
+            AppTheme.spacing.sm
+        }
+        ButtonVariant.Accent -> {
+            container = colors.primaryContainer
+            content = colors.onPrimaryContainer
+            depth = Modifier.depthShadow(AppSize.buttonDepth, colors.primary.copy(alpha = AppAlpha.Depth), shape)
+            AppTheme.spacing.xs
+        }
+    }
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(AppSize.buttonHeight)
-            .appShadow(AppTheme.elevation.xs, shape, AppTheme.colors.shadow)
+            .then(depth)
             .clip(shape)
-            .background(AppTheme.colors.primary)
+            .background(container)
             .clickable(role = Role.Button, onClick = onClick),
-        horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.sm, Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(gap, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = text, style = AppTheme.typography.button, color = AppTheme.colors.onPrimary)
-        trailingIcon?.let { AppIcon(it, tint = AppTheme.colors.onPrimary) }
+        leadingIcon?.let { AppIcon(it, tint = content) }
+        Text(text = text, style = AppTheme.typography.button, color = content)
+        trailingIcon?.let { AppIcon(it, tint = content) }
     }
 }
 
@@ -69,9 +100,10 @@ fun TextLinkButton(
 @Composable
 private fun ButtonsPreview() {
     AppTheme {
-        Row(Modifier.padding(AppTheme.spacing.lg), verticalAlignment = Alignment.CenterVertically) {
-            PrimaryButton("Jugar", onClick = {}, trailingIcon = AppIcons.Play, modifier = Modifier.weight(1f))
-            TextLinkButton("Ver historial", onClick = {}, modifier = Modifier.padding(start = AppTheme.spacing.lg))
+        Column(Modifier.padding(AppTheme.spacing.lg), verticalArrangement = Arrangement.spacedBy(AppTheme.spacing.lg)) {
+            PrimaryButton("Jugar", onClick = {}, trailingIcon = AppIcons.Play)
+            PrimaryButton("Jugar", onClick = {}, variant = ButtonVariant.Accent, leadingIcon = AppIcons.PlayFilled)
+            TextLinkButton("Ver historial", onClick = {})
         }
     }
 }

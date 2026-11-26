@@ -30,6 +30,16 @@ object AppIcons {
     val MedalGold = R.drawable.ic_medal_gold
     val MedalSilver = R.drawable.ic_medal_silver
     val MedalBronze = R.drawable.ic_medal_bronze
+    val PlayFilled = R.drawable.ic_play_filled
+
+    // Game artwork
+    val Game2048 = R.drawable.ic_game_2048
+    val GameWhack = R.drawable.ic_game_whack
+    val GameMaze = R.drawable.ic_game_maze
+    val GameSimon = R.drawable.ic_game_simon
+    val GameSnake = R.drawable.ic_game_snake
+    val GamePong = R.drawable.ic_game_pong
+    val GameInvaders = R.drawable.ic_game_invaders
 
     val BrandLogo = R.drawable.brand_logo
 }

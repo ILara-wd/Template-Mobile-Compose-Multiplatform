@@ -16,12 +16,14 @@ data class AppColors(
     val primaryContainer: Color,
     val onPrimaryContainer: Color,
     val primaryFixed: Color,
+    val primaryFixedDim: Color,
     val onPrimaryFixed: Color,
     val onPrimaryFixedVariant: Color,
 
     val secondary: Color,
     val secondaryContainer: Color,
     val secondaryFixed: Color,
+    val secondaryFixedDim: Color,
     val onSecondaryFixed: Color,
     val onSecondaryFixedVariant: Color,
 
@@ -31,6 +33,9 @@ data class AppColors(
     val tertiaryFixed: Color,
     val onTertiaryFixed: Color,
     val onTertiaryFixedVariant: Color,
+
+    val errorContainer: Color,
+    val onErrorContainer: Color,
 
     val background: Color,
     val surface: Color,
@@ -51,12 +56,14 @@ val LightAppColors = AppColors(
     primaryContainer = ColorPalette.Green60,
     onPrimaryContainer = ColorPalette.Green20,
     primaryFixed = ColorPalette.Green80,
+    primaryFixedDim = ColorPalette.Green70,
     onPrimaryFixed = ColorPalette.Green10,
     onPrimaryFixedVariant = ColorPalette.Green30,
 
     secondary = ColorPalette.Blue40,
     secondaryContainer = ColorPalette.Blue60,
     secondaryFixed = ColorPalette.Blue90,
+    secondaryFixedDim = ColorPalette.Blue80,
     onSecondaryFixed = ColorPalette.Blue10,
     onSecondaryFixedVariant = ColorPalette.Blue30,
 
@@ -66,6 +73,9 @@ val LightAppColors = AppColors(
     tertiaryFixed = ColorPalette.Orange90,
     onTertiaryFixed = ColorPalette.Orange10,
     onTertiaryFixedVariant = ColorPalette.Orange28,
+
+    errorContainer = ColorPalette.Red90,
+    onErrorContainer = ColorPalette.Red20,
 
     background = ColorPalette.Indigo98,
     surface = ColorPalette.Indigo98,
@@ -86,6 +96,14 @@ object AppAlpha {
     const val Tint = 0.20f
     /** Subtle tinted badge background. */
     const val TintSubtle = 0.15f
+    /** Medium tinted tag background. */
+    const val TintMedium = 0.25f
+    /** Strong tinted tag background. */
+    const val TintStrong = 0.30f
+    /** Near-opaque overlay over a light container. */
+    const val Overlay = 0.70f
+    /** Hard "pressable" depth shadow under accent buttons. */
+    const val Depth = 0.35f
     /** Avatar ring around the profile picture. */
     const val Ring = 0.40f
     /** Top app bar translucent background. */

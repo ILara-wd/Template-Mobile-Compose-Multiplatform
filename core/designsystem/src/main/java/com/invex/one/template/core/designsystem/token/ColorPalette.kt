@@ -15,6 +15,7 @@ internal object ColorPalette {
     val Green30 = Color(0xFF005321)
     val Green40 = Color(0xFF006E2F)
     val Green60 = Color(0xFF22C55E)
+    val Green70 = Color(0xFF4AE176)
     val Green80 = Color(0xFF6BFF8F)
 
     // Blue (secondary)
@@ -22,6 +23,7 @@ internal object ColorPalette {
     val Blue30 = Color(0xFF004C69)
     val Blue40 = Color(0xFF00668A)
     val Blue60 = Color(0xFF2EB7F2)
+    val Blue80 = Color(0xFF7BD0FF)
     val Blue90 = Color(0xFFC4E7FF)
 
     // Orange (tertiary)
@@ -31,6 +33,10 @@ internal object ColorPalette {
     val Orange40 = Color(0xFF855300)
     val Orange70 = Color(0xFFFEA619)
     val Orange90 = Color(0xFFFFDDB8)
+
+    // Red (error / action)
+    val Red20 = Color(0xFF93000A)
+    val Red90 = Color(0xFFFFDAD6)
 
     // Indigo neutrals (surfaces)
     val Indigo10 = Color(0xFF131B2E)

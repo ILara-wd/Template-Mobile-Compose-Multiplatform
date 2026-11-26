@@ -35,7 +35,7 @@ import com.invex.one.template.feature.home.model.RecentGame
 /** Stateful entry point: wires the [HomeViewModel] to the stateless [HomeScreen]. */
 @Composable
 fun HomeRoute(
-    onPlayGame: (gameId: String) -> Unit,
+    onPlayGame: (gameId: String, title: String) -> Unit,
     onSeeHistory: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -44,7 +44,7 @@ fun HomeRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     HomeScreen(
         state = state,
-        onPlayGame = { onPlayGame(it.id) },
+        onPlayGame = { onPlayGame(it.id, it.name) },
         onSeeHistory = onSeeHistory,
         modifier = modifier,
         contentPadding = contentPadding,

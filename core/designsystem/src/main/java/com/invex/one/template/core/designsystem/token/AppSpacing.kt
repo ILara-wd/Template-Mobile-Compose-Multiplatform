@@ -28,7 +28,7 @@ object AppSize {
     val avatar = 32.dp
     val logo = 32.dp
     val iconTile = 40.dp
-    val iconTileGlyph = 20.dp
+    val iconTileLarge = 48.dp
     val rankBadge = 44.dp
     val statTileIcon = 32.dp
     val navIndicatorWidth = 56.dp
@@ -36,4 +36,8 @@ object AppSize {
     val navItemMinWidth = 64.dp
     val progressBarHeight = 8.dp
     val avatarRing = 2.dp
+    val filterChipHeight = 36.dp
+    val statusDot = 8.dp
+    /** Vertical offset of the hard depth shadow under accent buttons. */
+    val buttonDepth = 3.dp
 }

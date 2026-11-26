@@ -17,8 +17,8 @@ import com.invex.one.template.core.designsystem.theme.AppTheme
 @Composable
 fun ScreenHeader(
     title: String,
-    subtitle: String,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     action: (@Composable () -> Unit)? = null,
 ) {
     Row(
@@ -31,11 +31,11 @@ fun ScreenHeader(
                 title,
                 style = AppTheme.typography.headline,
                 color = AppTheme.colors.onSurface,
-                maxLines = 1,
+                maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.semantics { heading() },
             )
-            Text(subtitle, style = AppTheme.typography.bodySmall, color = AppTheme.colors.onSurfaceVariant)
+            subtitle?.let { Text(it, style = AppTheme.typography.bodySmall, color = AppTheme.colors.onSurfaceVariant) }
         }
         action?.invoke()
     }

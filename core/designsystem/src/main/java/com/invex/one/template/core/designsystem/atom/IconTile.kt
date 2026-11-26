@@ -3,30 +3,57 @@ package com.invex.one.template.core.designsystem.atom
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.theme.appShadow
 import com.invex.one.template.core.designsystem.token.AppSize
 
-/** Rounded square holding a single glyph (40dp, radius 12). */
+/** Rounded square (radius 12, soft shadow) holding a glyph at its intrinsic Figma size. */
 @Composable
 fun IconTile(
     @DrawableRes icon: Int,
     containerColor: Color,
     modifier: Modifier = Modifier,
+    size: Dp = AppSize.iconTile,
+) {
+    IconTile(containerColor = containerColor, modifier = modifier, size = size) { AppIcon(icon) }
+}
+
+/** Tile showing short text (initials) when no artwork exists yet. */
+@Composable
+fun MonogramTile(
+    text: String,
+    containerColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+    size: Dp = AppSize.iconTile,
+) {
+    IconTile(containerColor = containerColor, modifier = modifier, size = size) {
+        Text(text, style = AppTheme.typography.title, color = contentColor, maxLines = 1)
+    }
+}
+
+@Composable
+fun IconTile(
+    containerColor: Color,
+    modifier: Modifier = Modifier,
+    size: Dp = AppSize.iconTile,
+    content: @Composable BoxScope.() -> Unit,
 ) {
     val shape = AppTheme.shapes.small
     Box(
         modifier = modifier
-            .size(AppSize.iconTile)
+            .size(size)
             .appShadow(AppTheme.elevation.xs, shape, AppTheme.colors.shadow)
             .background(containerColor, shape),
         contentAlignment = Alignment.Center,
-    ) {
-        AppIcon(icon, Modifier.size(AppSize.iconTileGlyph))
-    }
+        content = content,
+    )
 }
