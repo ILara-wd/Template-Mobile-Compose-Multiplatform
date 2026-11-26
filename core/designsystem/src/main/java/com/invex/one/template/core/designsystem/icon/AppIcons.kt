@@ -47,6 +47,23 @@ object AppIcons {
     val GamepadMini = R.drawable.ic_gamepad_mini
     val BoltBadge = R.drawable.ic_bolt_badge
     val Robot = R.drawable.ic_robot
+    val StarCircle = R.drawable.ic_star_circle
+    val Token = R.drawable.ic_token
+    val Face = R.drawable.ic_face
+    val CheckSmall = R.drawable.ic_check_small
+    val CheckTiny = R.drawable.ic_check_tiny
+    val CheckCircle = R.drawable.ic_check_circle
+    val GamepadLabel = R.drawable.ic_gamepad_label
+    val IdBadge = R.drawable.ic_id_badge
+    val Mail = R.drawable.ic_mail
+    val Cake = R.drawable.ic_cake
+    val Calendar = R.drawable.ic_calendar
+    val Gift = R.drawable.ic_gift
+    val LockLabel = R.drawable.ic_lock_label
+    val Key = R.drawable.ic_key
+    val ShieldLabel = R.drawable.ic_shield_label
+    val Shield = R.drawable.ic_shield
+    val Rocket = R.drawable.ic_rocket
 
     // Game artwork
     val Game2048 = R.drawable.ic_game_2048

@@ -27,12 +27,18 @@ object AppSize {
     val buttonHeight = 44.dp
     val buttonHeightLarge = 56.dp
     val fieldHeight = 52.dp
+    val fieldHeightCompact = 48.dp
     val fieldIconButton = 36.dp
     /** Text start inset inside a field that has a leading icon. */
     val fieldTextInset = 44.dp
     /** Text end inset inside a field that has a trailing icon button. */
     val fieldTrailingInset = 48.dp
     val checkbox = 24.dp
+    val checkboxSmall = 14.dp
+    val checkboxSmallGlyph = 10.dp
+    val selectionBadge = 20.dp
+    val avatarOption = 62.5.dp
+    val strengthBarHeight = 6.dp
     val heroTile = 80.dp
     val avatar = 32.dp
     val logo = 32.dp

@@ -9,6 +9,8 @@ import androidx.compose.ui.unit.dp
 /** Corner radius tokens. */
 @Immutable
 data class AppShapes(
+    /** 3dp — small checkboxes. */
+    val tiny: Shape = RoundedCornerShape(3.dp),
     /** 8dp — checkboxes, small inline buttons. */
     val extraSmall: Shape = RoundedCornerShape(8.dp),
     /** 12dp — icon tiles, inset value boxes. */

@@ -18,9 +18,9 @@ import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.token.AppSize
 import com.invex.one.template.feature.auth.R
 
-/** Header for the auth flow: back, "MINIJUEGOS" brand pill and a profile mark. */
+/** Header shared by login and registration: back, "MINIJUEGOS" brand pill and a profile mark. */
 @Composable
-internal fun LoginTopBar(onBack: () -> Unit, modifier: Modifier = Modifier) {
+internal fun AuthTopBar(onBack: () -> Unit, modifier: Modifier = Modifier) {
     val colors = AppTheme.colors
     AppBarContainer(modifier) {
         TonalIconButton(AppIcons.ArrowBack, stringResource(R.string.login_back), onClick = onBack)

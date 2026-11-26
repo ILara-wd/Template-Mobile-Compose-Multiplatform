@@ -45,7 +45,8 @@ fun PrimaryButton(
     @DrawableRes trailingIcon: Int? = null,
 ) {
     val colors = AppTheme.colors
-    val shape = if (size == ButtonSize.Large) AppTheme.shapes.small else AppTheme.shapes.pill
+    // Large primary CTAs use a 12dp radius; accent CTAs stay pill-shaped at every size.
+    val shape = if (size == ButtonSize.Large && variant == ButtonVariant.Primary) AppTheme.shapes.small else AppTheme.shapes.pill
     val container: Color
     val content: Color
     val depth: Modifier
@@ -60,8 +61,12 @@ fun PrimaryButton(
         ButtonVariant.Accent -> {
             container = colors.primaryContainer
             content = colors.onPrimaryContainer
-            depth = Modifier.depthShadow(AppSize.buttonDepth, colors.primary.copy(alpha = AppAlpha.Depth), shape)
-            AppTheme.spacing.xs
+            depth = if (size == ButtonSize.Large) {
+                Modifier.appShadow(AppTheme.elevation.md, shape, colors.primaryContainer.copy(alpha = AppAlpha.Glow))
+            } else {
+                Modifier.depthShadow(AppSize.buttonDepth, colors.primary.copy(alpha = AppAlpha.Depth), shape)
+            }
+            if (size == ButtonSize.Large) AppTheme.spacing.sm else AppTheme.spacing.xs
         }
     }
     Row(
@@ -78,7 +83,11 @@ fun PrimaryButton(
         leadingIcon?.let { AppIcon(it, tint = content) }
         Text(
             text = text,
-            style = if (size == ButtonSize.Large) AppTheme.typography.title else AppTheme.typography.button,
+            style = when {
+                size == ButtonSize.Medium -> AppTheme.typography.button
+                variant == ButtonVariant.Accent -> AppTheme.typography.buttonLarge
+                else -> AppTheme.typography.title
+            },
             color = content,
         )
         trailingIcon?.let { AppIcon(it, tint = content) }

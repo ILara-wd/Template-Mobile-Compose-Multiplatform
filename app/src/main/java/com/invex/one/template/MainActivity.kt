@@ -23,6 +23,8 @@ import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.data.SamplePlayer
 import com.invex.one.template.feature.auth.LoginActions
 import com.invex.one.template.feature.auth.LoginRoute
+import com.invex.one.template.feature.auth.RegisterActions
+import com.invex.one.template.feature.auth.RegisterRoute
 import com.invex.one.template.feature.games.GamesRoute
 import com.invex.one.template.feature.games.data.GameCatalog
 import com.invex.one.template.feature.home.HomeRoute
@@ -50,6 +52,9 @@ enum class AppDestination(@StringRes val label: Int, @DrawableRes val icon: Int)
     Records(R.string.nav_records, AppIcons.Trophy),
 }
 
+/** Screens of the authentication flow shown above the tabs. */
+enum class AuthScreen { Login, Register }
+
 @Composable
 fun TemplateApp() {
     var current by rememberSaveable { mutableStateOf(AppDestination.Home) }
@@ -61,28 +66,46 @@ fun TemplateApp() {
         activeGameTitle = title
     }
 
-    var showLogin by rememberSaveable { mutableStateOf(false) }
+    // Auth flow on top of the tabs: null = hidden.
+    var authScreen by rememberSaveable { mutableStateOf<AuthScreen?>(null) }
 
     activeGameId?.let { gameId ->
         GameHostScreen(gameId = gameId, title = activeGameTitle, onBack = { activeGameId = null })
         return
     }
-    if (showLogin) {
-        val close = { showLogin = false }
-        LoginRoute(
-            gamesCount = GameCatalog.games.size,
-            streakDays = SamplePlayer.streakDays,
-            actions = LoginActions(
-                onBack = close,
-                // TODO: no auth backend yet; every entry path just returns to the app.
-                onLogin = close,
-                onGoogle = close,
-                onGuest = close,
-                onForgotPassword = { /* TODO: password recovery */ },
-                onSignUp = { /* TODO: registration */ },
-            ),
-        )
-        return
+    when (authScreen) {
+        AuthScreen.Login -> {
+            val close = { authScreen = null }
+            LoginRoute(
+                gamesCount = GameCatalog.games.size,
+                streakDays = SamplePlayer.streakDays,
+                actions = LoginActions(
+                    onBack = close,
+                    // TODO: no auth backend yet; every entry path just returns to the app.
+                    onLogin = close,
+                    onGoogle = close,
+                    onGuest = close,
+                    onForgotPassword = { /* TODO: password recovery */ },
+                    onSignUp = { authScreen = AuthScreen.Register },
+                ),
+            )
+            return
+        }
+        AuthScreen.Register -> {
+            RegisterRoute(
+                actions = RegisterActions(
+                    onBack = { authScreen = AuthScreen.Login },
+                    // TODO: no account backend yet; registering just returns to the app.
+                    onRegister = { authScreen = null },
+                    onGoogle = { authScreen = null },
+                    onSignIn = { authScreen = AuthScreen.Login },
+                    onTermsClick = { /* TODO: terms of service */ },
+                    onPrivacyClick = { /* TODO: privacy policy */ },
+                ),
+            )
+            return
+        }
+        null -> Unit
     }
 
     Scaffold(
@@ -92,7 +115,7 @@ fun TemplateApp() {
             MiniJuegosTopBar(
                 section = stringResource(current.label),
                 player = SamplePlayer,
-                onProfileClick = { showLogin = true },
+                onProfileClick = { authScreen = AuthScreen.Login },
             )
         },
         bottomBar = {

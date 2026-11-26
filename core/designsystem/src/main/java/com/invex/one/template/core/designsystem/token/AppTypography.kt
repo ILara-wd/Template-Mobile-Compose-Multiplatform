@@ -57,10 +57,14 @@ data class AppTypography(
     val subtitle: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Bold, 16, 22),
     /** Plus Jakarta Sans Medium 14/20 — body copy and input text. */
     val body: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 14, 20),
+    /** Plus Jakarta Sans Medium 14 +0.1em — revealed passwords / secrets. */
+    val secret: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 14, 20, 1.4),
     /** Plus Jakarta Sans Medium 12/16 — supporting text. */
     val bodySmall: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Medium, 12, 16),
     /** Plus Jakarta Sans Bold 10/20 — tiny badges (XP). */
     val micro: TextStyle = style(AppFonts.PlusJakartaSans, FontWeight.Bold, 10, 20),
+    /** Outfit Bold 18/24 +0.025em — large accent CTAs. */
+    val buttonLarge: TextStyle = style(AppFonts.Outfit, FontWeight.Bold, 18, 24, 0.45),
     /** Space Grotesk Bold 14/18 +0.02em — buttons. */
     val button: TextStyle = style(AppFonts.SpaceGrotesk, FontWeight.Bold, 14, 18, 0.28),
     /** Space Grotesk Bold 11/14 +0.04em — chips, tags, nav labels, links. */

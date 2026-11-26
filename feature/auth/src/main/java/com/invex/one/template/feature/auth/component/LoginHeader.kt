@@ -74,20 +74,31 @@ internal fun LoginHero(gamesCount: Int, modifier: Modifier = Modifier) {
                     .padding(spacing.xxs),
             ) { AppIcon(AppIcons.StarBadge) }
         }
+        AuthHeadline(
+            title = stringResource(R.string.login_title),
+            subtitle = stringResource(R.string.login_subtitle, gamesCount),
+        )
+    }
+}
+
+/** Centered display title + readable-width subtitle used by the auth screens. */
+@Composable
+internal fun AuthHeadline(title: String, subtitle: String, modifier: Modifier = Modifier) {
+    Column(modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            stringResource(R.string.login_title),
+            title,
             style = AppTheme.typography.display,
-            color = colors.onSurface,
+            color = AppTheme.colors.onSurface,
             textAlign = TextAlign.Center,
             modifier = Modifier.semantics { heading() },
         )
         Text(
-            stringResource(R.string.login_subtitle, gamesCount),
+            subtitle,
             style = AppTheme.typography.body,
-            color = colors.onSurfaceVariant,
+            color = AppTheme.colors.onSurfaceVariant,
             textAlign = TextAlign.Center,
             modifier = Modifier
-                .padding(top = spacing.xxs)
+                .padding(top = AppTheme.spacing.xxs)
                 .widthIn(max = AppSize.readableWidth),
         )
     }

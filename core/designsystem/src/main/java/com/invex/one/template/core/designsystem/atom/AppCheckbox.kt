@@ -11,21 +11,25 @@ import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.token.AppSize
 
+/** `Regular`: 24dp, radius 8 (settings rows). `Small`: 14dp, radius 3 (inline legal text). */
+enum class CheckboxSize { Regular, Small }
+
 /**
- * Visual 24dp checkbox (radius 8). Not clickable by itself: wrap it in a toggleable row
- * (see [com.invex.one.template.core.designsystem.molecule.CheckboxRow]) so the whole row is the target.
+ * Visual checkbox. Not clickable by itself: wrap it in a toggleable container
+ * (see [com.invex.one.template.core.designsystem.molecule.CheckboxRow]).
  * Figma only defines the checked look; unchecked uses a neutral fill with an outline.
  */
 @Composable
 fun AppCheckbox(
     checked: Boolean,
     modifier: Modifier = Modifier,
+    size: CheckboxSize = CheckboxSize.Regular,
 ) {
     val colors = AppTheme.colors
-    val shape = AppTheme.shapes.extraSmall
+    val shape = if (size == CheckboxSize.Small) AppTheme.shapes.tiny else AppTheme.shapes.extraSmall
     Box(
         modifier = modifier
-            .size(AppSize.checkbox)
+            .size(if (size == CheckboxSize.Small) AppSize.checkboxSmall else AppSize.checkbox)
             .then(
                 if (checked) {
                     Modifier.background(colors.primary, shape)
@@ -37,6 +41,11 @@ fun AppCheckbox(
             ),
         contentAlignment = Alignment.Center,
     ) {
-        if (checked) AppIcon(AppIcons.Check)
+        if (checked) {
+            AppIcon(
+                AppIcons.Check,
+                if (size == CheckboxSize.Small) Modifier.size(AppSize.checkboxSmallGlyph) else Modifier,
+            )
+        }
     }
 }

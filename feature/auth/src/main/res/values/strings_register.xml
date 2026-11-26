@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="register_welcome_bonus">Nuevo jugador • +%1$d fichas de bienvenida</string>
+    <string name="register_title">Crear Cuenta</string>
+    <string name="register_subtitle">Guarda tus récords mundiales, compite en torneos y desbloquea trofeos exclusivos.</string>
+
+    <string name="register_avatar_title">Elige tu Avatar Gamer</string>
+    <string name="register_step">Paso %1$d de %2$d</string>
+
+    <string name="register_gamertag_label">Gamertag / Usuario</string>
+    <string name="register_gamertag_placeholder">PixelMaster_99</string>
+    <string name="register_gamertag_available">Disponible</string>
+    <string name="register_gamertag_support">Visible en tablas de puntuación y duelos multijugador.</string>
+
+    <string name="register_email_label">Correo Electrónico</string>
+    <string name="register_email_placeholder">jugador@correo.com</string>
+
+    <string name="register_birthdate_label">Fecha de Nacimiento</string>
+    <string name="register_birthdate_placeholder">dd/mm/aaaa</string>
+    <string name="register_birthdate_support">Para premios especiales de cumpleaños y torneos por categoría de edad.</string>
+    <string name="register_birthdate_confirm">Aceptar</string>
+    <string name="register_birthdate_cancel">Cancelar</string>
+
+    <string name="register_password_label">Contraseña</string>
+    <string name="register_password_placeholder">Mínimo 8 caracteres</string>
+    <string name="register_strength_weak">Débil (%1$d%%)</string>
+    <string name="register_strength_fair">Media (%1$d%%)</string>
+    <string name="register_strength_good">Buena (%1$d%%)</string>
+    <string name="register_strength_strong">Fuerte (%1$d%%)</string>
+    <string name="register_toggle_password">Alternar visibilidad de contraseña</string>
+
+    <string name="register_confirm_label">Confirmar Contraseña</string>
+    <string name="register_confirm_placeholder">Repite tu contraseña</string>
+    <string name="register_confirm_match">Coincide</string>
+    <string name="register_confirm_mismatch">No coincide</string>
+    <string name="register_toggle_confirm">Alternar visibilidad de confirmación</string>
+
+    <string name="register_terms">Acepto los %1$s y la %2$s de MiniJuegos Hub.</string>
+    <string name="register_terms_service">Términos de Servicio</string>
+    <string name="register_terms_privacy">Política de Privacidad</string>
+
+    <string name="register_submit">Completar Registro</string>
+    <string name="register_or">O regístrate con</string>
+    <string name="register_has_account">¿Ya tienes una cuenta?</string>
+    <string name="register_sign_in">Inicia sesión aquí</string>
+</resources>

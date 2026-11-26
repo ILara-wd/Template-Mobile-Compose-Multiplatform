@@ -43,11 +43,12 @@ import com.invex.one.template.core.designsystem.atom.SecondaryButtonVariant
 import com.invex.one.template.core.designsystem.icon.AppIcons
 import com.invex.one.template.core.designsystem.molecule.AppTextField
 import com.invex.one.template.core.designsystem.molecule.CheckboxRow
+import com.invex.one.template.core.designsystem.molecule.FieldLabel
 import com.invex.one.template.core.designsystem.molecule.LabeledDivider
 import com.invex.one.template.core.designsystem.theme.AppTheme
 import com.invex.one.template.core.designsystem.theme.appShadow
 import com.invex.one.template.feature.auth.component.LoginHero
-import com.invex.one.template.feature.auth.component.LoginTopBar
+import com.invex.one.template.feature.auth.component.AuthTopBar
 import com.invex.one.template.feature.auth.component.StreakBanner
 import com.invex.one.template.feature.auth.component.SyncedGamesCard
 
@@ -104,7 +105,7 @@ fun LoginScreen(
         modifier = modifier,
         containerColor = colors.background,
         contentWindowInsets = WindowInsets(0),
-        topBar = { LoginTopBar(onBack = actions.onBack) },
+        topBar = { AuthTopBar(onBack = actions.onBack) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -132,7 +133,7 @@ fun LoginScreen(
                 AppTextField(
                     value = state.identifier,
                     onValueChange = onIdentifierChange,
-                    label = stringResource(R.string.login_email_label),
+                    label = FieldLabel(stringResource(R.string.login_email_label)),
                     placeholder = stringResource(R.string.login_email_placeholder),
                     leadingIcon = AppIcons.At,
                     labelAction = {
@@ -148,7 +149,7 @@ fun LoginScreen(
                 AppTextField(
                     value = state.password,
                     onValueChange = onPasswordChange,
-                    label = stringResource(R.string.login_password_label),
+                    label = FieldLabel(stringResource(R.string.login_password_label)),
                     placeholder = stringResource(R.string.login_password_placeholder),
                     leadingIcon = AppIcons.Lock,
                     labelAction = {

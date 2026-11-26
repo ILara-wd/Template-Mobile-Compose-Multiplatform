@@ -108,6 +108,8 @@ object AppAlpha {
     const val Overlay = 0.70f
     /** Hard "pressable" depth shadow under accent buttons. */
     const val Depth = 0.35f
+    /** Colored glow under large accent CTAs. */
+    const val Glow = 0.30f
     /** Avatar ring around the profile picture. */
     const val Ring = 0.40f
     /** Top app bar translucent background. */
