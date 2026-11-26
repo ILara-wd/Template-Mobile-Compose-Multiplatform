@@ -2,19 +2,321 @@
   "paquete": "com.invex.one.template",
   "figmaFileKey": "KqTFktvrRvCzO2idPga5xf",
   "pantallas": [
-    {"id": "P01", "nombre": "Login", "composable": "LoginScreen", "figma": "192:4",
-     "captura": {"extras": {"mj_screen": "Login"}, "scrolls": 1, "espera": 4}},
-    {"id": "P02", "nombre": "Registro", "composable": "RegisterScreen", "figma": "193:142",
-     "captura": {"extras": {"mj_screen": "Register"}, "scrolls": 2, "espera": 4}},
-    {"id": "P03", "nombre": "Inicio", "composable": "HomeScreen", "figma": "186:405",
-     "captura": {"extras": {"mj_screen": "Home"}, "scrolls": 1, "espera": 4}},
-    {"id": "P04", "nombre": "Juegos", "composable": "GamesScreen", "figma": "186:3",
-     "captura": {"extras": {"mj_screen": "Games"}, "scrolls": 2, "espera": 4}},
-    {"id": "P05", "nombre": "Récords", "composable": "RecordsScreen", "figma": "186:199",
-     "captura": {"extras": {"mj_screen": "Records"}, "scrolls": 1, "espera": 4}},
-    {"id": "P06", "nombre": "Perfil", "composable": "ProfileScreen", "figma": "196:353",
-     "captura": {"extras": {"mj_screen": "Profile"}, "scrolls": 2, "espera": 4}},
-    {"id": "P07", "nombre": "Contenedor de juego", "composable": "GameHostScreen", "figma": "",
-     "captura": {"extras": {"mj_screen": "Game", "mj_game": "2048"}, "scrolls": 0, "espera": 4}}
+    {
+      "id": "P01",
+      "nombre": "Login",
+      "composable": "LoginScreen",
+      "figma": "192:4",
+      "captura": {
+        "extras": {
+          "mj_screen": "Login"
+        },
+        "scrolls": 1,
+        "espera": 4
+      }
+    },
+    {
+      "id": "P02",
+      "nombre": "Registro",
+      "composable": "RegisterScreen",
+      "figma": "193:142",
+      "captura": {
+        "extras": {
+          "mj_screen": "Register"
+        },
+        "scrolls": 2,
+        "espera": 4
+      }
+    },
+    {
+      "id": "P03",
+      "nombre": "Inicio",
+      "composable": "HomeScreen",
+      "figma": "186:405",
+      "captura": {
+        "extras": {
+          "mj_screen": "Home"
+        },
+        "scrolls": 1,
+        "espera": 4
+      }
+    },
+    {
+      "id": "P04",
+      "nombre": "Juegos",
+      "composable": "GamesScreen",
+      "figma": "186:3",
+      "captura": {
+        "extras": {
+          "mj_screen": "Games"
+        },
+        "scrolls": 2,
+        "espera": 4
+      }
+    },
+    {
+      "id": "P05",
+      "nombre": "Récords",
+      "composable": "RecordsScreen",
+      "figma": "186:199",
+      "captura": {
+        "extras": {
+          "mj_screen": "Records"
+        },
+        "scrolls": 1,
+        "espera": 4
+      }
+    },
+    {
+      "id": "P06",
+      "nombre": "Perfil",
+      "composable": "ProfileScreen",
+      "figma": "196:353",
+      "captura": {
+        "extras": {
+          "mj_screen": "Profile"
+        },
+        "scrolls": 2,
+        "espera": 4
+      }
+    },
+    {
+      "id": "P07",
+      "nombre": "Juego · 2048",
+      "composable": "Game2048Screen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "2048"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P08",
+      "nombre": "Juego · Whack-a-Mole",
+      "composable": "WhackAMoleScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "whack"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P09",
+      "nombre": "Juego · Laberinto",
+      "composable": "MazeDragScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "maze"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P10",
+      "nombre": "Juego · Simón Dice",
+      "composable": "SimonSaysScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "simon"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P11",
+      "nombre": "Juego · Snake",
+      "composable": "SnakeScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "snake"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P12",
+      "nombre": "Juego · Pong",
+      "composable": "PongScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "pong"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P13",
+      "nombre": "Juego · Space Invaders",
+      "composable": "SpaceInvadersScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "invaders"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P14",
+      "nombre": "Juego · Bloques",
+      "composable": "TetrisGameScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "blocks"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P15",
+      "nombre": "Juego · Carreras",
+      "composable": "RaceCarGame",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "car"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P16",
+      "nombre": "Juego · Dodge Board",
+      "composable": "DodgeGameScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "dodge"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P17",
+      "nombre": "Juego · Slash",
+      "composable": "SlashGameScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "slash"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P18",
+      "nombre": "Juego · Smash Board",
+      "composable": "SmashGameScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "smash"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P19",
+      "nombre": "Juego · Neon Brick Breaker",
+      "composable": "NeonBrickBreakerScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "bricks"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P20",
+      "nombre": "Juego · Fight",
+      "composable": "LandscapeFightingGame",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "fight"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P21",
+      "nombre": "Juego · Galaxy",
+      "composable": "GalaxyDefenderGame",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "galaxy"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P22",
+      "nombre": "Juego · Orbi Guard",
+      "composable": "OrbitGuardScreen",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "orbiguard"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    },
+    {
+      "id": "P23",
+      "nombre": "Juego · Peleas",
+      "composable": "PeleasGame",
+      "figma": "",
+      "captura": {
+        "extras": {
+          "mj_screen": "Game",
+          "mj_game": "peleas"
+        },
+        "scrolls": 0,
+        "espera": 5
+      }
+    }
   ]
 }

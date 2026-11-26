@@ -288,15 +288,17 @@ Comportamiento destacado:
 
 ## Minijuegos
 
-- `app/.../Screen.kt` declara los 17 composables de juego (`Numbers`, `WhackAmole`, `Snake`,
-  `TetrisCompose`, …). **Hoy están vacíos.**
+- Cada juego está implementado en `:feature:games`, paquete `hub` (`Game2048Screen`,
+  `WhackAMoleScreen`, `SnakeScreen`…, con sprites en `hub/character`).
+- `app/.../Screen.kt` declara los 17 composables de entrada (`Numbers`, `WhackAmole`, `Snake`,
+  `TetrisCompose`, …), que envuelven a los de `hub`. `PeleasGame` sigue vacío.
 - `GameCatalog` (`:feature:games`) es la lista única de juegos: id, nombre, descripción y categoría.
 - `GameRegistry` (`:app`) asocia cada id con su composable; `GameHostScreen` lo ejecuta a pantalla
   completa con barra de *Volver*.
 
 Para agregar un juego:
 
-1. Implementa su composable en `Screen.kt` (o en su propio archivo/módulo).
+1. Implementa el juego en `feature/games/.../hub/` y su composable de entrada en `Screen.kt`.
 2. Agrega la entrada en `GameCatalog.games` con un id nuevo.
 3. Registra `"id" to { MiJuego() }` en `GameRegistry`.
 4. (Opcional) Agrega su arte en `AppIcons` y mapéalo en `Game.artwork()`.
@@ -363,7 +365,7 @@ open docs/ui-catalogo/index.html
 - **Backend**: login, registro, Google, recuperación de contraseña, verificación de correo,
   cambio de contraseña/foto y guardado de perfil son locales o `TODO`.
 - **Sesión persistente**: "Recordar en este equipo" aún no guarda nada (candidato: DataStore).
-- **Juegos**: los 17 composables de `Screen.kt` están vacíos. 10 juegos no tienen arte ni textos
+- **Juegos**: `PeleasGame` está vacío; los demás ya funcionan. 10 juegos no tienen arte ni textos
   definitivos en Figma (nombres y descripciones provisionales en `GameCatalog`).
 - **Arte de avatares**: las imágenes de avatar del registro son capturas de relleno del prototipo.
 - **Catálogo de personajes duplicado**: Astro, Valeria, CiberBot y Draco están definidos en

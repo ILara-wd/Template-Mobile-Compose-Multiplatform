@@ -23,8 +23,8 @@ Capas que muestra el catálogo (salen del paquete, no del nombre):
 | Capa | Dónde |
 |---|---|
 | Átomo / Molécula / Organismo | `core/designsystem/.../{atom,molecule,organism}/` |
-| App | `app/` (barra superior compartida, contenedor de juegos, composables de `Screen.kt`) |
-| Feature | públicos de un `feature/*` (las `XScreen` se listan como pantallas, no como componentes) |
+| App | `app/` (barra superior compartida, contenedor de juegos, entradas de los juegos en `Screen.kt`) |
+| Feature | públicos de un `feature/*`, incluidos los juegos de `feature/games/.../hub/` (las `XScreen` públicas no se listan como componentes; solo las de `pantallas.json` aparecen como pantallas) |
 | Local | `private`/`internal` de un feature (normalmente su `component/`) |
 
 ## A. Consultar antes de implementar
@@ -54,7 +54,7 @@ Capas que muestra el catálogo (salen del paquete, no del nombre):
 
 ## B. Actualizar el catálogo (después de crear o cambiar pantallas)
 
-1. **Pantalla nueva**: agrégala a `docs/ui-catalogo/pantallas.json` con el siguiente id (P08…), su composable `XScreen` y su nodo de Figma. Para abrirla directo:
+1. **Pantalla nueva**: agrégala a `docs/ui-catalogo/pantallas.json` con el siguiente id libre (hoy P24; P01–P06 son pantallas de la app y P07–P23 los juegos), su composable `XScreen` y su nodo de Figma. Para abrirla directo:
    - si es una pantalla nueva de la app, agrega el caso a `DebugStart.StartScreen` en `app/.../MainActivity.kt` y haz que `TemplateApp`/`SignedInApp` la muestren con ese valor; el extra `mj_screen` usa el nombre del enum (`Login`, `Register`, `Home`, `Games`, `Records`, `Profile`, `Game`);
    - para un juego, `"mj_screen": "Game", "mj_game": "<id de GameCatalog>"`;
    - los extras solo funcionan en builds *debuggable*; release los ignora.

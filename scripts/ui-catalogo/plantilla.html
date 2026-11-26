@@ -220,8 +220,8 @@ const TIERS = {
   "Molécula": { cls: "molecule", desc: "core:designsystem · molecule/ — combinan átomos (campos, filas, encabezados)" },
   "Organismo": { cls: "organism", desc: "core:designsystem · organism/ — barras y contenedores de pantalla" },
   "Base": { cls: "base", desc: "core:designsystem fuera de atom/molecule/organism" },
-  "App": { cls: "app", desc: "app · shell, navegación, barra superior y composables de los juegos (Screen.kt)" },
-  "Feature": { cls: "feature", desc: "Públicos dentro de un feature" },
+  "App": { cls: "app", desc: "app · shell, navegación, barra superior y entradas de los juegos (Screen.kt)" },
+  "Feature": { cls: "feature", desc: "Públicos dentro de un feature (incluye los juegos de feature:games/hub)" },
   "Local": { cls: "local", desc: "private/internal de un feature (component/): candidatos a subir a core:designsystem si otro feature los necesita" },
 };
 const byKey = Object.fromEntries(DATA.components.map(c => [c.key, c]));
