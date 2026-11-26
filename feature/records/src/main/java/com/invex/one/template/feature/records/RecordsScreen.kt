@@ -114,6 +114,7 @@ fun RecordsScreen(
     }
 }
 
+/** Row of summary metric tiles shown above the records list. */
 @Composable
 private fun SummaryRow(summary: RecordsSummary, modifier: Modifier = Modifier) {
     val colors = AppTheme.colors

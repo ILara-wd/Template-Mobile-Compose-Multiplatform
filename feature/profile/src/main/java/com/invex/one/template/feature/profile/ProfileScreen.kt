@@ -212,6 +212,7 @@ fun ProfileScreen(
     }
 }
 
+/** "Rendimiento arcade" header plus the three KPI tiles (games, record, achievements). */
 @Composable
 private fun PerformanceSection(stats: PlayerStats, modifier: Modifier = Modifier) {
     val colors = AppTheme.colors
@@ -245,6 +246,7 @@ private fun PerformanceSection(stats: PlayerStats, modifier: Modifier = Modifier
     }
 }
 
+/** Security and privacy settings card (password, visibility switches). */
 @Composable
 private fun SecurityCard(state: ProfileUiState, callbacks: ProfileCallbacks, actions: ProfileActions, modifier: Modifier = Modifier) {
     val colors = AppTheme.colors

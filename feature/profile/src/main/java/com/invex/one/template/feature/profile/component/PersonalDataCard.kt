@@ -191,6 +191,7 @@ internal fun PersonalDataCard(
 private fun ServerRegion.display(): String =
     stringResource(R.string.profile_region_format, flag, stringResource(country), stringResource(server))
 
+/** Tinted primary pill with a check icon (e.g. gamertag "Disponible"). */
 @Composable
 private fun StatusChip(text: String) {
     val colors = AppTheme.colors
@@ -206,6 +207,7 @@ private fun StatusChip(text: String) {
     }
 }
 
+/** Verified badge shown next to a confirmed email. */
 @Composable
 private fun VerifiedLabel() {
     Row(horizontalArrangement = Arrangement.spacedBy(AppTheme.spacing.xxxs), verticalAlignment = Alignment.CenterVertically) {
@@ -214,6 +216,7 @@ private fun VerifiedLabel() {
     }
 }
 
+/** Chip with the computed age and its category bracket (Kids / Junior / Senior). */
 @Composable
 private fun AgeChip(age: Int) {
     val bracket = stringResource(

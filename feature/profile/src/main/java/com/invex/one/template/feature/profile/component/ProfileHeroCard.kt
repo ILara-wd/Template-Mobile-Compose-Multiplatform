@@ -116,6 +116,7 @@ internal fun ProfileHeroCard(
     }
 }
 
+/** Large ringed avatar with the level badge and the change-photo button. */
 @Composable
 private fun ProfileAvatar(stats: PlayerStats, onChangePhoto: () -> Unit, modifier: Modifier = Modifier) {
     val colors = AppTheme.colors
@@ -169,6 +170,7 @@ private fun ProfileAvatar(stats: PlayerStats, onChangePhoto: () -> Unit, modifie
     }
 }
 
+/** Coins and active streak side by side, split by a divider. */
 @Composable
 private fun TelemetryPill(stats: PlayerStats) {
     val colors = AppTheme.colors
@@ -195,6 +197,7 @@ private fun TelemetryPill(stats: PlayerStats) {
     }
 }
 
+/** One telemetry value: icon tile, number and caption. */
 @Composable
 private fun RowScope.TelemetryItem(@DrawableRes icon: Int, iconBackground: Color, value: String, label: String) {
     Row(
@@ -212,6 +215,7 @@ private fun RowScope.TelemetryItem(@DrawableRes icon: Int, iconBackground: Color
     }
 }
 
+/** "Elige tu personaje" section with the selectable character tiles. */
 @Composable
 private fun CharacterPicker(
     selected: ProfileCharacter,
@@ -247,6 +251,7 @@ private fun CharacterPicker(
     }
 }
 
+/** Selectable character tile; disabled outside edit mode. */
 @Composable
 private fun CharacterOption(character: ProfileCharacter, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
     val colors = AppTheme.colors

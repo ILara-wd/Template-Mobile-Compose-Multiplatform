@@ -221,6 +221,7 @@ fun LoginScreen(
     }
 }
 
+/** Small secondary-colored text link (e.g. "¿Olvidaste tu clave?"). */
 @Composable
 private fun LinkText(text: String, onClick: () -> Unit) {
     Text(

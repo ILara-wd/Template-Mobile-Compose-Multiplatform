@@ -116,6 +116,7 @@ fun GamesScreen(
     }
 }
 
+/** Horizontal row of category filter chips; `null` selects "Todos". */
 @Composable
 private fun CategoryFilters(
     selected: GameCategory?,
