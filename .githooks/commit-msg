@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+# ------------------------------------------------------------------------------
+# commit-msg hook — valida la convención de mensajes de commit del proyecto
+# (sección «Convenciones» de CLAUDE.md).
+#
+# Formato esperado (línea de asunto):
+#   <tipo>(<ámbito>): <descripción imperativa en minúscula> [APP-<n>]
+#
+#   - <tipo>     obligatorio: feat | fix | refactor | test | docs | chore | build | revert
+#   - (<ámbito>) opcional: feature o área en minúscula (payments, theme, components, docs…)
+#   - [APP-<n>]  opcional: ticket al FINAL del asunto
+#
+# Ejemplos válidos:
+#   feat(payments): agregar detalle de cobro
+#   fix(students): corregir filtro de búsqueda [APP-7]
+#   refactor: extraer secciones de PaymentsSections
+#   docs(architecture): actualizar guía de contribución
+#   build: subir lifecycle a 2.9.0 [APP-21]
+#
+# Auto-normalización: el hook deja EXACTAMENTE UN espacio entre "<tipo>(<ámbito>):"
+# y la descripción ("feat:agregar…", "feat:   agregar…", "feat:\tagregar…" →
+# "feat: agregar…"). Si hubo cambio, reescribe el archivo del commit.
+#
+# El sufijo `!` de BREAKING CHANGE no se usa: la app es de un solo módulo
+# sin API publicada; los cambios de comportamiento se explican en el cuerpo.
+#
+# Bypass (usar con criterio, quedan auditados en el historial):
+#   1. git commit --no-verify        (nativo de Git)
+#   2. SKIP_COMMIT_MSG_HOOK=1 git commit -m "..."
+#   3. Incluir [skip-validation] en el mensaje
+#
+# Instalación: git config core.hooksPath .githooks   (ver .githooks/README.md)
+# ------------------------------------------------------------------------------
+
+set -euo pipefail
+
+COMMIT_MSG_FILE="${1:-}"
+if [[ -z "$COMMIT_MSG_FILE" || ! -f "$COMMIT_MSG_FILE" ]]; then
+  echo "  ❌ commit-msg: archivo de mensaje no encontrado ('$COMMIT_MSG_FILE')" >&2
+  exit 1
+fi
+
+# --- Bypass explícito por variable de entorno --------------------------------
+if [[ "${SKIP_COMMIT_MSG_HOOK:-0}" == "1" ]]; then
+  echo "  ⚠️  commit-msg: validación saltada por SKIP_COMMIT_MSG_HOOK=1"
+  exit 0
+fi
+
+TYPES='feat|fix|refactor|test|docs|chore|build|revert'
+SCOPE_RE='\([a-z0-9][a-z0-9-]*\)'
+# Prefijos de ticket aceptados. APP es un placeholder hasta que exista el proyecto
+# de tickets real; actualizar aquí y en la suite de tests.
+TICKET_PREFIXES='APP'
+
+# --- Normalizar CRLF -> LF (Windows / WSL) ------------------------------------
+TMP_FILE="$(mktemp)"
+NORMALIZED_FILE="$(mktemp)"
+trap 'rm -f "$TMP_FILE" "$NORMALIZED_FILE"' EXIT
+tr -d '\r' < "$COMMIT_MSG_FILE" > "$TMP_FILE"
+
+# --- Auto-normalización: UN espacio tras "<tipo>(<ámbito>):" ------------------
+# Solo se transforma el SUBJECT (primera línea útil, ignorando comentarios `#` y
+# blancos iniciales). El cuerpo queda intacto.
+SUBJECT_LINE_NO="$(awk '/[^[:space:]]/ && !/^[[:space:]]*#/ {print NR; exit}' "$TMP_FILE")"
+
+if [[ -n "$SUBJECT_LINE_NO" ]]; then
+  ORIGINAL_SUBJECT_LINE="$(sed -n "${SUBJECT_LINE_NO}p" "$TMP_FILE")"
+  NORMALIZED_SUBJECT_LINE="$(printf '%s' "$ORIGINAL_SUBJECT_LINE" \
+    | sed -E "s/^((${TYPES})(${SCOPE_RE})?):[[:space:]]*([^[:space:]])/\1: \4/")"
+
+  if [[ "$NORMALIZED_SUBJECT_LINE" != "$ORIGINAL_SUBJECT_LINE" ]]; then
+    awk -v line_no="$SUBJECT_LINE_NO" -v replacement="$NORMALIZED_SUBJECT_LINE" \
+      'NR == line_no { print replacement; next } { print }' \
+      "$TMP_FILE" > "$NORMALIZED_FILE"
+    cp "$NORMALIZED_FILE" "$COMMIT_MSG_FILE"
+    cp "$NORMALIZED_FILE" "$TMP_FILE"
+  fi
+fi
+
+# --- Extraer líneas ignorando comentarios (#) y blancos iniciales -------------
+MSG_CONTENT="$(grep -vE '^\s*#' "$TMP_FILE" | sed -e '/./,$!d' || true)"
+
+SUBJECT="$(printf '%s\n' "$MSG_CONTENT" | awk 'NF{print; exit}')"
+SECOND_LINE="$(printf '%s\n' "$MSG_CONTENT" | awk 'NR==2{print; exit}')"
+
+# --- Bypass por marca dentro del mensaje --------------------------------------
+if printf '%s' "$MSG_CONTENT" | grep -qF '[skip-validation]'; then
+  echo "  ⚠️  commit-msg: validación saltada por marca [skip-validation]"
+  exit 0
+fi
+
+# --- Skips automáticos: merges, reverts, fixup/squash generados por Git -------
+if [[ "$SUBJECT" =~ ^Merge[[:space:]] ]] \
+   || [[ "$SUBJECT" =~ ^Revert[[:space:]]\" ]] \
+   || [[ "$SUBJECT" =~ ^(fixup|squash|amend)! ]]; then
+  exit 0
+fi
+
+print_format() {
+  echo "  📐 Formato esperado:" >&2
+  echo "     <tipo>(<ámbito>): <descripción imperativa en minúscula> [APP-<n>]" >&2
+  echo "     (el ámbito y el ticket son opcionales)" >&2
+}
+
+# --- Validación: subject no puede estar vacío ---------------------------------
+if [[ -z "$SUBJECT" ]]; then
+  echo "  ❌ commit-msg: el mensaje del commit está vacío." >&2
+  print_format
+  exit 1
+fi
+
+# --- Validación: si hay body, la línea 2 DEBE estar en blanco -----------------
+BODY_LINES_COUNT="$(printf '%s\n' "$MSG_CONTENT" | awk 'NF' | wc -l | tr -d ' ')"
+if [[ "$BODY_LINES_COUNT" -gt 1 && -n "$SECOND_LINE" ]]; then
+  echo "  ❌ commit-msg: separa el asunto del cuerpo con una línea en blanco." >&2
+  echo "" >&2
+  echo "    📐 Formato correcto:" >&2
+  echo "       feat(payments): agregar detalle de cobro" >&2
+  echo "       <línea en blanco>" >&2
+  echo "       Explicación más detallada del cambio…" >&2
+  exit 1
+fi
+
+# --- Validación de longitud del subject ---------------------------------------
+SUBJECT_LEN="${#SUBJECT}"
+if [[ "$SUBJECT_LEN" -gt 100 ]]; then
+  echo "  ❌ commit-msg: el asunto tiene $SUBJECT_LEN caracteres (máx. 100)." >&2
+  echo "     📏 Recomendado: 72 caracteres o menos." >&2
+  echo "     📥 Commit recibido: $SUBJECT" >&2
+  exit 1
+fi
+
+# --- Ticket al inicio (formato antiguo) → pista específica --------------------
+if [[ "$SUBJECT" =~ ^(${TYPES})(${SCOPE_RE})?:\ \[ ]]; then
+  echo "  ❌ commit-msg: el ticket va al FINAL del asunto, no al inicio." >&2
+  echo "     ✍️  Recibido: $SUBJECT" >&2
+  echo "     ✅ Ejemplo:   fix(students): corregir filtro de búsqueda [APP-7]" >&2
+  exit 1
+fi
+
+# --- Ticket opcional al final -------------------------------------------------
+# Se separa antes de validar el resto para no confundirlo con la descripción.
+SUBJECT_NO_TICKET="$SUBJECT"
+if [[ "$SUBJECT" =~ ^(.*)\ \[([A-Za-z]+(-[A-Za-z]+)?)-([0-9]+)\]$ ]]; then
+  SUBJECT_NO_TICKET="${BASH_REMATCH[1]}"
+  TICKET_PREFIX="${BASH_REMATCH[2]}"
+  if [[ ! "$TICKET_PREFIX" =~ ^(${TICKET_PREFIXES})$ ]]; then
+    echo "  ❌ commit-msg: prefijo de ticket no aceptado '[${TICKET_PREFIX}-…]' (se acepta [${TICKET_PREFIXES}-<n>])." >&2
+    echo "     ✍️  Recibido: $SUBJECT" >&2
+    exit 1
+  fi
+fi
+
+# --- Regex del formato --------------------------------------------------------
+# Grupos: 1: tipo · 2: (ámbito) · 3: descripción
+REGEX="^(${TYPES})(${SCOPE_RE})?: (.{10,})$"
+
+if [[ "$SUBJECT_NO_TICKET" =~ $REGEX ]]; then
+  DESCRIPTION="${BASH_REMATCH[3]}"
+else
+  DESCRIPTION=""
+fi
+
+if [[ -z "$DESCRIPTION" || "$DESCRIPTION" =~ [[:space:]]$ ]]; then
+  echo "  ❌ El commit no cumple con la convención de commits (ver CLAUDE.md). ❌" >&2
+  echo "" >&2
+  print_format
+  echo "" >&2
+  echo "  🏷️  Tipos válidos:" >&2
+  echo "     • feat     → nueva funcionalidad o pantalla" >&2
+  echo "     • fix      → corrección de bug" >&2
+  echo "     • refactor → cambio interno sin alterar comportamiento" >&2
+  echo "     • test     → agregar o corregir tests" >&2
+  echo "     • docs     → documentación (docs/, CLAUDE.md, README)" >&2
+  echo "     • chore    → mantenimiento (limpieza, configuración del repo)" >&2
+  echo "     • build    → Gradle, dependencias, CI" >&2
+  echo "     • revert   → revertir un commit previo" >&2
+  echo "" >&2
+  echo "  ✅ Ejemplos válidos:" >&2
+  echo "     feat(payments): agregar detalle de cobro" >&2
+  echo "     fix(students): corregir filtro de búsqueda [APP-7]" >&2
+  echo "     docs(architecture): actualizar guía de contribución" >&2
+  echo "" >&2
+  echo "  💡 Tips:" >&2
+  echo "     • Ámbito en minúscula, sin espacios: (payments), (theme), (components)." >&2
+  echo "     • Descripción en minúscula, imperativo, ≥10 caracteres, sin punto final." >&2
+  echo "     • Ticket opcional al final: [APP-<n>]." >&2
+  exit 1
+fi
+
+# La descripción no debe terminar con punto
+if [[ "$DESCRIPTION" =~ \.$ ]]; then
+  echo "  ❌ commit-msg: la descripción no debe terminar con punto." >&2
+  echo "    ✍️  Recibido: $DESCRIPTION" >&2
+  exit 1
+fi
+
+# La descripción debe empezar en minúscula (se rechazan A-Z ASCII)
+FIRST_CHAR="${DESCRIPTION:0:1}"
+if [[ "$FIRST_CHAR" =~ [A-Z] ]]; then
+  echo "  ❌ commit-msg: la descripción debe empezar en minúscula." >&2
+  echo "     ✍️  Recibido: $DESCRIPTION" >&2
+  exit 1
+fi
+
+# Un ticket en medio de la descripción es un error común: va al final
+if [[ "$DESCRIPTION" =~ \[[A-Za-z]+-[0-9]*\] ]]; then
+  echo "  ❌ commit-msg: ticket mal formado o mal ubicado: va al final del asunto como [${TICKET_PREFIXES}-<n>]." >&2
+  echo "     ✍️  Recibido: $SUBJECT" >&2
+  exit 1
+fi
+
+exit 0
