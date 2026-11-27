@@ -1,0 +1,90 @@
+# Instrucciones de estilo para GitHub Copilot — SportKid
+# Fuente de verdad: CLAUDE.md y README.md (§1–§7). Si algo aquí
+# contradice esos documentos, mandan ellos.
+language: kotlin
+style:
+  indent: 4
+  max_line_length: 140
+  use_semicolons: false
+  trailing_commas: true
+naming_conventions:
+  classes: PascalCase
+  functions: camelCase
+  variables: camelCase
+  constants: UPPER_SNAKE_CASE
+  atoms: "Sk<Nombre> en core:designsystem, sin dominio (SkButton, SkPill, SkAvatar)"
+  domain_components: "PascalCase sin prefijo en core:ui (EventCard, SportTag, FormCard)"
+  screens: "<Pantalla>Screen en feature:<x> (HomeScreen, RaceFormScreen)"
+  state_holders: "<Pantalla>State @Stable + remember<Pantalla>State con rememberSaveable"
+  sample_data: "object <Feature>Samples en <Feature>Models.kt"
+  string_keys: "<pantalla>_<descripcion> en el strings.xml del módulo (quick_add_title)"
+  drawables: "ic_<feature>_<nombre> (vectores) / img_<pantalla>_<nombre> (fotos, drawable-nodpi)"
+  packages: "com.invex.sportkid.core.<capa> / com.invex.sportkid.feature.<x>"
+imports:
+  order: [android, androidx, com.invex.sportkid, java, javax, kotlin, kotlinx]
+  group: true
+  wildcard: false
+comments:
+  language: es
+  require_docstring_for_public_functions: true
+  require_docstring_for_classes: true
+  style: "KDoc de una línea que diga qué es (con pantalla P/O o nombre de Figma si aplica); comentarios solo para el porqué no obvio"
+patterns:
+  avoid:
+    - "!!"
+    - "lateinit"
+    - "GlobalScope / runBlocking"
+    - "android.util.Log / println / printStackTrace"
+    - "Color(0x…) fuera de core/designsystem/theme/"
+    - "16.dp sueltos en features — usar SportKidTheme.spacing / LocalSpacing"
+    - "fontSize = N.sp — usar MaterialTheme.typography"
+    - "Text(\"literal\") — usar stringResource"
+    - "Textos en inglés o emojis en la UI (todo en español de México)"
+    - "LocalDate.now() dentro de modelos o lógica — recibir today como parámetro"
+    - "Importar un feature desde otro feature"
+    - "NavController o ViewModel como parámetro de un componente"
+    - "Colores de deporte, medalla, estado o hijo que cambien con el tema"
+    - "contentDescription = null en iconos que transmiten información"
+  prefer:
+    - "val e @Immutable data class para modelos de UI"
+    - "enum en core:model + presentación (texto, icono, color) una sola vez en core:ui"
+    - "pantallas que reciben datos y callbacks (onClose, onSave) y delegan la navegación a :app"
+    - "modifier: Modifier = Modifier como primer parámetro opcional; slots @Composable al final"
+    - "MaterialTheme.colorScheme / LocalSportColors / SportKidTheme.spacing / MaterialTheme.typography"
+    - "componentes existentes de core:designsystem (Sk*) y core:ui antes de crear uno"
+    - "@SkPreviews en una preview private por estado relevante"
+    - "items(list, key = { it.id }) en listas perezosas"
+    - "Mateo (azul) y Sofía (rosa) en datos de ejemplo"
+examples:
+  - description: "Holder de estado de un formulario que sobrevive rotación"
+    code: |
+      /** Estado de P15: distancia, tipo, tiempo y posición de la carrera. */
+      @Stable
+      class RaceFormState(initial: RaceDraft) {
+          var distance by mutableStateOf(initial.distance)
+          var time by mutableStateOf(initial.time)
+          fun toDraft(): RaceDraft = RaceDraft(distance = distance, time = time)
+      }
+
+      @Composable
+      fun rememberRaceFormState(initial: RaceDraft = RaceFormState.empty()): RaceFormState =
+          rememberSaveable(saver = RaceFormState.Saver) { RaceFormState(initial) }
+  - description: "Átomo del sistema de diseño"
+    code: |
+      /** Etiqueta pill de 11sp con icono opcional (Figma: "Entrenamientos", "Activo"). */
+      @Composable
+      fun SkPill(
+          text: String,
+          modifier: Modifier = Modifier,
+          containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
+      ) {
+          Surface(modifier = modifier, shape = MaterialTheme.shapes.extraLarge, color = containerColor) {
+              Text(text, Modifier.padding(horizontal = SportKidTheme.spacing.sm), style = MaterialTheme.typography.labelSmall)
+          }
+      }
+
+      @SkPreviews
+      @Composable
+      private fun SkPillPreview() = SportKidTheme {
+          SkPill("Entrenamientos")
+      }

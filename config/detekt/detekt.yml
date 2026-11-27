@@ -1,0 +1,73 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  Detekt — SportKid
+# ─────────────────────────────────────────────────────────────────────────────
+#  Se aplica sobre la configuración por defecto de Detekt (buildUponDefaultConfig),
+#  ajustada a Compose y a las convenciones de CLAUDE.md.
+#
+#  PENDIENTE (TD-SK-008): el plugin aún no está aplicado en Gradle. Para activarlo:
+#    1. libs.versions.toml: detekt = "<versión>" y el plugin io.gitlab.arturbosch.detekt.
+#    2. build.gradle.kts raíz: aplicarlo a todos los módulos con
+#       config.setFrom("config/detekt/detekt.yml") y buildUponDefaultConfig = true.
+#    3. ./gradlew detektBaseline para congelar la deuda existente en
+#       config/detekt/detekt-baseline.xml; el baseline solo se encoge.
+# ─────────────────────────────────────────────────────────────────────────────
+
+build:
+  maxIssues: 0
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+console-reports:
+  active: true
+  exclude:
+    - 'ProjectStatisticsReport'
+    - 'ComplexityReport'
+    - 'NotificationReport'
+    - 'FileBasedFindingsReport'
+
+# ─────────────────────────────────────────────────────────────────────────────
+#  REGLAS DE DETEKT AJUSTADAS A COMPOSE Y A CLAUDE.md
+# ─────────────────────────────────────────────────────────────────────────────
+
+complexity:
+  LongMethod:
+    threshold: 60                  # CLAUDE.md: composables > 60 líneas se dividen
+  LongParameterList:
+    functionThreshold: 10          # los composables tienen muchos parámetros con default
+    constructorThreshold: 10
+    ignoreDefaultParameters: true
+    ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    active: false                  # un archivo de secciones agrupa muchos composables pequeños
+  CyclomaticComplexMethod:
+    ignoreAnnotated: ['Composable'] # los `when` de UI inflan la métrica sin ser lógica
+
+naming:
+  FunctionNaming:
+    ignoreAnnotated: ['Composable'] # los composables son PascalCase
+  TopLevelPropertyNaming:
+    constantPattern: '[A-Z][A-Za-z0-9_]*'
+
+style:
+  ForbiddenComment:
+    comments:
+      - value: 'FIXME:'
+        reason: 'abre una deuda TD-SK-0XX en lugar de dejar FIXME'
+      - value: 'STOPSHIP:'
+        reason: 'no se integra código marcado como STOPSHIP'
+  MagicNumber:
+    ignorePropertyDeclaration: true
+    ignoreAnnotated: ['Preview', 'SkPreviews']
+    excludes: ['**/designsystem/theme/**', '**/test/**', '**/androidTest/**']
+  MaxLineLength:
+    maxLineLength: 140             # firmas de composables en una línea llegan a ~140
+  UnusedPrivateMember:
+    ignoreAnnotated: ['Preview', 'SkPreviews'] # las previews private no se llaman desde código
+  UnusedPrivateProperty:
+    active: true
+  ReturnCount:
+    max: 3
+  WildcardImport:
+    active: true
