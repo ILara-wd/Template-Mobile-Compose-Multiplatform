@@ -1,0 +1,50 @@
+# Changelog de Template con towncrier: un fragmento por cambio en changelog.d/, el CHANGELOG.md se genera al publicar.
+# Guía: changelog.d/template/TOWNCRIER_README.md. Las rutas son relativas a este archivo.
+[tool.towncrier]
+name = "Template"
+filename = "../CHANGELOG.md"
+directory = "../changelog.d"
+template = "../config/towncrier.md.jinja2"
+start_string = "<!-- towncrier release notes start -->\n"
+title_format = false
+# Sin gestor de tickets todavía (APP-<n> es placeholder): el ticket se muestra como texto.
+issue_format = "{issue}"
+# Sin ticket: fragmento huérfano "+<slug>.<tipo>.md".
+orphan_prefix = "+"
+ignore = ["template", ".DS_Store"]
+wrap = false
+
+[[tool.towncrier.type]]
+directory = "added"
+name = "Agregado"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "changed"
+name = "Cambiado"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "refactored"
+name = "Refactorizado"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "deprecated"
+name = "Obsoleto"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "removed"
+name = "Eliminado"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "fixed"
+name = "Corregido"
+showcontent = true
+
+[[tool.towncrier.type]]
+directory = "security"
+name = "Seguridad"
+showcontent = true
