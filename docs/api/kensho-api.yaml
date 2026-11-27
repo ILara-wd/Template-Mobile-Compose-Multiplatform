@@ -1,0 +1,2200 @@
+openapi: 3.1.0
+info:
+  title: Kensho API
+  version: 0.1.0
+  description: |
+    API del portal de administración del dojo (ADR-017). Las fixtures de `app/src/test/resources/fixtures/`
+    salen de este contrato.
+
+    Pase de lista, Pagos y perfil del instructor: solo los endpoints que consume la app; el resto (eventos,
+    exámenes) está en su documento de `docs/api/`.
+
+    Estado (2026-10-31): el entorno `dev` es un mock estático en Netlify que solo sirve `GET login.json`
+    (ver `x-static-mock`). La app lo consume con `StaticMockTkdAuthApi` mientras `kensho.authStaticMock.debug=true`.
+servers:
+  - url: https://treecode.dev/api/v1/
+    description: Producción (release)
+  - url: https://treecode.dev/api/dev/
+    description: Desarrollo (debug) — hoy mock estático
+tags:
+  - name: auth
+    description: Inicio de sesión, alta del dojo y renovación del token
+  - name: students
+    description: >-
+      Alumnos del dojo de la sesión (diseño en `docs/api/students-api.md`); edición de la ficha y estado en
+      `docs/api/student-edit-api.md`
+  - name: dojo-config
+    description: >-
+      Configuración del dojo que necesita la ficha de alta: programas con escalera, horarios y plan
+      (`docs/api/dojo-config-api.md`). Las mutaciones devuelven el `DojoConfig` completo.
+  - name: attendance
+    description: Pase de lista por sesión (horario + fecha) del dojo de la sesión (`docs/api/checkin-api.md`)
+  - name: payments
+    description: >-
+      Resumen del mes, cargos, cobro con `Idempotency-Key` y anulación (`docs/api/payments-api.md`). Montos en
+      centavos con la moneda del cargo.
+  - name: sensei-profile
+    description: Perfil del instructor, switch "En el tatami" y sus datos (`docs/api/sensei-profile-api.md`)
+  - name: app
+    description: >-
+      Configuración de la app que el splash pide antes del login: versiones por plataforma, mantenimiento, textos de
+      los avisos y banderas. Público (sin token).
+  - name: push
+    description: >-
+      Registro del dispositivo para notificaciones push con FCM (ADR-027, `docs/api/push-api.md`). El contenido de
+      cada notificación (`PushData`) no es un endpoint: lo envía el backend por FCM.
+security:
+  - bearerAuth: []
+paths:
+  /app/settings:
+    get:
+      tags: [app]
+      operationId: appSettings
+      summary: Políticas de versión, mantenimiento y banderas de la app
+      description: >-
+        Público: el splash lo pide antes del login. Si falla, la app sigue con la última respuesta guardada sin el
+        mantenimiento (o sin restricciones si nunca la recibió). Las versiones se comparan con `versionName`
+        (`major.minor.patch`, un sufijo `-x` es anterior a la misma versión sin sufijo); `blocked` es coincidencia
+        exacta. Una bandera ausente vale `false`.
+      security: []
+      responses:
+        '200':
+          description: Configuración vigente
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AppSettings' }
+  /auth/login:
+    post:
+      tags: [auth]
+      operationId: login
+      summary: Inicia sesión con correo y contraseña
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          description: Sesión abierta
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /auth/register:
+    post:
+      tags: [auth]
+      operationId: register
+      summary: Crea la cuenta del dojo y abre sesión
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+      responses:
+        '201':
+          description: Cuenta creada y sesión abierta
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '409':
+          description: El correo ya tiene una cuenta
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /auth/refresh:
+    post:
+      tags: [auth]
+      operationId: refresh
+      summary: Renueva el access token
+      description: >-
+        La app lo llama una sola vez ante un 401. Rota el refresh token (el anterior queda revocado). Solo un 401
+        de este endpoint cierra la sesión local; un fallo de red o un 5xx la conserva y la petición original
+        falla con el error transitorio.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RefreshRequest' }
+      responses:
+        '200':
+          description: Tokens nuevos (el refresh token puede rotar)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Session' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /me:
+    get:
+      tags: [auth]
+      operationId: me
+      summary: Cuenta del usuario dueño del token
+      responses:
+        '200':
+          description: Cuenta del instructor
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Me' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    patch:
+      tags: [sensei-profile]
+      operationId: updateMe
+      summary: Cambia cargo, año en que empezó a enseñar y rango del instructor
+      description: >-
+        Solo cambian las llaves enviadas; `null` borra el dato y `{}` no cambia nada. La app manda siempre las
+        tres llaves con nulos explícitos.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MeUpdate' }
+      responses:
+        '200':
+          description: Cuenta actualizada
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Me' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /auth/logout:
+    post:
+      tags: [auth]
+      operationId: logout
+      summary: Cierra solo la sesión de este dispositivo
+      description: >-
+        Revoca el refresh token del cuerpo. No requiere Bearer. La app borra la sesión local con cualquier
+        resultado; un fallo solo significa que el token no se revocó en el servidor.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RefreshRequest' }
+      responses:
+        '204':
+          description: Sesión revocada
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /auth/logout-all:
+    post:
+      tags: [auth]
+      operationId: logoutAll
+      summary: Cierra la sesión en todos los dispositivos
+      description: >-
+        Revoca todos los access y refresh tokens del usuario autenticado. Sin cuerpo de petición ni de respuesta.
+        Con 204 o 401 la app borra la sesión local; con otro error la conserva para reintentar.
+      responses:
+        '204':
+          description: Sesiones revocadas
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /students:
+    get:
+      tags: [students]
+      operationId: listStudents
+      summary: Alumnos del dojo (activos por defecto) y cintas del filtro
+      description: >-
+        Lista completa (sin paginación): la app busca, filtra por cinta y ordena en local. El dojo sale del token.
+        Códigos desconocidos de `belt` o `examStatus.code` no invalidan la lista (la app los ignora). Sin `status`
+        devuelve solo los activos; con él, los estados pedidos (`docs/api/student-edit-api.md` §4).
+      parameters:
+        - in: query
+          name: status
+          required: false
+          description: Repetible (`?status=PAUSED&status=INACTIVE`); un valor desconocido responde 422.
+          schema:
+            type: array
+            items: { $ref: '#/components/schemas/MembershipStatus' }
+          style: form
+          explode: true
+        - in: header
+          name: If-None-Match
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: Alumnos activos
+          headers:
+            ETag: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StudentList' }
+        '304': { description: Sin cambios desde el ETag enviado }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+        '403':
+          description: Sin permiso sobre los alumnos del dojo
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    post:
+      tags: [students]
+      operationId: createStudent
+      summary: Da de alta un alumno en el dojo de la sesión
+      description: >-
+        Idempotente por `Idempotency-Key` (el `registrationId` del setup): un reintento con la misma llave y el mismo
+        cuerpo devuelve el mismo 201. Diseño en `docs/api/student-registration-api.md`.
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          required: true
+          description: El `registrationId` de `GET /dojo/registration-setup`
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateStudentRequest' }
+      responses:
+        '201':
+          description: Alumno creado (o reintento idempotente)
+          headers:
+            Location: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StudentProfile' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '410': { $ref: '#/components/responses/Gone' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /students/{studentId}:
+    get:
+      tags: [students]
+      operationId: studentProfile
+      summary: Perfil completo de un alumno del dojo de la sesión
+      description: >-
+        Un alumno de otro dojo responde 404. Los textos del temario, del programa y de la observación son
+        contenido del dojo; los nombres de cinta y grado los arma la app a partir de los códigos
+        (diseño en `docs/api/student-profile-api.md`).
+      parameters:
+        - in: path
+          name: studentId
+          required: true
+          schema: { type: string }
+        - in: header
+          name: If-None-Match
+          required: false
+          schema: { type: string }
+      responses:
+        '200':
+          description: Perfil del alumno
+          headers:
+            ETag: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StudentProfile' }
+        '304': { description: Sin cambios desde el ETag enviado }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+  /students/{studentId}/record:
+    parameters:
+      - $ref: '#/components/parameters/StudentId'
+    get:
+      tags: [students]
+      operationId: studentRecord
+      summary: Ficha editable del alumno
+      description: >-
+        Lo capturado en el alta que el perfil no devuelve (datos médicos y de contacto): `no-store`. Un alumno en pausa
+        o de baja también se lee; uno de otro dojo responde 404 (`docs/api/student-edit-api.md` §2).
+      responses:
+        '200':
+          description: Ficha del alumno
+          headers:
+            ETag: { description: 'Versión de la ficha (débil); va en `If-Match` al guardar', schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StudentRecord' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      tags: [students]
+      operationId: updateStudentRecord
+      summary: Corrige datos personales, tutor, contacto, emergencia y horario
+      description: >-
+        Solo cambian las llaves presentes y `null` borra los opcionales; `{}` responde 200 sin cambios. Disciplina,
+        rango, primera clase y estado no se aceptan (422 `NOT_EDITABLE`). Un menor sin tutor responde 422 en
+        `guardian.name`; nombre y fecha repetidos, 409 `STUDENT_ALREADY_EXISTS`; una baja, 409 `STUDENT_INACTIVE`
+        (`docs/api/student-edit-api.md` §3).
+      parameters:
+        - in: header
+          name: If-Match
+          required: false
+          description: El `ETag` de `GET record`; si no coincide responde 412. Sin él gana el último en guardar.
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StudentRecordPatch' }
+            example:
+              contact: { phone: '+525511112222', email: null }
+              scheduleId: karate-tue-thu-1830
+      responses:
+        '200':
+          description: Ficha actualizada
+          headers:
+            ETag: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/StudentRecord' }
+        '400': { description: El cuerpo no es un objeto JSON }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '412':
+          description: La ficha cambió desde que se leyó (`PRECONDITION_FAILED`); recargar y volver a aplicar
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /students/{studentId}/membership:
+    parameters:
+      - $ref: '#/components/parameters/StudentId'
+    put:
+      tags: [students]
+      operationId: setStudentMembership
+      summary: Pausa, da de baja o reactiva al alumno
+      description: >-
+        Idempotente: el estado actual responde 200 sin cambiar fecha ni motivo. Reactivar necesita cupo en su horario
+        o un `scheduleId` con cupo (409 `SCHEDULE_FULL`; 422 `scheduleId` `NOT_AVAILABLE` o `REQUIRED`). La baja
+        cancela sus cargos pendientes de exámenes y eventos; la pausa, solo con `cancelUpcomingEvents`
+        (`docs/api/student-edit-api.md` §4).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/MembershipRequest' }
+            example: { status: PAUSED, reason: Lesión de rodilla, cancelUpcomingEvents: false }
+      responses:
+        '200':
+          description: Ficha con el estado nuevo y los cargos cancelados
+          headers:
+            ETag: { schema: { type: string } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MembershipResponse' }
+        '400': { description: El cuerpo no es un objeto JSON }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: Reactivar sin cupo en su horario (`SCHEDULE_FULL`)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /dojo/registration-setup:
+    get:
+      tags: [students]
+      operationId: registrationSetup
+      summary: Catálogos para dar de alta un alumno y folio reservado
+      description: >-
+        Cada llamada reserva un `registrationId` (vigencia 7 días) que el alta usa como `Idempotency-Key`.
+        Los nombres de cinta, grado y días los arma la app a partir de los códigos.
+      responses:
+        '200':
+          description: Catálogos del dojo
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RegistrationSetup' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /dojo/config:
+    get:
+      tags: [dojo-config]
+      operationId: dojoConfig
+      summary: Configuración completa del dojo
+      description: >-
+        La app decide con ella si el dojo ya puede dar de alta alumnos: al menos un programa con rangos y un
+        horario (`docs/android-integration-guide.md` §3).
+      responses:
+        '200':
+          description: 'Configuración del dojo (`cache-control: no-store`)'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DojoConfig' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /dojo/programs/{discipline}:
+    parameters:
+      - name: discipline
+        in: path
+        required: true
+        description: Disciplina que se entrena (`MIXED` no tiene programa); acepta mayúsculas o minúsculas
+        schema: { type: string, enum: [KARATE, TAEKWONDO, BJJ] }
+    put:
+      tags: [dojo-config]
+      operationId: saveProgram
+      summary: Crea o reemplaza el programa con su escalera completa
+      description: >-
+        Reconcilia en lugar de borrar: un rango que sigue (misma cinta y grado) y un requisito que sigue (mismo
+        `id`) conservan su fila y las verificaciones de los alumnos. Lo que no viene se borra.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProgramRequest' }
+      responses:
+        '200':
+          description: Programa reemplazado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DojoConfig' }
+        '201':
+          description: Programa creado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DojoConfig' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: '`RANK_IN_USE`: se quitaría un rango con alumnos; `ranks` dice cuáles. No cambia nada.'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+    delete:
+      tags: [dojo-config]
+      operationId: deleteProgram
+      summary: Borra el programa con su escalera, requisitos y horarios
+      responses:
+        '204':
+          description: Programa borrado
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: '`PROGRAM_IN_USE`: el programa tiene alumnos'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /dojo/schedules/{scheduleId}:
+    parameters:
+      - name: scheduleId
+        in: path
+        required: true
+        description: Slug que genera la app una sola vez (`karate-mon-wed-1730`); reintentar no duplica
+        schema: { type: string, pattern: '^[a-z0-9][a-z0-9-]{0,39}$' }
+    put:
+      tags: [dojo-config]
+      operationId: saveSchedule
+      summary: Crea o reemplaza un horario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ScheduleRequest' }
+      responses:
+        '200':
+          description: Horario reemplazado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DojoConfig' }
+        '201':
+          description: Horario creado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DojoConfig' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '409':
+          description: '`SCHEDULE_IN_USE`: no se puede cambiar la disciplina de un horario con alumnos'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+    delete:
+      tags: [dojo-config]
+      operationId: deleteSchedule
+      summary: Borra un horario
+      responses:
+        '204':
+          description: Horario borrado
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409':
+          description: '`SCHEDULE_IN_USE`: algún alumno lo tiene asignado'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /dojo/settings:
+    put:
+      tags: [dojo-config]
+      operationId: saveSettings
+      summary: Guarda el plan de cobro y la lada
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DojoSettings' }
+      responses:
+        '200':
+          description: Plan guardado
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/DojoConfig' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /me/profile:
+    get:
+      tags: [sensei-profile]
+      operationId: senseiProfile
+      summary: Perfil completo del instructor en una llamada
+      description: >-
+        Identidad, ingresos del mes (mismo cálculo que `GET /payments/summary`), la sede (una cuenta es un dojo),
+        la semana de lunes a domingo de `asOf` con los mismos `id` de sesión que el pase de lista, y avisos. Leerlo
+        genera las mensualidades que falten. `Cache-Control: no-store`.
+      responses:
+        '200':
+          description: Perfil del instructor
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/SenseiProfile' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /me/presence:
+    put:
+      tags: [sensei-profile]
+      operationId: setPresence
+      summary: Switch "En el tatami"
+      description: Solo lo cambia el instructor; la app lo aplica de forma optimista y regresa si falla.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [onTatami]
+              properties:
+                onTatami: { type: boolean }
+      responses:
+        '204':
+          description: Guardado
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /me/devices/{installationId}:
+    parameters:
+      - $ref: '#/components/parameters/InstallationId'
+    put:
+      tags: [push]
+      operationId: registerDevice
+      summary: Alta o actualización del dispositivo para push
+      description: >-
+        Idempotente (upsert por `installationId`): reemplaza token, versión, idioma, permiso y el usuario dueño, así
+        que otra cuenta en el mismo teléfono se queda con el dispositivo. Si el `fcmToken` ya estaba en otro
+        `installationId`, ese registro se borra. El usuario y su rol salen del token. La app lo llama al iniciar
+        sesión, en `onNewToken`, al cambiar de versión o de permiso y una vez al día; un fallo no bloquea la UI.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/DeviceRegistration' }
+      responses:
+        '204':
+          description: Registrado
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+    delete:
+      tags: [push]
+      operationId: unregisterDevice
+      summary: Quita el dispositivo al cerrar sesión
+      description: >-
+        La app lo llama antes de `POST /auth/logout`, mientras aún tiene Bearer, y borra la sesión local con
+        cualquier resultado. 204 también si no existía. `POST /auth/logout-all` borra todos los dispositivos del
+        usuario.
+      responses:
+        '204':
+          description: Quitado o inexistente
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /attendance/today:
+    get:
+      tags: [attendance]
+      operationId: attendanceToday
+      summary: Sesiones de hoy en la zona del dojo con su resumen
+      responses:
+        '200':
+          description: Día del pase de lista
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AttendanceDay' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /attendance/sessions/{scheduleId}/{date}:
+    parameters:
+      - $ref: '#/components/parameters/ScheduleId'
+      - $ref: '#/components/parameters/SessionDate'
+    get:
+      tags: [attendance]
+      operationId: attendanceSession
+      summary: Roster de una sesión
+      responses:
+        '200':
+          description: Sesión con sus alumnos
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AttendanceRoster' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`SESSION_NOT_FOUND`: el horario no existe, es de otro dojo o no cae en esa fecha'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /attendance/sessions/{scheduleId}/{date}/students/{studentId}:
+    parameters:
+      - $ref: '#/components/parameters/ScheduleId'
+      - $ref: '#/components/parameters/SessionDate'
+      - name: studentId
+        in: path
+        required: true
+        schema: { type: string }
+    put:
+      tags: [attendance]
+      operationId: markAttendance
+      summary: Marca (o deshace con `PENDING`) la asistencia de un alumno
+      description: >-
+        Idempotente: reenviar el mismo estado no cambia `checkedInAt`. Se puede marcar hoy y hasta 30 días atrás.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AttendanceMarkRequest' }
+      responses:
+        '200':
+          description: Alumno marcado y resumen actualizado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [student, summary]
+                properties:
+                  student: { $ref: '#/components/schemas/Attendee' }
+                  summary: { $ref: '#/components/schemas/AttendanceSummary' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`SESSION_NOT_FOUND` o `STUDENT_NOT_IN_SESSION`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: '`SESSION_NOT_STARTED` (fecha futura) o `SESSION_LOCKED` (más de 30 días)'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /attendance/sessions/{scheduleId}/{date}/close:
+    parameters:
+      - $ref: '#/components/parameters/ScheduleId'
+      - $ref: '#/components/parameters/SessionDate'
+    post:
+      tags: [attendance]
+      operationId: closeAttendance
+      summary: Completa el pase de lista; los no marcados quedan ausentes
+      description: Sin cuerpo. Repetirlo conserva el primer cierre.
+      responses:
+        '200':
+          description: Sesión cerrada (`status` = `CLOSED`)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AttendanceRoster' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`SESSION_NOT_FOUND`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: '`SESSION_NOT_STARTED` o `SESSION_LOCKED`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /payments/summary:
+    get:
+      tags: [payments]
+      operationId: paymentsSummary
+      summary: Flujo de caja del mes y el próximo evento con cuota
+      description: Genera las mensualidades que falten antes de calcular.
+      parameters:
+        - name: month
+          in: query
+          required: false
+          description: '`YYYY-MM`; sin él, el mes de `asOf` en la zona del dojo'
+          schema: { type: string, pattern: '^[0-9]{4}-[0-9]{2}$' }
+      responses:
+        '200':
+          description: Resumen del mes
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaymentsSummary' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+  /payments/charges:
+    get:
+      tags: [payments]
+      operationId: listCharges
+      summary: Cargos con filtros, más recientes primero
+      parameters:
+        - name: category
+          in: query
+          description: Se puede repetir
+          schema: { type: array, items: { $ref: '#/components/schemas/ChargeCategory' } }
+          style: form
+          explode: true
+        - name: status
+          in: query
+          description: Se puede repetir; sin `status` se listan todos menos `CANCELED`
+          schema: { type: array, items: { $ref: '#/components/schemas/ChargeStatus' } }
+          style: form
+          explode: true
+        - name: studentId
+          in: query
+          schema: { type: string }
+        - name: cursor
+          in: query
+          description: '`nextCursor` de la página anterior (opaco)'
+          schema: { type: string }
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        '200':
+          description: Página de cargos
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChargesPage' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /payments/charges/{chargeId}:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    get:
+      tags: [payments]
+      operationId: chargeDetail
+      summary: Detalle del cargo con el alumno, su historial y el recibo si está pagado
+      responses:
+        '200':
+          description: Detalle del cargo
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChargeDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`CHARGE_NOT_FOUND`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /payments/charges/{chargeId}/payments:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+    post:
+      tags: [payments]
+      operationId: payCharge
+      summary: Registra el cobro de un cargo
+      description: >-
+        Un reintento con la misma `Idempotency-Key` y el mismo cuerpo devuelve el mismo pago. Con recargo, el
+        monto cobrado lo calcula el servidor.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          description: UUID que la app conserva entre reintentos del mismo cobro
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PayRequest' }
+      responses:
+        '201':
+          description: Cobro registrado
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [payment]
+                properties:
+                  payment: { $ref: '#/components/schemas/RegisteredPayment' }
+                  receipt: { $ref: '#/components/schemas/Receipt' }
+        '400':
+          description: '`BAD_REQUEST`: falta `Idempotency-Key`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`CHARGE_NOT_FOUND`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: '`CHARGE_ALREADY_PAID`, `CHARGE_CANCELED` o `IDEMPOTENCY_KEY_REUSED`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/ValidationFailed' }
+  /payments/charges/{chargeId}/payments/{paymentId}:
+    parameters:
+      - $ref: '#/components/parameters/ChargeId'
+      - name: paymentId
+        in: path
+        required: true
+        schema: { type: string }
+    delete:
+      tags: [payments]
+      operationId: voidPayment
+      summary: Anula un cobro; el cargo vuelve a pendiente o vencido
+      description: Repetirlo también responde 200.
+      responses:
+        '200':
+          description: Detalle del cargo sin el pago
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ChargeDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`CHARGE_NOT_FOUND` o `PAYMENT_NOT_FOUND`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /payments/events:
+    get:
+      tags: [payments]
+      operationId: listBillingEvents
+      summary: Exámenes y eventos con cuota, próximos y pasados
+      responses:
+        '200':
+          description: Los de hoy en adelante (el más próximo primero) y los 20 pasados más recientes
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BillingEventList' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+    post:
+      tags: [payments]
+      operationId: createBillingEvent
+      summary: Crea un examen o evento con cuota y un cargo por alumno
+      description: >-
+        Un examen también crea la fila de `exams` y la fija como `nextExam` de sus alumnos (reemplaza la que tuvieran).
+        Los cargos vencen en `date` y no llevan recargo. Por ahora no se puede editar ni borrar
+        (`docs/api/payments-api.md` §3.6).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateBillingEventRequest' }
+            example:
+              category: EXAM
+              title: Examen de grado a cinta azul
+              date: '2026-11-28'
+              venue: Tatami Central
+              lines:
+                - { label: Tasa de evaluación y sinodales, amountCents: 3500 }
+                - { label: Cinta nueva bordada y certificado, amountCents: 1000 }
+              studentIds: [st-kenji-sato, st-maya-rodriguez]
+      responses:
+        '201':
+          description: Evento creado con sus alumnos
+          headers:
+            Location:
+              description: '`/api/v1/payments/events/{eventId}`'
+              schema: { type: string }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BillingEventDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '422':
+          description: >-
+            `VALIDATION_FAILED`; un alumno que no está activo o es de otro dojo se marca
+            `{ field: 'studentIds[i]', code: NOT_AVAILABLE }`
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /payments/events/{eventId}:
+    parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema: { type: string }
+    get:
+      tags: [payments]
+      operationId: billingEventDetail
+      summary: Detalle del evento con el cargo de cada alumno
+      responses:
+        '200':
+          description: Detalle del evento
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BillingEventDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`EVENT_NOT_FOUND`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /payments/events/{eventId}/students/{studentId}:
+    parameters:
+      - name: eventId
+        in: path
+        required: true
+        schema: { type: string }
+      - name: studentId
+        in: path
+        required: true
+        schema: { type: string }
+    put:
+      tags: [payments]
+      operationId: addBillingEventStudent
+      summary: Agrega al alumno al evento
+      description: Crea su cargo o reactiva el que se había cancelado. Es idempotente; sin cuerpo.
+      responses:
+        '200':
+          description: Detalle del evento
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BillingEventDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`EVENT_NOT_FOUND` o `STUDENT_NOT_FOUND`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: '`STUDENT_NOT_ACTIVE`: el alumno está pausado o de baja'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    delete:
+      tags: [payments]
+      operationId: removeBillingEventStudent
+      summary: Quita al alumno del evento
+      description: >-
+        Su cargo pasa a `CANCELED` (queda en el historial) y, si es examen, deja de ser su próximo examen. Repetirlo
+        responde 200.
+      responses:
+        '200':
+          description: Detalle del evento sin el alumno
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BillingEventDetail' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404':
+          description: '`EVENT_NOT_FOUND` o `STUDENT_NOT_IN_EVENT`'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: '`CHARGE_ALREADY_PAID`: primero se anula el pago'
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+x-static-mock:
+  description: Respuesta del mock estático de Netlify (`GET {dev}/login.json`). No valida credenciales ni emite token.
+  path: /login.json
+  example:
+    status: 200
+    data:
+      userId: 647
+      userMail: mock@treecode.dev
+      userInfo: true
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    StudentId:
+      in: path
+      name: studentId
+      required: true
+      schema: { type: string }
+    ScheduleId:
+      name: scheduleId
+      in: path
+      required: true
+      schema: { type: string }
+    SessionDate:
+      name: date
+      in: path
+      required: true
+      description: Fecha de la sesión en la zona del dojo
+      schema: { type: string, format: date }
+    ChargeId:
+      name: chargeId
+      in: path
+      required: true
+      schema: { type: string }
+    InstallationId:
+      name: installationId
+      in: path
+      required: true
+      description: UUID v4 que la app genera una vez por instalación; sobrevive al cierre de sesión
+      schema: { type: string, format: uuid }
+  responses:
+    Unauthorized:
+      description: Credenciales o token inválidos
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Recurso inexistente o fuera del dojo de la sesión
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: Ya existe un recurso con esos datos o la llave de idempotencia se usó con otro cuerpo
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Gone:
+      description: El folio de registro venció
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    ValidationFailed:
+      description: Campos inválidos; `fields` dice cuáles
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    AppSettings:
+      type: object
+      required: [app_version_policy]
+      properties:
+        app_version_policy:
+          type: object
+          properties:
+            ios: { $ref: '#/components/schemas/PlatformVersionPolicy' }
+            android: { $ref: '#/components/schemas/PlatformVersionPolicy' }
+            force_update: { $ref: '#/components/schemas/AppNotice' }
+            maintenance:
+              allOf:
+                - $ref: '#/components/schemas/AppNotice'
+                - type: object
+                  required: [enabled]
+                  properties:
+                    enabled: { type: boolean, description: '`true` bloquea la app con este aviso' }
+            update_catalog_version:
+              type: object
+              properties:
+                vr: { type: string, description: Versión de los catálogos (la app aún no la usa) }
+            flags:
+              type: array
+              items:
+                type: object
+                required: [name]
+                properties:
+                  name: { type: string }
+                  FTI: { type: boolean, description: Encendida en iOS }
+                  FTA: { type: boolean, description: Encendida en Android }
+      example:
+        app_version_policy:
+          ios: { min_supported: '0.1.0', recommended: '0.1.0', blocked: [] }
+          android: { min_supported: '0.1.0', recommended: '0.2.0', blocked: ['0.0.3'] }
+          force_update:
+            title: Actualiza Kensho
+            body: Esta versión ya no es compatible. Descarga la más reciente para seguir usando la app.
+            actionLabel: Actualizar
+          maintenance:
+            enabled: false
+            title: Estamos en mantenimiento
+            body: Volvemos en unos minutos. Inténtalo de nuevo más tarde.
+            actionLabel: Entendido
+          update_catalog_version: { vr: '0.0.23' }
+          flags:
+            - { name: ff_01, FTI: true, FTA: true }
+    PlatformVersionPolicy:
+      type: object
+      properties:
+        min_supported: { type: string, description: Menor versión que puede abrir la app }
+        recommended: { type: string, description: Con una menor se sugiere actualizar (se puede cerrar) }
+        blocked:
+          type: array
+          items: { type: string }
+          description: Versiones que no pueden abrir la app aunque cumplan el mínimo
+    AppNotice:
+      type: object
+      description: Textos del aviso; si falta alguno la app usa el suyo
+      properties:
+        title: { type: string }
+        body: { type: string }
+        actionLabel: { type: string }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+    RegisterRequest:
+      type: object
+      required: [instructorName, dojoName, discipline, email, password]
+      properties:
+        instructorName: { type: string }
+        dojoName: { type: string }
+        discipline: { $ref: '#/components/schemas/DisciplineCode' }
+        email: { type: string, format: email }
+        password: { type: string, format: password, minLength: 8 }
+    RefreshRequest:
+      type: object
+      required: [refreshToken]
+      properties:
+        refreshToken: { type: string }
+    Session:
+      type: object
+      required: [accessToken, user]
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: [string, 'null'] }
+        expiresIn: { type: integer, description: Segundos de vigencia del access token }
+        user: { $ref: '#/components/schemas/User' }
+      example:
+        accessToken: access-1
+        refreshToken: refresh-1
+        expiresIn: 3600
+        user: { id: u-1, email: sensei@kenshodojo.com, instructorName: Kenji Sato }
+    User:
+      type: object
+      required: [id, email]
+      properties:
+        id: { type: string }
+        email: { type: string, format: email }
+        instructorName: { type: string }
+    Me:
+      type: object
+      required: [id, email, instructorName, dojoName, discipline]
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        instructorName: { type: string }
+        dojoName: { type: string }
+        discipline: { $ref: '#/components/schemas/DisciplineCode' }
+        title: { type: [string, 'null'], maxLength: 60, description: Cargo libre del instructor }
+        rank: { $ref: '#/components/schemas/InstructorRank' }
+        teachingSince: { type: [integer, 'null'], minimum: 1900, description: Año en que empezó a enseñar }
+        onTatami: { type: boolean, default: false }
+      example:
+        id: b1536619-a5b2-4199-a506-0b72fe2269c4
+        email: qa.kensho.1793509763@example.com
+        instructorName: QA Kensho
+        dojoName: Dojo QA
+        discipline: TAEKWONDO
+        title: Head Coach
+        rank: { discipline: KARATE, belt: BLACK, grade: { system: DAN, value: 4 } }
+        teachingSince: 2010
+        onTatami: false
+    MeUpdate:
+      type: object
+      description: Todas opcionales; `null` borra el dato.
+      properties:
+        title: { type: [string, 'null'], maxLength: 60, description: Vacío equivale a `null` }
+        teachingSince: { type: [integer, 'null'], minimum: 1900, description: Hasta el año en curso }
+        rank: { $ref: '#/components/schemas/InstructorRank' }
+      example:
+        title: Head Coach
+        teachingSince: 2010
+        rank: { discipline: KARATE, belt: BLACK, grade: { system: DAN, value: 4 } }
+    InstructorRank:
+      description: Igual que el rango de los alumnos, sin `stripes`; la cinta no tiene que estar en la escalera del dojo.
+      oneOf:
+        - type: 'null'
+        - type: object
+          required: [discipline, belt]
+          properties:
+            discipline: { $ref: '#/components/schemas/DisciplineCode' }
+            belt: { $ref: '#/components/schemas/BeltCode' }
+            grade:
+              oneOf:
+                - type: 'null'
+                - type: object
+                  required: [system, value]
+                  properties:
+                    system: { type: string, enum: [KUP, DAN, KYU] }
+                    value: { type: integer, minimum: 1, maximum: 20 }
+    DisciplineCode:
+      type: string
+      description: >-
+        Código de catálogo. `KARATE`, `TAEKWONDO` y `BJJ` se entrenan (`DojoDiscipline`: programas, horarios,
+        alumnos); `MIXED` solo es disciplina principal del registro y de `GET me` (`DojoMainDiscipline`) y la app
+        la descarta en catálogos de la ficha de alta.
+      enum: [KARATE, BJJ, TAEKWONDO, MIXED]
+    StudentList:
+      type: object
+      required: [asOf, beltFilters, items]
+      properties:
+        asOf: { type: string, format: date-time }
+        beltFilters:
+          type: array
+          uniqueItems: true
+          description: Cintas del filtro en el orden del temario del dojo; vacío oculta la fila de chips.
+          items: { $ref: '#/components/schemas/BeltCode' }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/StudentSummary' }
+      example:
+        asOf: '2026-11-05T17:30:00-07:00'
+        beltFilters: [WHITE, ORANGE, YELLOW, GREEN, BLUE, PURPLE, BROWN, RED, BLACK]
+        items:
+          - id: st-kenji-sato
+            displayName: Kenji Sato
+            age: 14
+            photoUrl: https://cdn.treecode.dev/students/st-kenji-sato.jpg
+            rank: { discipline: TAEKWONDO, belt: GREEN, grade: { system: KUP, value: 6 }, stripes: 2 }
+            examStatus: { code: READY }
+            attendance: { attended: 22, required: 24 }
+            nextExamOn: '2026-11-28'
+          - id: st-alex-chen
+            displayName: Alex Chen
+            age: 28
+            photoUrl: null
+            rank: { discipline: BJJ, belt: BLUE, grade: null, stripes: 2 }
+            examStatus: { code: SPARRING_EVAL_PENDING }
+            attendance: { attended: 48, required: 60 }
+            nextExamOn: '2026-12-04'
+          - id: st-maya-rodriguez
+            displayName: Maya Rodríguez
+            age: 10
+            photoUrl: https://cdn.treecode.dev/students/st-maya-rodriguez.jpg
+            rank: { discipline: TAEKWONDO, belt: YELLOW, grade: { system: KUP, value: 8 }, stripes: 0 }
+            examStatus: { code: CLASSES_REMAINING, classesRemaining: 2 }
+            attendance: { attended: 14, required: 16 }
+            nextExamOn: null
+    StudentSummary:
+      type: object
+      required: [id, displayName, age, photoUrl, rank, examStatus, attendance, nextExamOn]
+      properties:
+        id: { type: string }
+        displayName: { type: string, minLength: 1 }
+        age: { type: integer, minimum: 0 }
+        photoUrl: { type: [string, 'null'], format: uri }
+        rank: { $ref: '#/components/schemas/StudentRank' }
+        examStatus: { $ref: '#/components/schemas/ExamStatus' }
+        attendance:
+          type: object
+          required: [attended, required]
+          properties:
+            attended: { type: integer, minimum: 0 }
+            required: { type: integer, minimum: 0 }
+        nextExamOn: { type: [string, 'null'], format: date }
+        membership:
+          type: object
+          description: Estado del alumno; sirve al pedir `?status=` con varios estados.
+          required: [status]
+          properties:
+            status: { $ref: '#/components/schemas/MembershipStatus' }
+    StudentRank:
+      type: object
+      required: [discipline, belt, grade, stripes]
+      properties:
+        discipline: { $ref: '#/components/schemas/DisciplineCode' }
+        belt: { $ref: '#/components/schemas/BeltCode' }
+        grade: { $ref: '#/components/schemas/BeltGrade' }
+        stripes: { type: integer, minimum: 0 }
+    ExamStatus:
+      type: object
+      required: [code]
+      properties:
+        code: { type: string, enum: [READY, CLASSES_REMAINING, SPARRING_EVAL_PENDING, READY_FOR_BLACK_TIP] }
+        classesRemaining: { type: integer, minimum: 1, description: Solo con CLASSES_REMAINING }
+    BeltCode:
+      type: string
+      enum: [WHITE, ORANGE, YELLOW, GREEN, BLUE, PURPLE, BROWN, RED, BLACK]
+    BeltGrade:
+      oneOf:
+        - type: 'null'
+        - type: object
+          required: [system, value]
+          properties:
+            system: { type: string, enum: [KUP, DAN, KYU] }
+            value: { type: integer, minimum: 1 }
+    StudentProfile:
+      type: object
+      required: [asOf, id, displayName, age, photoUrl, membership, program, rank, nextRank, nextExam,
+                 attendance, syllabus, latestObservation, graduation]
+      properties:
+        asOf: { type: string, format: date-time }
+        id: { type: string }
+        displayName: { type: string, minLength: 1 }
+        age: { type: integer, minimum: 0 }
+        photoUrl: { type: [string, 'null'], format: uri }
+        membership:
+          type: object
+          required: [status, enrolledOn]
+          properties:
+            status: { $ref: '#/components/schemas/MembershipStatus' }
+            enrolledOn: { type: string, format: date }
+        program:
+          type: object
+          required: [discipline, name]
+          properties:
+            discipline: { $ref: '#/components/schemas/DisciplineCode' }
+            name: { type: string }
+        rank: { $ref: '#/components/schemas/StudentRank' }
+        nextRank:
+          oneOf:
+            - type: 'null'
+            - type: object
+              required: [belt, grade]
+              properties:
+                belt: { $ref: '#/components/schemas/BeltCode' }
+                grade: { $ref: '#/components/schemas/BeltGrade' }
+        nextExam:
+          oneOf:
+            - type: 'null'
+            - type: object
+              required: [id, on]
+              properties:
+                id: { type: string }
+                on: { type: string, format: date }
+        attendance:
+          type: object
+          required: [attended, required, minimumPercent, streakWeeks, classesPerWeek, lifetimeHours]
+          properties:
+            attended: { type: integer, minimum: 0 }
+            required: { type: integer, minimum: 0 }
+            minimumPercent: { type: integer, minimum: 0, maximum: 100 }
+            streakWeeks: { type: integer, minimum: 0 }
+            classesPerWeek: { type: number, minimum: 0, description: Promedio de las últimas 8 semanas, 1 decimal }
+            lifetimeHours: { type: integer, minimum: 0 }
+        syllabus:
+          type: object
+          required: [verifierName, requirements]
+          properties:
+            verifierName: { type: [string, 'null'] }
+            requirements:
+              type: array
+              items: { $ref: '#/components/schemas/Requirement' }
+        latestObservation:
+          oneOf:
+            - type: 'null'
+            - $ref: '#/components/schemas/Observation'
+        graduation:
+          type: object
+          required: [markedReady]
+          properties:
+            markedReady: { type: boolean }
+      example:
+        asOf: '2026-11-05T17:30:00-07:00'
+        id: st-kenji-sato
+        displayName: Kenji Sato
+        age: 14
+        photoUrl: https://cdn.treecode.dev/students/st-kenji-sato.jpg
+        membership: { status: ACTIVE, enrolledOn: '2023-09-04' }
+        program: { discipline: KARATE, name: Shotokan Karate & Kobudo }
+        rank: { discipline: KARATE, belt: GREEN, grade: { system: KUP, value: 6 }, stripes: 2 }
+        nextRank: { belt: BLUE, grade: { system: KUP, value: 5 } }
+        nextExam: { id: ex-2026-11-28, on: '2026-11-28' }
+        attendance: { attended: 22, required: 24, minimumPercent: 90, streakWeeks: 6, classesPerWeek: 2.8, lifetimeHours: 84 }
+        syllabus:
+          verifierName: Sensei Marcus
+          requirements:
+            - { id: kata, title: Kata, description: Heian Sandan, verifiedOn: '2026-10-15' }
+            - { id: tameshiwari, title: Tameshiwari, description: Patada lateral a tabla de pino de 1 pulgada, verifiedOn: null }
+        latestObservation:
+          id: obs-8812
+          text: Excelente rotación de cadera en la patada lateral.
+          authorName: Sensei Marcus
+          observedOn: '2026-10-14'
+          clipThumbnailUrl: https://cdn.treecode.dev/clips/obs-8812.jpg
+        graduation: { markedReady: false }
+    Requirement:
+      type: object
+      required: [id, title, verifiedOn]
+      properties:
+        id: { type: string, description: Estable entre alumnos; es el requirementId de la verificación }
+        title: { type: string }
+        description: { type: string }
+        verifiedOn: { type: [string, 'null'], format: date }
+    Observation:
+      type: object
+      required: [id, text, authorName, observedOn]
+      properties:
+        id: { type: string }
+        text: { type: string }
+        authorName: { type: string }
+        observedOn: { type: string, format: date }
+        clipThumbnailUrl: { type: [string, 'null'], format: uri }
+    MembershipStatus:
+      type: string
+      enum: [ACTIVE, PAUSED, INACTIVE]
+    StudentRecord:
+      type: object
+      description: >-
+        Ficha editable. `gender` y `contact.phone` pueden ser `null` en alumnos anteriores al alta actual;
+        `enrollment.scheduleId` es `null` si su horario se borró mientras estaba de baja. `scheduleOptions` son los
+        horarios de su disciplina; `available` cuenta el cupo sin contarlo a él.
+      required: [asOf, id, fullName, birthDate, age, membership, enrollment, contact, scheduleOptions]
+      properties:
+        asOf: { type: string, format: date-time }
+        id: { type: string }
+        fullName: { type: string, minLength: 1, maxLength: 120 }
+        birthDate: { type: string, format: date }
+        age: { type: integer, minimum: 0 }
+        gender: { type: [string, 'null'], enum: [MALE, FEMALE, null] }
+        medicalNotes: { type: [string, 'null'], maxLength: 1000 }
+        photoUrl: { type: [string, 'null'], format: uri }
+        membership:
+          type: object
+          required: [status, enrolledOn, changedOn, reason]
+          properties:
+            status: { $ref: '#/components/schemas/MembershipStatus' }
+            enrolledOn: { type: string, format: date }
+            changedOn: { type: [string, 'null'], format: date, description: Último cambio de estado }
+            reason: { type: [string, 'null'], maxLength: 200 }
+        enrollment:
+          type: object
+          required: [discipline, programName, scheduleId, firstClassOn]
+          properties:
+            discipline: { $ref: '#/components/schemas/DisciplineCode' }
+            programName: { type: string }
+            scheduleId: { type: [string, 'null'] }
+            firstClassOn: { type: [string, 'null'], format: date }
+        guardian:
+          type: [object, 'null']
+          required: [name, relation]
+          properties:
+            name: { type: string }
+            relation: { type: string, enum: [FATHER, MOTHER, LEGAL_GUARDIAN] }
+        contact:
+          type: object
+          properties:
+            phone: { type: [string, 'null'], pattern: '^\+[1-9][0-9]{7,14}$' }
+            email: { type: [string, 'null'], format: email }
+        emergencyContact:
+          type: [object, 'null']
+          required: [name, phone]
+          properties:
+            name: { type: string }
+            phone: { type: string }
+        scheduleOptions:
+          type: array
+          items:
+            type: object
+            required: [id, weekdays, startsAt, endsAt, description, available]
+            properties:
+              id: { type: string }
+              weekdays:
+                type: array
+                items: { type: string, enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY] }
+              startsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+              endsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+              description: { type: [string, 'null'] }
+              available: { type: boolean }
+    StudentRecordPatch:
+      type: object
+      description: >-
+        Solo las llaves que cambian; `null` borra los opcionales. `contact` va completo (si falta `email`, se borra).
+        `scheduleId` debe ser de su disciplina y con cupo (sin contarlo a él).
+      properties:
+        fullName: { type: string, minLength: 1, maxLength: 120 }
+        birthDate: { type: string, format: date }
+        gender: { type: string, enum: [MALE, FEMALE] }
+        medicalNotes: { type: [string, 'null'], maxLength: 1000 }
+        guardian:
+          type: [object, 'null']
+          required: [name, relation]
+          properties:
+            name: { type: string, minLength: 1, maxLength: 120 }
+            relation: { type: string, enum: [FATHER, MOTHER, LEGAL_GUARDIAN] }
+        contact:
+          type: object
+          required: [phone]
+          properties:
+            phone: { type: string, pattern: '^\+[1-9][0-9]{7,14}$' }
+            email: { type: [string, 'null'], format: email }
+        emergencyContact:
+          type: [object, 'null']
+          required: [name, phone]
+          properties:
+            name: { type: string }
+            phone: { type: string, pattern: '^\+[1-9][0-9]{7,14}$' }
+        scheduleId: { type: string }
+    MembershipRequest:
+      type: object
+      required: [status]
+      properties:
+        status: { $ref: '#/components/schemas/MembershipStatus' }
+        reason: { type: string, minLength: 1, maxLength: 200 }
+        scheduleId: { type: string, description: Solo al reactivar; con otro estado responde 422 }
+        cancelUpcomingEvents: { type: boolean, description: Solo aplica a `PAUSED`; la baja siempre cancela }
+    MembershipResponse:
+      allOf:
+        - $ref: '#/components/schemas/StudentRecord'
+        - type: object
+          required: [canceledCharges]
+          properties:
+            canceledCharges: { type: integer, minimum: 0, description: Cargos pendientes de eventos cancelados }
+    RegistrationSetup:
+      type: object
+      required: [asOf, registrationId, phoneCountryCode, disciplines, schedules, plan]
+      properties:
+        asOf: { type: string, format: date-time }
+        registrationId: { type: string }
+        phoneCountryCode: { type: string, pattern: '^\+[0-9]{1,3}$' }
+        disciplines:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [code, maxStripes, belts]
+            properties:
+              code: { $ref: '#/components/schemas/DisciplineCode' }
+              maxStripes: { type: integer, minimum: 0, maximum: 10 }
+              belts:
+                type: array
+                minItems: 1
+                items:
+                  type: object
+                  required: [belt, grade]
+                  properties:
+                    belt: { $ref: '#/components/schemas/BeltCode' }
+                    grade: { $ref: '#/components/schemas/BeltGrade' }
+        schedules:
+          type: array
+          items: { $ref: '#/components/schemas/TrainingSchedule' }
+        plan:
+          type: object
+          required: [monthlyFeeCents, currency, enrollmentWaived, billingDay]
+          properties:
+            monthlyFeeCents: { type: integer, minimum: 0 }
+            currency: { type: string, description: ISO 4217, example: MXN }
+            enrollmentWaived: { type: boolean }
+            billingDay: { type: integer, minimum: 1, maximum: 28 }
+      example:
+        asOf: '2026-11-06T10:15:00-06:00'
+        registrationId: DOJO-9402
+        phoneCountryCode: '+52'
+        disciplines:
+          - code: KARATE
+            maxStripes: 4
+            belts:
+              - { belt: WHITE, grade: { system: KYU, value: 10 } }
+              - { belt: BLACK, grade: { system: DAN, value: 1 } }
+        schedules:
+          - { id: mon-wed-1730, discipline: KARATE, weekdays: [MONDAY, WEDNESDAY], startsAt: '17:30', endsAt: '18:45', description: 'Tatami B • Sensei Tanaka • Cadetes (12-16 años)' }
+        plan: { monthlyFeeCents: 65000, currency: MXN, enrollmentWaived: true, billingDay: 5 }
+    TrainingSchedule:
+      type: object
+      required: [id, discipline, weekdays, startsAt, endsAt]
+      properties:
+        id: { type: string }
+        discipline: { $ref: '#/components/schemas/DisciplineCode' }
+        weekdays:
+          type: array
+          minItems: 1
+          items: { type: string, enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY] }
+        startsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+        endsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+        description: { type: [string, 'null'] }
+    CreateStudentRequest:
+      type: object
+      description: >-
+        `guardian` se omite si no es menor; `emergencyContact`, si no se capturó; `contact.email` y `medicalNotes`, si
+        van vacíos. Con menos de 18 años a `asOf`, `guardian` es obligatorio (422 en `guardian.name`).
+      required: [fullName, birthDate, gender, enrollment, contact, sendCredential]
+      properties:
+        fullName: { type: string, minLength: 1, maxLength: 120 }
+        birthDate: { type: string, format: date }
+        gender: { type: string, enum: [MALE, FEMALE] }
+        medicalNotes: { type: string, maxLength: 1000 }
+        enrollment:
+          type: object
+          required: [discipline, belt, stripes, firstClassOn, scheduleId]
+          properties:
+            discipline: { $ref: '#/components/schemas/DisciplineCode' }
+            belt: { $ref: '#/components/schemas/BeltCode' }
+            stripes: { type: integer, minimum: 0 }
+            firstClassOn: { type: string, format: date }
+            scheduleId: { type: string }
+        guardian:
+          type: object
+          required: [name, relation]
+          properties:
+            name: { type: string, minLength: 1, maxLength: 120 }
+            relation: { type: string, enum: [FATHER, MOTHER, LEGAL_GUARDIAN] }
+        contact:
+          type: object
+          required: [phone]
+          properties:
+            phone: { type: string, pattern: '^\+[1-9][0-9]{7,14}$' }
+            email: { type: string, format: email }
+        emergencyContact:
+          type: object
+          required: [name, phone]
+          properties:
+            name: { type: string }
+            phone: { type: string, pattern: '^\+[1-9][0-9]{7,14}$' }
+        sendCredential: { type: boolean }
+    DojoConfig:
+      type: object
+      required: [asOf, dojo, settings, belts, programs, schedules]
+      properties:
+        asOf: { type: string, format: date-time }
+        dojo:
+          type: object
+          required: [name, mainDiscipline]
+          properties:
+            name: { type: string }
+            mainDiscipline: { $ref: '#/components/schemas/DisciplineCode' }
+        settings: { $ref: '#/components/schemas/DojoSettings' }
+        belts:
+          type: array
+          description: Temario de cintas del dojo; lo recalcula el servidor a partir de las escaleras
+          items: { $ref: '#/components/schemas/BeltCode' }
+        programs:
+          type: array
+          description: La disciplina principal primero; las demás en orden alfabético
+          items: { $ref: '#/components/schemas/DojoProgram' }
+        schedules:
+          type: array
+          items: { $ref: '#/components/schemas/DojoSchedule' }
+      example:
+        asOf: '2026-11-07T10:15:00-06:00'
+        dojo: { name: Kensho Dojo, mainDiscipline: KARATE }
+        settings: { phoneCountryCode: '+52', monthlyFeeCents: 65000, currency: MXN, enrollmentWaived: true, billingDay: 5 }
+        belts: [WHITE, YELLOW, BLACK]
+        programs:
+          - discipline: KARATE
+            name: Shotokan Karate
+            minimumAttendancePercent: 85
+            maxStripes: 3
+            students: 12
+            ranks:
+              - belt: WHITE
+                grade: { system: KYU, value: 10 }
+                requiredClasses: 24
+                verifierName: Sensei Tanaka
+                requirements: [{ id: kata, title: Taikyoku Shodan, description: Sin pausas }]
+        schedules:
+          - { id: karate-mon-wed-1730, discipline: KARATE, weekdays: [MONDAY, WEDNESDAY], startsAt: '17:30', endsAt: '18:45', description: Tatami A, capacity: 20, activeStudents: 8 }
+    DojoSettings:
+      type: object
+      description: Sin plan guardado, el servidor responde `+52`, 0, `MXN`, `false`, día 1 e inscripción de 0.
+      required: [phoneCountryCode, monthlyFeeCents, currency, enrollmentWaived, billingDay]
+      properties:
+        phoneCountryCode: { type: string, pattern: '^\+[1-9][0-9]{0,2}$' }
+        monthlyFeeCents: { type: integer, minimum: 0 }
+        currency: { type: string, pattern: '^[A-Z]{3}$', description: ISO 4217 }
+        enrollmentWaived: { type: boolean }
+        billingDay: { type: integer, minimum: 1, maximum: 28 }
+        enrollmentFeeCents:
+          type: integer
+          minimum: 0
+          description: Cuota de inscripción que Pagos cobra al dar de alta; opcional en el PUT (se conserva la guardada)
+    DojoProgram:
+      allOf:
+        - $ref: '#/components/schemas/ProgramRequest'
+        - type: object
+          required: [discipline, students]
+          properties:
+            discipline: { $ref: '#/components/schemas/DisciplineCode' }
+            students: { type: integer, minimum: 0, description: Alumnos de cualquier estado; impiden borrar el programa }
+    ProgramRequest:
+      type: object
+      required: [name, minimumAttendancePercent, maxStripes, ranks]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        minimumAttendancePercent: { type: integer, minimum: 0, maximum: 100 }
+        maxStripes: { type: integer, minimum: 0, maximum: 10 }
+        ranks:
+          type: array
+          minItems: 1
+          maxItems: 40
+          description: Escalera completa en orden de progresión; sin repetir cinta + grado (`DUPLICATED`)
+          items: { $ref: '#/components/schemas/ProgramRank' }
+    ProgramRank:
+      type: object
+      required: [belt]
+      properties:
+        belt: { $ref: '#/components/schemas/BeltCode' }
+        grade:
+          oneOf:
+            - type: 'null'
+            - type: object
+              required: [system, value]
+              properties:
+                system: { type: string, enum: [KUP, DAN, KYU] }
+                value: { type: integer, minimum: 1, maximum: 20 }
+        requiredClasses: { type: integer, minimum: 0, maximum: 1000, default: 0 }
+        verifierName: { type: [string, 'null'], maxLength: 120 }
+        requirements:
+          type: array
+          maxItems: 30
+          items:
+            type: object
+            required: [id, title]
+            properties:
+              id: { type: string, pattern: '^[a-z0-9][a-z0-9-]{0,39}$', description: Único en el rango; conservarlo al editar }
+              title: { type: string, minLength: 1, maxLength: 120 }
+              description: { type: [string, 'null'], maxLength: 500 }
+    ScheduleRequest:
+      type: object
+      required: [discipline, weekdays, startsAt, endsAt]
+      properties:
+        discipline: { $ref: '#/components/schemas/DisciplineCode' }
+        weekdays:
+          type: array
+          minItems: 1
+          maxItems: 7
+          uniqueItems: true
+          items: { type: string, enum: [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY] }
+        startsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+        endsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$', description: Mayor que `startsAt` (`OUT_OF_RANGE`) }
+        description: { type: [string, 'null'], maxLength: 200 }
+        capacity: { type: [integer, 'null'], minimum: 1, maximum: 1000, description: '`null` = sin límite' }
+    DojoSchedule:
+      allOf:
+        - $ref: '#/components/schemas/ScheduleRequest'
+        - type: object
+          required: [id, activeStudents]
+          properties:
+            id: { type: string }
+            activeStudents: { type: integer, minimum: 0 }
+    SenseiProfile:
+      type: object
+      required: [asOf, instructor, dojo, earnings, dojos, activeDojoId, week, notices]
+      properties:
+        asOf: { type: string, format: date-time, description: '"Hoy" del dojo; la app no usa el reloj del teléfono' }
+        instructor:
+          type: object
+          required: [id, name, onTatami]
+          properties:
+            id: { type: string, description: El id de la cuenta }
+            name: { type: string }
+            title: { type: [string, 'null'] }
+            photoUrl: { type: [string, 'null'], description: Siempre `null` por ahora }
+            rank: { $ref: '#/components/schemas/InstructorRank' }
+            teachingSince: { type: [integer, 'null'] }
+            onTatami: { type: boolean }
+        dojo:
+          type: object
+          required: [id, name, disciplines]
+          properties:
+            id: { type: string }
+            name: { type: string }
+            logoUrl: { type: [string, 'null'] }
+            disciplines:
+              type: array
+              description: Con programa, en orden alfabético; sin programas, la del registro
+              items: { $ref: '#/components/schemas/DisciplineCode' }
+        earnings:
+          type: object
+          required: [month, currency, collectedCents, previousFeesCents, activeStudents, pendingCents, pendingStudents, extrasCents]
+          properties:
+            month: { type: string, pattern: '^[0-9]{4}-[0-9]{2}$' }
+            currency: { type: string, pattern: '^[A-Z]{3}$' }
+            collectedCents: { type: integer, minimum: 0 }
+            previousFeesCents: { type: integer, minimum: 0, description: Cobrado el mes anterior }
+            activeStudents: { type: integer, minimum: 0 }
+            pendingCents: { type: integer, minimum: 0, description: Incluye adeudos de meses anteriores }
+            pendingStudents: { type: integer, minimum: 0 }
+            extrasCents: { type: integer, minimum: 0, description: Inscripciones, exámenes y eventos }
+        dojos:
+          type: array
+          description: Una sola sede (una cuenta es un dojo)
+          items:
+            type: object
+            required: [id, name, students, schedules, isPrimary]
+            properties:
+              id: { type: string }
+              name: { type: string }
+              address: { type: [string, 'null'] }
+              students: { type: integer, minimum: 0 }
+              schedules: { type: integer, minimum: 0 }
+              isPrimary: { type: boolean }
+        activeDojoId: { type: string }
+        week:
+          type: array
+          minItems: 7
+          maxItems: 7
+          description: Lunes a domingo de la semana de `asOf`; días sin clases con `sessions` vacío
+          items:
+            type: object
+            required: [date, sessions]
+            properties:
+              date: { type: string, format: date }
+              sessions:
+                type: array
+                items:
+                  type: object
+                  required: [id, scheduleId, programName, startsAt, endsAt, students, status]
+                  properties:
+                    id: { type: string, description: 'Mismo id de sesión que el pase de lista (`{scheduleId}/{date}`)' }
+                    scheduleId: { type: string }
+                    programName: { type: string }
+                    description: { type: [string, 'null'] }
+                    startsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+                    endsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+                    students: { type: integer, minimum: 0 }
+                    status: { type: string, enum: [FINISHED, IN_PROGRESS, UPCOMING], description: Cerrada a mano sale como `FINISHED` }
+        notices:
+          type: array
+          description: Un `type` desconocido se descarta en la app
+          items:
+            type: object
+            required: [id, type]
+            properties:
+              id: { type: string }
+              type: { type: string, enum: [OVERDUE_FEES, GRADING_DEADLINE] }
+              students: { type: integer, description: Solo `OVERDUE_FEES` }
+              pendingCents: { type: integer, description: 'Solo `OVERDUE_FEES`: lo vencido, con recargos' }
+              examId: { type: string, description: Solo `GRADING_DEADLINE` }
+              examDate: { type: string, format: date }
+              deadline: { type: string, format: date, description: Examen − 7 días; puede haber pasado }
+              title: { type: string }
+    AttendanceDay:
+      type: object
+      required: [asOf, date, sessions]
+      properties:
+        asOf: { type: string, format: date-time }
+        date: { type: string, format: date }
+        currentSessionId: { type: [string, 'null'], description: En curso o, si no hay, la siguiente }
+        sessions:
+          type: array
+          items: { $ref: '#/components/schemas/AttendanceSession' }
+    AttendanceSession:
+      type: object
+      required: [id, scheduleId, date, discipline, programName, startsAt, endsAt, status]
+      properties:
+        id: { type: string, description: '`{scheduleId}/{date}`' }
+        scheduleId: { type: string }
+        date: { type: string, format: date }
+        discipline: { $ref: '#/components/schemas/DisciplineCode' }
+        programName: { type: string }
+        description: { type: [string, 'null'] }
+        instructorName: { type: [string, 'null'] }
+        startsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+        endsAt: { type: string, pattern: '^[0-2][0-9]:[0-5][0-9]$' }
+        status: { type: string, enum: [UPCOMING, IN_PROGRESS, FINISHED, CLOSED] }
+        closedAt: { type: [string, 'null'], format: date-time }
+        summary: { $ref: '#/components/schemas/AttendanceSummary' }
+    AttendanceSummary:
+      type: object
+      required: [total, present, excused, absent, pending]
+      properties:
+        total: { type: integer, minimum: 0 }
+        present: { type: integer, minimum: 0 }
+        excused: { type: integer, minimum: 0 }
+        absent: { type: integer, minimum: 0 }
+        pending: { type: integer, minimum: 0 }
+    AttendanceRoster:
+      type: object
+      required: [asOf, session, summary, students]
+      properties:
+        asOf: { type: string, format: date-time }
+        session: { $ref: '#/components/schemas/AttendanceSession' }
+        summary: { $ref: '#/components/schemas/AttendanceSummary' }
+        students:
+          type: array
+          items: { $ref: '#/components/schemas/Attendee' }
+    Attendee:
+      type: object
+      required: [id, displayName, status]
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        photoUrl: { type: [string, 'null'] }
+        rank: { $ref: '#/components/schemas/StudentRank' }
+        status: { $ref: '#/components/schemas/AttendanceStatus' }
+        checkedInAt: { type: [string, 'null'], format: date-time }
+        note: { type: [string, 'null'] }
+    AttendanceStatus:
+      type: string
+      description: Sin marca, `PENDING` mientras la sesión no termina y `ABSENT` después
+      enum: [PRESENT, ABSENT, EXCUSED, PENDING]
+    AttendanceMarkRequest:
+      type: object
+      required: [status]
+      properties:
+        status: { $ref: '#/components/schemas/AttendanceStatus' }
+        note: { type: [string, 'null'], maxLength: 200, description: Solo con `EXCUSED` }
+    ChargeCategory:
+      type: string
+      enum: [MONTHLY, ENROLLMENT, EXAM, EVENT]
+    ChargeStatus:
+      type: string
+      enum: [PENDING, OVERDUE, PAID, CANCELED]
+    PaymentMethod:
+      type: string
+      enum: [CASH, CARD, TRANSFER]
+    PaymentsSummary:
+      type: object
+      required: [asOf, month, currency, collectedCents, expectedCents, previousCollectedCents, pendingCents, studentsWithPending, otherCollectedCents]
+      properties:
+        asOf: { type: string, format: date-time }
+        month: { type: string, pattern: '^[0-9]{4}-[0-9]{2}$' }
+        currency: { type: string, pattern: '^[A-Z]{3}$' }
+        collectedCents: { type: integer, minimum: 0 }
+        expectedCents: { type: integer, minimum: 0 }
+        previousCollectedCents: { type: integer, minimum: 0 }
+        pendingCents: { type: integer, minimum: 0 }
+        studentsWithPending: { type: integer, minimum: 0 }
+        otherCollectedCents: { type: integer, minimum: 0 }
+        upcomingEvent:
+          oneOf:
+            - type: 'null'
+            - type: object
+              required: [id, category, title, date, currency]
+              properties:
+                id: { type: string }
+                category: { type: string, enum: [EXAM, EVENT] }
+                title: { type: string }
+                date: { type: string, format: date }
+                venue: { type: [string, 'null'] }
+                currency: { type: string }
+                amountCents: { type: integer, minimum: 0 }
+                candidates: { type: integer, minimum: 0 }
+                candidatesPaid: { type: integer, minimum: 0 }
+                collectedCents: { type: integer, minimum: 0 }
+                goalCents: { type: integer, minimum: 0 }
+    BillingEvent:
+      description: Examen o evento con cuota y el avance de su cobranza
+      type: object
+      required: [id, category, title, date, currency]
+      properties:
+        id: { type: string }
+        category: { type: string, enum: [EXAM, EVENT] }
+        title: { type: string }
+        date: { type: string, format: date }
+        venue: { type: [string, 'null'] }
+        currency: { type: string }
+        lines: { type: array, items: { $ref: '#/components/schemas/ChargeLine' } }
+        amountCents: { type: integer, minimum: 0, description: Monto por alumno (suma de `lines`) }
+        examId: { type: [string, 'null'], description: Solo en exámenes }
+        candidates: { type: integer, minimum: 0 }
+        candidatesPaid: { type: integer, minimum: 0 }
+        collectedCents: { type: integer, minimum: 0 }
+        goalCents: { type: integer, minimum: 0 }
+    BillingEventList:
+      type: object
+      required: [asOf, upcoming, past]
+      properties:
+        asOf: { type: string, format: date-time }
+        upcoming: { type: array, items: { $ref: '#/components/schemas/BillingEvent' } }
+        past: { type: array, maxItems: 20, items: { $ref: '#/components/schemas/BillingEvent' } }
+    ChargeLine:
+      type: object
+      required: [label, amountCents]
+      properties:
+        label: { type: string, maxLength: 80 }
+        amountCents: { type: integer, minimum: 1 }
+    CreateBillingEventRequest:
+      type: object
+      required: [category, title, date, lines]
+      properties:
+        category: { type: string, enum: [EXAM, EVENT] }
+        title: { type: string, maxLength: 120, description: Concepto de cada cargo }
+        date: { type: string, format: date, description: Hoy o después; vencimiento de los cargos }
+        venue: { type: [string, 'null'], maxLength: 120 }
+        lines: { type: array, minItems: 1, maxItems: 10, items: { $ref: '#/components/schemas/ChargeLine' } }
+        studentIds:
+          type: array
+          maxItems: 500
+          description: Solo alumnos `ACTIVE` del dojo
+          items: { type: string }
+    BillingEventDetail:
+      type: object
+      required: [asOf, event, students]
+      properties:
+        asOf: { type: string, format: date-time }
+        event: { $ref: '#/components/schemas/BillingEvent' }
+        students:
+          type: array
+          description: Orden alfabético; sin los alumnos quitados
+          items:
+            type: object
+            required: [chargeId, status, amountCents, student]
+            properties:
+              chargeId: { type: string }
+              status: { $ref: '#/components/schemas/ChargeStatus' }
+              amountCents: { type: integer, minimum: 0 }
+              paidOn: { type: [string, 'null'], format: date }
+              method: { description: Solo con `PAID`, oneOf: [{ type: 'null' }, { $ref: '#/components/schemas/PaymentMethod' }] }
+              student: { $ref: '#/components/schemas/ChargeStudent' }
+    ChargeStudent:
+      type: object
+      required: [id, displayName]
+      properties:
+        id: { type: string }
+        displayName: { type: string }
+        photoUrl: { type: [string, 'null'] }
+        rank: { $ref: '#/components/schemas/StudentRank' }
+    ChargesPage:
+      type: object
+      required: [asOf, items]
+      properties:
+        asOf: { type: string, format: date-time }
+        nextCursor: { type: [string, 'null'] }
+        items:
+          type: array
+          items:
+            type: object
+            required: [id, concept, category, amountCents, currency, status, dueOn, student]
+            properties:
+              id: { type: string }
+              concept: { type: string }
+              category: { $ref: '#/components/schemas/ChargeCategory' }
+              amountCents: { type: integer, minimum: 0 }
+              currency: { type: string }
+              status: { $ref: '#/components/schemas/ChargeStatus' }
+              dueOn: { type: string, format: date }
+              paidOn: { type: [string, 'null'], format: date }
+              method: { description: Solo con `PAID`, oneOf: [{ type: 'null' }, { $ref: '#/components/schemas/PaymentMethod' }] }
+              student: { $ref: '#/components/schemas/ChargeStudent' }
+    ChargeDetail:
+      type: object
+      required: [asOf, charge, student, history]
+      properties:
+        asOf: { type: string, format: date-time }
+        charge:
+          type: object
+          required: [id, concept, category, currency, status, dueOn, lines, amountCents]
+          properties:
+            id: { type: string }
+            concept: { type: string }
+            programName: { type: [string, 'null'] }
+            category: { $ref: '#/components/schemas/ChargeCategory' }
+            period: { type: [string, 'null'], description: '`YYYY-MM` en mensualidades' }
+            currency: { type: string }
+            status: { $ref: '#/components/schemas/ChargeStatus' }
+            dueOn: { type: string, format: date }
+            lines:
+              type: array
+              items:
+                type: object
+                required: [label, amountCents]
+                properties:
+                  label: { type: string }
+                  amountCents: { type: integer }
+            amountCents: { type: integer, minimum: 0, description: Total con recargo si aplica }
+            note: { type: [string, 'null'] }
+            payment:
+              oneOf:
+                - type: 'null'
+                - $ref: '#/components/schemas/RegisteredPayment'
+        student:
+          allOf:
+            - $ref: '#/components/schemas/ChargeStudent'
+            - type: object
+              properties:
+                age: { type: [integer, 'null'] }
+                scheduleDescription: { type: [string, 'null'] }
+                guardian:
+                  oneOf:
+                    - type: 'null'
+                    - type: object
+                      required: [name, relation]
+                      properties:
+                        name: { type: string }
+                        relation: { type: string, enum: [FATHER, MOTHER, LEGAL_GUARDIAN] }
+                        phone: { type: [string, 'null'], description: E.164 }
+                contactPhone: { type: [string, 'null'], description: E.164 }
+                monthlyUpToDate: { type: boolean }
+                pendingCharges: { type: integer, minimum: 0 }
+        history:
+          type: array
+          maxItems: 5
+          description: Últimos pagos vigentes del alumno
+          items:
+            type: object
+            required: [id, paidOn, concept, method, amountCents]
+            properties:
+              id: { type: string }
+              paidOn: { type: string, format: date }
+              concept: { type: string }
+              method: { $ref: '#/components/schemas/PaymentMethod' }
+              amountCents: { type: integer, minimum: 0 }
+        receipt: { $ref: '#/components/schemas/Receipt' }
+    RegisteredPayment:
+      type: object
+      required: [id, paidOn, method, amountCents]
+      properties:
+        id: { type: string }
+        paidOn: { type: string, format: date }
+        method: { $ref: '#/components/schemas/PaymentMethod' }
+        amountCents: { type: integer, minimum: 0 }
+        lateFeeCents: { type: integer, minimum: 0, default: 0 }
+        note: { type: [string, 'null'] }
+    PayRequest:
+      type: object
+      required: [method]
+      properties:
+        method: { $ref: '#/components/schemas/PaymentMethod' }
+        note: { type: [string, 'null'], maxLength: 200 }
+    Receipt:
+      description: Recibo para compartir desde el teléfono; el servidor no envía nada. `null` si no está pagado.
+      oneOf:
+        - type: 'null'
+        - type: object
+          required: [text]
+          properties:
+            phone: { type: [string, 'null'], description: E.164 del tutor o del alumno }
+            text: { type: string }
+            whatsappUrl: { type: [string, 'null'] }
+            smsUrl: { type: [string, 'null'] }
+    DeviceRegistration:
+      type: object
+      required: [fcmToken, platform, appVersion]
+      properties:
+        fcmToken: { type: string, description: Token de registro de FCM; nunca se escribe en logs }
+        platform: { type: string, enum: [ANDROID, IOS] }
+        appVersion:
+          type: string
+          pattern: '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$'
+          description: '`versionName` de la app; se compara como en `AppSettings`'
+        locale: { type: string, description: 'BCP 47 (`es-MX`)', default: es-MX }
+        notificationsEnabled:
+          type: boolean
+          default: true
+          description: Permiso del sistema concedido y notificaciones de la app encendidas
+      example:
+        fcmToken: eXaMpLe:APA91bHkL0
+        platform: ANDROID
+        appVersion: 0.3.0
+        locale: es-MX
+        notificationsEnabled: true
+    PushType:
+      type: string
+      enum: [MEMBERSHIP_DUE, MEMBERSHIP_OVERDUE, MEMBERSHIP_PAID, FEATURE_ANNOUNCEMENT, APP_UPDATE]
+      description: >-
+        Abierto: la app abre su pantalla inicial con un tipo que no conoce, así que agregar uno no es un cambio
+        incompatible. Canal y momento de cada tipo en `docs/api/push-api.md §4`.
+    PushData:
+      type: object
+      description: >-
+        No es un endpoint: es el bloque `data` del mensaje FCM que envía el backend junto con `notification`
+        (título y cuerpo en español, sin montos ni datos personales), `android.notification.channel_id`
+        (`account`, `news` o `updates`) y `android.notification.click_action` = `dev.treecode.kensho.OPEN_PUSH`
+        (obligatorio: sin él la app abierta no recibe `data`). FCM exige que todos los valores sean string.
+      required: [v, id, type]
+      properties:
+        v: { type: string, const: '1', description: Versión de este esquema }
+        id: { type: string, description: Id del envío en `notification_log`; no se muestra }
+        type: { $ref: '#/components/schemas/PushType' }
+        url:
+          type: string
+          format: uri
+          description: Solo `https` de `treecode.dev`; la app ignora otro esquema o dominio
+      example:
+        v: '1'
+        id: ntf_01JD8X2Q9M
+        type: MEMBERSHIP_DUE
+        url: https://treecode.dev/kensho/membresia
+    Error:
+      type: object
+      description: >-
+        La app muestra `message` tal cual (ADR-020): en español de México, para el usuario final y sin
+        datos técnicos. Si falta o viene vacío, usa `tkd_error_*` según el código HTTP.
+      properties:
+        code: { type: string }
+        message: { type: string }
+        fields:
+          type: array
+          description: Solo en 422. Campos inválidos del request.
+          items:
+            type: object
+            required: [field, code]
+            properties:
+              field: { type: string, description: Ruta del campo en el request (`contact.phone`) }
+              code:
+                type: string
+                enum: [REQUIRED, INVALID_FORMAT, OUT_OF_RANGE, NOT_AVAILABLE, DUPLICATED]
+                description: >-
+                  La app lo traduce a `TkdFieldError` para elegir el texto bajo el campo; un código nuevo se
+                  trata como `Invalid` ("Revisa este campo").
+        ranks:
+          type: array
+          description: Solo en 409 `RANK_IN_USE`. Rangos con alumnos que el cuerpo quitaba.
+          items:
+            type: object
+            required: [belt]
+            properties:
+              belt: { $ref: '#/components/schemas/BeltCode' }
+              grade: { $ref: '#/components/schemas/BeltGrade' }

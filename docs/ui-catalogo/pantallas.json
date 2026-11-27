@@ -1,0 +1,84 @@
+{
+  "paquete": "dev.treecode.kensho",
+  "actividad": ".MainActivity",
+  "figmaArchivos": {
+    "uikit": { "nombre": "Prototipo-Demo-UiKit", "key": "KqTFktvrRvCzO2idPga5xf" },
+    "demo": { "nombre": "Prototipo-Demo", "key": null }
+  },
+  "pantallas": [
+    {
+      "id": "P01", "nombre": "Inicio de sesión", "composable": "TkdLoginScreen",
+      "figma": { "archivo": "demo", "nodo": "28:31" },
+      "captura": null, "nota": "Requiere cerrar sesión: se captura a mano"
+    },
+    {
+      "id": "P02", "nombre": "Registro del dojo", "composable": "TkdSignUpScreen",
+      "figma": { "archivo": "demo", "nodo": "28:132" },
+      "captura": null, "nota": "Requiere cerrar sesión: se captura a mano"
+    },
+    {
+      "id": "P03", "nombre": "Resumen del dojo", "composable": "TkdDashboardScreen",
+      "figma": { "archivo": "demo", "nodo": "1:56" },
+      "captura": { "pasos": [{ "tocar": "Resumen" }], "espera": 3, "scrolls": 1 }
+    },
+    {
+      "id": "P04", "nombre": "Lista de alumnos", "composable": "TkdStudentsScreen",
+      "figma": { "archivo": "demo", "nodo": "1:326" },
+      "captura": { "pasos": [{ "tocar": "Estudiantes" }], "scrolls": 1 }
+    },
+    {
+      "id": "P05", "nombre": "Perfil del alumno", "composable": "TkdStudentProfileScreen",
+      "figma": { "archivo": "demo", "nodo": "1:673" },
+      "captura": { "pasos": [{ "tocar": "Estudiantes" }, { "tocar": "/^Cinta /", "esperar": 3 }], "scrolls": 2 },
+      "nota": "Necesita al menos un alumno en el dojo de la sesión"
+    },
+    {
+      "id": "P06", "nombre": "Nuevo alumno", "composable": "TkdStudentRegistrationScreen",
+      "figma": { "archivo": "uikit", "nodo": "65:2" },
+      "captura": { "pasos": [{ "tocar": "Estudiantes" }, { "tocar": "Añadir rápido", "esperar": 3 }], "scrolls": 3 }
+    },
+    {
+      "id": "P07", "nombre": "Pase de lista", "composable": "TkdCheckInScreen",
+      "figma": { "archivo": "demo", "nodo": "1:919" },
+      "captura": { "pasos": [{ "tocar": "Registro" }], "scrolls": 1 }
+    },
+    {
+      "id": "P08", "nombre": "Pagos", "composable": "TkdPaymentsScreen",
+      "figma": { "archivo": "uikit", "nodo": "44:2" },
+      "captura": { "pasos": [{ "tocar": "Pagos" }], "scrolls": 2 }
+    },
+    {
+      "id": "P09", "nombre": "Detalle de pago", "composable": "TkdPaymentDetailScreen",
+      "figma": { "archivo": "uikit", "nodo": "46:325" },
+      "captura": { "pasos": [{ "tocar": "Pagos" }, { "tocar": "Cobrar ahora", "esperar": 3 }], "scrolls": 1 }
+    },
+    {
+      "id": "P10", "nombre": "Mi Dojo", "composable": "TkdMyDojoScreen",
+      "figma": { "archivo": "uikit", "nodo": "108:2" },
+      "captura": { "pasos": [{ "tocar": "Mi Dojo", "esperar": 3 }], "scrolls": 4 },
+      "nota": "Muestra el dojo configurado (108:2) o el asistente inicial (108:313) según la configuración del dojo"
+    },
+    {
+      "id": "P11", "nombre": "Perfil del instructor", "composable": "TkdSenseiProfileScreen",
+      "figma": { "archivo": "uikit", "nodo": "66:356" },
+      "captura": { "pasos": [{ "tocar": "Mi Dojo" }, { "tocarDesc": "Perfil", "esperar": 3 }], "scrolls": 1 }
+    },
+    {
+      "id": "P12", "nombre": "Editor de programa", "composable": "TkdProgramEditorScreen",
+      "figma": { "archivo": "uikit", "nodo": "109:905" },
+      "captura": { "pasos": [{ "tocar": "Mi Dojo", "esperar": 3 }, { "tocarDesc": "/^Opciones de /", "esperar": 1 }, { "tocar": "Editar programa" }], "scrolls": 3 },
+      "nota": "Edición (109:905); desde \"Agregar programa\" es la variante de creación (109:547). Un 409 RANK_IN_USE muestra el aviso y los rangos bloqueados"
+    },
+    {
+      "id": "P13", "nombre": "Editor de horario", "composable": "TkdScheduleEditorScreen",
+      "figma": { "archivo": "uikit", "nodo": "117:1499" },
+      "captura": { "pasos": [{ "tocar": "Mi Dojo", "esperar": 3 }, { "deslizar": 3 }, { "tocar": "/ • .+ a .+/", "esperar": 3 }], "scrolls": 3 },
+      "nota": "Edición con alumnos (117:1499); desde \"Agregar horario\" es la variante de creación (117:1272)"
+    },
+    {
+      "id": "P14", "nombre": "Plan de cobro", "composable": "TkdPlanEditorScreen",
+      "figma": { "archivo": "uikit", "nodo": "118:1734" },
+      "captura": { "pasos": [{ "tocar": "Mi Dojo", "esperar": 3 }, { "deslizar": 5 }, { "tocar": "Editar", "esperar": 3 }], "scrolls": 3 }
+    }
+  ]
+}

@@ -1,0 +1,4929 @@
+{
+  "info": {
+    "name": "Kensho API · Alumnos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Endpoints de alumnos y perfil de la API Kensho.\n\n**Cómo usarla**\n1. Ejecuta **Auth → Login**: guarda `accessToken` y `refreshToken` en las variables de la colección.\n2. El resto de peticiones usan `Authorization: Bearer {{accessToken}}` (heredado de la colección).\n3. Si recibes 401, ejecuta **Auth → Refresh**.\n\n`baseUrl` apunta a `netlify dev` (`http://localhost:8888/api/v1`). En producción: `https://api-kensho.netlify.app/api/v1`.\n\nLos usuarios `demo@kenshodojo.test` y `otro@kenshodojo.test` (contraseña `kensho1234`) solo existen en la BD local después de `npm run db:seed`."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8888/api/v1"
+    },
+    {
+      "key": "email",
+      "value": "demo@kenshodojo.test"
+    },
+    {
+      "key": "password",
+      "value": "kensho1234"
+    },
+    {
+      "key": "studentId",
+      "value": "st-kenji-sato"
+    },
+    {
+      "key": "requirementId",
+      "value": "kyokpa"
+    },
+    {
+      "key": "otherDojoStudentId",
+      "value": "st-otro-hiro"
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "registrationId",
+      "value": ""
+    },
+    {
+      "key": "createdStudentId",
+      "value": ""
+    },
+    {
+      "key": "freshRegistrationId",
+      "value": ""
+    },
+    {
+      "key": "newStudentName",
+      "value": ""
+    },
+    {
+      "key": "studentsEtag",
+      "value": ""
+    },
+    {
+      "key": "profileEtag",
+      "value": ""
+    },
+    {
+      "key": "configEmail",
+      "value": ""
+    },
+    {
+      "key": "configToken",
+      "value": ""
+    },
+    {
+      "key": "configRegistrationId",
+      "value": ""
+    },
+    {
+      "key": "scheduleId",
+      "value": "mon-wed-1730"
+    },
+    {
+      "key": "sessionDate",
+      "value": ""
+    },
+    {
+      "key": "checkinStudentId",
+      "value": ""
+    },
+    {
+      "key": "noClassDate",
+      "value": ""
+    },
+    {
+      "key": "futureSessionDate",
+      "value": ""
+    },
+    {
+      "key": "lockedSessionDate",
+      "value": ""
+    },
+    {
+      "key": "chargeId",
+      "value": ""
+    },
+    {
+      "key": "paymentKey",
+      "value": ""
+    },
+    {
+      "key": "paymentId",
+      "value": ""
+    },
+    {
+      "key": "eventId",
+      "value": ""
+    },
+    {
+      "key": "examDate",
+      "value": ""
+    },
+    {
+      "key": "recordEtag",
+      "value": ""
+    },
+    {
+      "key": "recordRestore",
+      "value": "{}"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Inicia sesión y guarda los tokens en las variables de la colección.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 con Session\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set(\"accessToken\", body.accessToken);",
+                  "pm.collectionVariables.set(\"refreshToken\", body.refreshToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Renueva el access token. El refresh token anterior deja de servir, así que se guarda el nuevo.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 con Session\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set(\"accessToken\", body.accessToken);",
+                  "pm.collectionVariables.set(\"refreshToken\", body.refreshToken);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Alumnos",
+      "item": [
+        {
+          "name": "Lista de alumnos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Alumnos activos del dojo del token y cintas del filtro (`beltFilters`). Sin paginación."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"trae beltFilters e items\", () => {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body).to.have.property(\"asOf\");",
+                  "  pm.expect(body.beltFilters).to.be.an(\"array\");",
+                  "  pm.expect(body.items).to.be.an(\"array\");",
+                  "});",
+                  "pm.collectionVariables.set(\"studentsEtag\", pm.response.headers.get(\"ETag\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lista de alumnos · sin cambios (304)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "If-None-Match",
+                "value": "{{studentsEtag}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Envía el ETag de la última respuesta de **Lista de alumnos**: si nada cambió responde 304 sin cuerpo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"304\", () => pm.response.to.have.status(304));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lista de alumnos · sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Sin `Authorization` responde 401 `MISSING_TOKEN`.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Perfil del alumno",
+      "item": [
+        {
+          "name": "Perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                }
+              ]
+            },
+            "description": "Perfil completo: identidad, rango y siguiente rango, examen, asistencia, temario, última observación y graduación."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"id igual al del path\", () => pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"studentId\")));",
+                  "pm.collectionVariables.set(\"profileEtag\", pm.response.headers.get(\"ETag\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil · sin cambios (304)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "If-None-Match",
+                "value": "{{profileEtag}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                }
+              ]
+            },
+            "description": "Envía el ETag de la última respuesta de **Perfil**."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"304\", () => pm.response.to.have.status(304));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil · alumno de otro dojo (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{otherDojoStudentId}}",
+                  "description": "Alumno de otro dojo"
+                }
+              ]
+            },
+            "description": "Un alumno de otro dojo responde 404 (no 403), igual que uno que no existe."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"STUDENT_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"STUDENT_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil · alumno dado de baja (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "st-baja-pablo",
+                  "description": "Alumno dado de baja"
+                }
+              ]
+            },
+            "description": "Un alumno inactivo o pausado responde 200 con su `membership.status`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"INACTIVE\", () => pm.expect(pm.response.json().membership.status).to.eql(\"INACTIVE\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verificar requisito",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/requirements/:requirementId/verification",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "requirements",
+                ":requirementId",
+                "verification"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                },
+                {
+                  "key": "requirementId",
+                  "value": "{{requirementId}}",
+                  "description": "`id` de un requisito del rango actual del alumno"
+                }
+              ]
+            },
+            "description": "Sin cuerpo. La fecha y el instructor salen del servidor y del token. Devuelve el requisito con `verifiedOn`.\n\nUna segunda llamada responde 409 `ALREADY_VERIFIED`. Para repetir la prueba, recrea los datos con `npm run db:seed`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 (o 409 si ya estaba verificado)\", () => pm.expect(pm.response.code).to.be.oneOf([200, 409]));",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test(\"trae verifiedOn\", () => pm.expect(pm.response.json().verifiedOn).to.be.a(\"string\"));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verificar requisito · fuera del rango actual (404)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/requirements/:requirementId/verification",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "requirements",
+                ":requirementId",
+                "verification"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                },
+                {
+                  "key": "requirementId",
+                  "value": "no-existe",
+                  "description": "Requisito inexistente"
+                }
+              ]
+            },
+            "description": "Un requisito que no es del rango actual del alumno responde 404 `REQUIREMENT_NOT_FOUND`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Marcar listo para graduación",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/graduation-readiness",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "graduation-readiness"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                }
+              ]
+            },
+            "description": "Idempotente: marcarlo otra vez conserva la fecha de la primera marca.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"markedReady\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"markedReady true\", () => pm.expect(pm.response.json().markedReady).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Desmarcar listo para graduación",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/graduation-readiness",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "graduation-readiness"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                }
+              ]
+            },
+            "description": "`markedReady: false` quita la marca.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"markedReady\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"markedReady false\", () => pm.expect(pm.response.json().markedReady).to.eql(false));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Graduación · cuerpo inválido (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/graduation-readiness",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "graduation-readiness"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno de GET /students"
+                }
+              ]
+            },
+            "description": "`markedReady` debe ser booleano; `\"true\"` como texto responde 422.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"markedReady\": \"true\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Alta de alumno",
+      "description": "Ejecuta las peticiones en orden. **Ficha de alta** reserva un folio (`registrationId`) que el alta manda como `Idempotency-Key`; los 422 no lo gastan, por eso van antes del alta. Las peticiones que necesitan un folio propio (duplicado y adulto) reservan uno en su pre-request (`freshRegistrationId`). Contrato en `docs/student-registration-api.md`.",
+      "item": [
+        {
+          "name": "Ficha de alta (setup)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/registration-setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "registration-setup"
+              ]
+            },
+            "description": "Catálogos de la ficha y folio reservado (7 días). Cada llamada reserva uno nuevo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae folio y catálogos\", () => {",
+                  "  pm.expect(body.registrationId).to.match(/^DOJO-/);",
+                  "  pm.expect(body.disciplines).to.be.an(\"array\").that.is.not.empty;",
+                  "  pm.expect(body.plan).to.have.property(\"currency\");",
+                  "});",
+                  "pm.collectionVariables.set(\"registrationId\", body.registrationId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ficha de alta · sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/registration-setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "registration-setup"
+              ]
+            },
+            "description": "Sin `Authorization` responde 401 `MISSING_TOKEN`.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"MISSING_TOKEN\", () => pm.expect(pm.response.json().code).to.eql(\"MISSING_TOKEN\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · campos inválidos (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{registrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Otra Persona\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": null,\n  \"contact\": {\n    \"phone\": \"5512345678\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Menor sin tutor y teléfono sin lada: `VALIDATION_FAILED` con `fields`. Un 422 no gasta el folio, por eso va antes del alta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"marca los campos\", () => pm.expect(pm.response.json().fields).to.deep.include.members([",
+                  "  { field: \"guardian.name\", code: \"REQUIRED\" },",
+                  "  { field: \"contact.phone\", code: \"INVALID_FORMAT\" },",
+                  "]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · cinta y horario no disponibles (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{registrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Cinta Equivocada\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"RED\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"sat-1000\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "La cinta `RED` está en el temario del dojo pero no en la escalera de karate, y `sat-1000` es un horario de otra disciplina: los dos campos salen con `NOT_AVAILABLE`. No gasta el folio."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"cinta y horario no disponibles\", () => pm.expect(pm.response.json().fields).to.deep.equal([",
+                  "  { field: \"enrollment.belt\", code: \"NOT_AVAILABLE\" },",
+                  "  { field: \"enrollment.scheduleId\", code: \"NOT_AVAILABLE\" },",
+                  "]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · sin Idempotency-Key (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Mateo Morales García\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Sin folio no se puede garantizar la idempotencia."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · folio inexistente (410)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "DOJO-NOEXISTE"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Mateo Morales García\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Un folio vencido, que no existe o que es de otro dojo responde 410 `REGISTRATION_EXPIRED`: la app recarga la ficha conservando el formulario."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"410\", () => pm.response.to.have.status(410));",
+                  "pm.test(\"REGISTRATION_EXPIRED\", () => pm.expect(pm.response.json().code).to.eql(\"REGISTRATION_EXPIRED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · sin token (401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{registrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Mateo Morales García\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Sin `Authorization` responde 401 antes de mirar el folio.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{registrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{newStudentName}}\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Crea al alumno y responde 201 con su `StudentProfile` y `Location`. El nombre lleva un sufijo aleatorio (`newStudentName`) para que la colección se pueda correr varias veces sin chocar con el 409 por duplicado."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"newStudentName\", `Mateo Morales García ${Math.random().toString(36).slice(2, 7).toUpperCase()}`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Location apunta al perfil\", () => pm.expect(pm.response.headers.get(\"Location\")).to.eql(`/api/v1/students/${body.id}`));",
+                  "pm.test(\"perfil con el rango inicial\", () => {",
+                  "  pm.expect(body.displayName).to.eql(pm.collectionVariables.get(\"newStudentName\"));",
+                  "  pm.expect(body.membership.status).to.eql(\"ACTIVE\");",
+                  "  pm.expect(body.rank).to.include({ discipline: \"KARATE\", belt: \"WHITE\", stripes: 0 });",
+                  "  pm.expect(body.attendance.attended).to.eql(0);",
+                  "});",
+                  "pm.collectionVariables.set(\"createdStudentId\", body.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · reintento con el mismo folio (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{registrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{newStudentName}}\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "El mismo folio y el mismo cuerpo devuelven el mismo alumno, sin duplicarlo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"mismo alumno\", () => pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"createdStudentId\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · folio usado con otros datos (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{registrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Otra Persona\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "El folio ya creó a otro alumno: `IDEMPOTENCY_KEY_REUSED`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"IDEMPOTENCY_KEY_REUSED\", () => pm.expect(pm.response.json().code).to.eql(\"IDEMPOTENCY_KEY_REUSED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil del alumno recién creado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{createdStudentId}}",
+                  "description": "`id` que devolvió **Dar de alta**"
+                }
+              ]
+            },
+            "description": "El `Location` del alta abre el mismo perfil que devolvió el 201."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"es el alumno creado\", () => pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"createdStudentId\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · alumno duplicado (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{freshRegistrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{newStudentName}}\",\n  \"birthDate\": \"2014-03-12\",\n  \"gender\": \"MALE\",\n  \"medicalNotes\": \"Asma leve controlada. Porta inhalador en el vestidor.\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-06\",\n    \"scheduleId\": \"mon-wed-1730\"\n  },\n  \"guardian\": {\n    \"name\": \"Ricardo Morales\",\n    \"relation\": \"FATHER\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\",\n    \"email\": \"ricardo.morales@correo.mx\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Elena Morales (Tía)\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Folio nuevo, pero mismo nombre (sin importar acentos ni mayúsculas) y misma fecha de nacimiento que el alumno de **Dar de alta**: 409 `STUDENT_ALREADY_EXISTS`."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Reserva un folio propio para esta petición.",
+                  "pm.sendRequest({",
+                  "  url: `${pm.collectionVariables.get(\"baseUrl\")}/dojo/registration-setup`,",
+                  "  method: \"GET\",",
+                  "  header: { Authorization: `Bearer ${pm.collectionVariables.get(\"accessToken\")}` },",
+                  "}, (err, res) => {",
+                  "  if (err) throw err;",
+                  "  pm.collectionVariables.set(\"freshRegistrationId\", res.json().registrationId);",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"STUDENT_ALREADY_EXISTS\", () => pm.expect(pm.response.json().code).to.eql(\"STUDENT_ALREADY_EXISTS\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dar de alta · adulto sin tutor ni contacto de emergencia (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{freshRegistrationId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"{{newStudentName}} (adulto)\",\n  \"birthDate\": \"1994-05-20\",\n  \"gender\": \"FEMALE\",\n  \"enrollment\": {\n    \"discipline\": \"TAEKWONDO\",\n    \"belt\": \"WHITE\",\n    \"stripes\": 1,\n    \"firstClassOn\": \"2026-11-09\",\n    \"scheduleId\": \"mon-wed-fri-1900\"\n  },\n  \"guardian\": null,\n  \"contact\": {\n    \"phone\": \"+525511112222\"\n  },\n  \"emergencyContact\": null,\n  \"sendCredential\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "description": "Un adulto manda `guardian: null`; sin correo se omite `contact.email`, y sin contacto de emergencia va `null`."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Reserva un folio propio para esta petición.",
+                  "pm.sendRequest({",
+                  "  url: `${pm.collectionVariables.get(\"baseUrl\")}/dojo/registration-setup`,",
+                  "  method: \"GET\",",
+                  "  header: { Authorization: `Bearer ${pm.collectionVariables.get(\"accessToken\")}` },",
+                  "}, (err, res) => {",
+                  "  if (err) throw err;",
+                  "  pm.collectionVariables.set(\"freshRegistrationId\", res.json().registrationId);",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"taekwondo con una raya\", () => pm.expect(pm.response.json().rank).to.include({ discipline: \"TAEKWONDO\", belt: \"WHITE\", stripes: 1 }));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Configuración del dojo",
+      "description": "Programas con su escalera de rangos, horarios y plan del dojo: lo que habilita el alta de alumnos. Usa un dojo recién registrado.",
+      "item": [
+        {
+          "name": "Registrar dojo de prueba",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instructorName\": \"Sensei Postman\",\n  \"dojoName\": \"Dojo Postman\",\n  \"discipline\": \"KARATE\",\n  \"email\": \"{{configEmail}}\",\n  \"password\": \"contraseña-segura\",\n  \"acceptedTerms\": true\n}"
+            },
+            "description": "Dojo nuevo y desechable: así la carpeta no toca al dojo demo y se puede repetir."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"configEmail\", `postman-${Date.now()}@kenshodojo.test`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set(\"configToken\", pm.response.json().accessToken);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Configuración · dojo nuevo vacío",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "config"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"sin programas ni horarios; plan por defecto\", () => {",
+                  "  pm.expect(body.programs).to.eql([]);",
+                  "  pm.expect(body.schedules).to.eql([]);",
+                  "  pm.expect(body.settings.phoneCountryCode).to.eql(\"+52\");",
+                  "});",
+                  "pm.test(\"no-store\", () => pm.response.to.have.header(\"cache-control\", \"no-store\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Configuración · sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/config",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "config"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ficha de alta · dojo sin programas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/registration-setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "registration-setup"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sin disciplinas (el aviso del panel)\", () => pm.expect(pm.response.json().disciplines).to.eql([]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · campos inválidos (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/KARATE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "KARATE"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"minimumAttendancePercent\": 120,\n  \"maxStripes\": 4,\n  \"ranks\": [\n    {\n      \"belt\": \"PINK\"\n    },\n    {\n      \"belt\": \"WHITE\"\n    },\n    {\n      \"belt\": \"WHITE\"\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"VALIDATION_FAILED con los campos\", () => {",
+                  "  pm.expect(body.code).to.eql(\"VALIDATION_FAILED\");",
+                  "  pm.expect(body.fields.map((f) => f.field)).to.include.members([\"name\", \"minimumAttendancePercent\", \"ranks[0].belt\", \"ranks[2]\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · disciplina desconocida (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/JUDO",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "JUDO"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shotokan Karate\",\n  \"minimumAttendancePercent\": 85,\n  \"maxStripes\": 3,\n  \"ranks\": [\n    {\n      \"belt\": \"WHITE\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 10\n      },\n      \"requiredClasses\": 24,\n      \"verifierName\": \"Sensei Tanaka\",\n      \"requirements\": [\n        {\n          \"id\": \"kata\",\n          \"title\": \"Taikyoku Shodan\",\n          \"description\": \"Sin pausas\"\n        },\n        {\n          \"id\": \"kihon\",\n          \"title\": \"Kihon básico\"\n        }\n      ]\n    },\n    {\n      \"belt\": \"YELLOW\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 9\n      },\n      \"requiredClasses\": 30\n    },\n    {\n      \"belt\": \"BLACK\",\n      \"grade\": {\n        \"system\": \"DAN\",\n        \"value\": 1\n      }\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"PROGRAM_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"PROGRAM_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · crear karate (201)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/KARATE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "KARATE"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shotokan Karate\",\n  \"minimumAttendancePercent\": 85,\n  \"maxStripes\": 3,\n  \"ranks\": [\n    {\n      \"belt\": \"WHITE\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 10\n      },\n      \"requiredClasses\": 24,\n      \"verifierName\": \"Sensei Tanaka\",\n      \"requirements\": [\n        {\n          \"id\": \"kata\",\n          \"title\": \"Taikyoku Shodan\",\n          \"description\": \"Sin pausas\"\n        },\n        {\n          \"id\": \"kihon\",\n          \"title\": \"Kihon básico\"\n        }\n      ]\n    },\n    {\n      \"belt\": \"YELLOW\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 9\n      },\n      \"requiredClasses\": 30\n    },\n    {\n      \"belt\": \"BLACK\",\n      \"grade\": {\n        \"system\": \"DAN\",\n        \"value\": 1\n      }\n    }\n  ]\n}"
+            },
+            "description": "PUT manda la escalera completa en orden. Crea el programa (201) o lo reemplaza (200)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"escalera y temario\", () => {",
+                  "  pm.expect(body.belts).to.eql([\"WHITE\", \"YELLOW\", \"BLACK\"]);",
+                  "  pm.expect(body.programs[0].ranks).to.have.length(3);",
+                  "  pm.expect(body.programs[0].ranks[0].requirements.map((r) => r.id)).to.eql([\"kata\", \"kihon\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · editar karate (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/KARATE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "KARATE"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shotokan Karate & Kobudo\",\n  \"minimumAttendancePercent\": 85,\n  \"maxStripes\": 3,\n  \"ranks\": [\n    {\n      \"belt\": \"WHITE\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 10\n      },\n      \"requiredClasses\": 24,\n      \"verifierName\": \"Sensei Tanaka\",\n      \"requirements\": [\n        {\n          \"id\": \"kata\",\n          \"title\": \"Taikyoku Shodan\",\n          \"description\": \"Sin pausas\"\n        },\n        {\n          \"id\": \"kihon\",\n          \"title\": \"Kihon básico\"\n        }\n      ]\n    },\n    {\n      \"belt\": \"YELLOW\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 9\n      },\n      \"requiredClasses\": 30\n    },\n    {\n      \"belt\": \"BLACK\",\n      \"grade\": {\n        \"system\": \"DAN\",\n        \"value\": 1\n      }\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"nombre actualizado\", () => pm.expect(pm.response.json().programs[0].name).to.eql(\"Shotokan Karate & Kobudo\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Horario · disciplina sin programa (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/schedules/tkd-sat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "schedules",
+                "tkd-sat"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"discipline\": \"TAEKWONDO\",\n  \"weekdays\": [\n    \"MONDAY\",\n    \"WEDNESDAY\"\n  ],\n  \"startsAt\": \"17:30\",\n  \"endsAt\": \"18:45\",\n  \"description\": \"Tatami A\",\n  \"capacity\": 20\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"VALIDATION_FAILED con los campos\", () => {",
+                  "  pm.expect(body.code).to.eql(\"VALIDATION_FAILED\");",
+                  "  pm.expect(body.fields.map((f) => f.field)).to.include.members([\"discipline\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Horario · horas inválidas (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/schedules/karate-mon-wed-1730",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "schedules",
+                "karate-mon-wed-1730"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"discipline\": \"KARATE\",\n  \"weekdays\": [\n    \"MONDAY\",\n    \"WEDNESDAY\"\n  ],\n  \"startsAt\": \"19:00\",\n  \"endsAt\": \"18:00\",\n  \"description\": \"Tatami A\",\n  \"capacity\": 0\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"VALIDATION_FAILED con los campos\", () => {",
+                  "  pm.expect(body.code).to.eql(\"VALIDATION_FAILED\");",
+                  "  pm.expect(body.fields.map((f) => f.field)).to.include.members([\"endsAt\", \"capacity\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Horario · crear (201)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/schedules/karate-mon-wed-1730",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "schedules",
+                "karate-mon-wed-1730"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"discipline\": \"KARATE\",\n  \"weekdays\": [\n    \"MONDAY\",\n    \"WEDNESDAY\"\n  ],\n  \"startsAt\": \"17:30\",\n  \"endsAt\": \"18:45\",\n  \"description\": \"Tatami A\",\n  \"capacity\": 20\n}"
+            },
+            "description": "El id lo elige el dojo: PUT crea o reemplaza, así un reintento no duplica."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"horario guardado\", () => pm.expect(pm.response.json().schedules[0]).to.include({ id: \"karate-mon-wed-1730\", capacity: 20, activeStudents: 0 }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Plan · inválido (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "settings"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneCountryCode\": \"52\",\n  \"monthlyFeeCents\": -1,\n  \"currency\": \"mxn\",\n  \"billingDay\": 31\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"VALIDATION_FAILED con los campos\", () => {",
+                  "  pm.expect(body.code).to.eql(\"VALIDATION_FAILED\");",
+                  "  pm.expect(body.fields.map((f) => f.field)).to.include.members([\"phoneCountryCode\", \"monthlyFeeCents\", \"currency\", \"enrollmentWaived\", \"billingDay\"]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Plan · guardar (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/settings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "settings"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phoneCountryCode\": \"+52\",\n  \"monthlyFeeCents\": 65000,\n  \"currency\": \"MXN\",\n  \"enrollmentWaived\": true,\n  \"billingDay\": 5,\n  \"enrollmentFeeCents\": 50000\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"plan guardado\", () => pm.expect(pm.response.json().settings).to.eql({\"phoneCountryCode\": \"+52\", \"monthlyFeeCents\": 65000, \"currency\": \"MXN\", \"enrollmentWaived\": true, \"billingDay\": 5, \"enrollmentFeeCents\": 50000}));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ficha de alta · dojo configurado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/registration-setup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "registration-setup"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"karate con sus cintas y el horario\", () => {",
+                  "  pm.expect(body.disciplines.map((d) => d.code)).to.eql([\"KARATE\"]);",
+                  "  pm.expect(body.schedules.map((s) => s.id)).to.eql([\"karate-mon-wed-1730\"]);",
+                  "  pm.expect(body.plan.monthlyFeeCents).to.eql(65000);",
+                  "});",
+                  "pm.collectionVariables.set(\"configRegistrationId\", body.registrationId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Alta de alumno en el dojo configurado (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{configRegistrationId}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Ana Pérez Luna\",\n  \"birthDate\": \"2000-01-15\",\n  \"gender\": \"FEMALE\",\n  \"enrollment\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"YELLOW\",\n    \"stripes\": 0,\n    \"firstClassOn\": \"2026-11-09\",\n    \"scheduleId\": \"karate-mon-wed-1730\"\n  },\n  \"contact\": {\n    \"phone\": \"+525512345678\"\n  },\n  \"emergencyContact\": {\n    \"name\": \"Luis Pérez\",\n    \"phone\": \"+525599324410\"\n  },\n  \"sendCredential\": false\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"programa del dojo\", () => pm.expect(pm.response.json().program.name).to.eql(\"Shotokan Karate & Kobudo\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · quitar un rango con alumnos (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/KARATE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "KARATE"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Shotokan Karate & Kobudo\",\n  \"minimumAttendancePercent\": 85,\n  \"maxStripes\": 3,\n  \"ranks\": [\n    {\n      \"belt\": \"WHITE\",\n      \"grade\": {\n        \"system\": \"KYU\",\n        \"value\": 10\n      },\n      \"requiredClasses\": 24,\n      \"verifierName\": \"Sensei Tanaka\",\n      \"requirements\": [\n        {\n          \"id\": \"kata\",\n          \"title\": \"Taikyoku Shodan\",\n          \"description\": \"Sin pausas\"\n        },\n        {\n          \"id\": \"kihon\",\n          \"title\": \"Kihon básico\"\n        }\n      ]\n    },\n    {\n      \"belt\": \"BLACK\",\n      \"grade\": {\n        \"system\": \"DAN\",\n        \"value\": 1\n      }\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"RANK_IN_USE\", () => pm.expect(pm.response.json().code).to.eql(\"RANK_IN_USE\"));",
+                  "pm.test(\"lista el rango\", () => pm.expect(pm.response.json().ranks[0].belt).to.eql(\"YELLOW\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Horario · borrar con alumnos (409)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/schedules/karate-mon-wed-1730",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "schedules",
+                "karate-mon-wed-1730"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"SCHEDULE_IN_USE\", () => pm.expect(pm.response.json().code).to.eql(\"SCHEDULE_IN_USE\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · borrar con alumnos (409)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/KARATE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "KARATE"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"PROGRAM_IN_USE\", () => pm.expect(pm.response.json().code).to.eql(\"PROGRAM_IN_USE\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · crear BJJ (201)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/BJJ",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "BJJ"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"BJJ Gi & No-Gi\",\n  \"minimumAttendancePercent\": 75,\n  \"maxStripes\": 4,\n  \"ranks\": [\n    {\n      \"belt\": \"WHITE\"\n    },\n    {\n      \"belt\": \"BLUE\"\n    },\n    {\n      \"belt\": \"PURPLE\"\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"temario suma azul y morada\", () => pm.expect(pm.response.json().belts).to.include.members([\"BLUE\", \"PURPLE\"]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · borrar BJJ sin alumnos (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/BJJ",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "BJJ"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programa · borrar BJJ otra vez (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dojo/programs/BJJ",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dojo",
+                "programs",
+                "BJJ"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{configToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"PROGRAM_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"PROGRAM_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pase de lista",
+      "description": "Ejecuta las peticiones en orden. **Sesiones de hoy** guarda en `scheduleId` y `sessionDate` la sesión en curso (o la siguiente); si hoy no hay clases usa `mon-wed-1730` del lunes más reciente. **Roster** guarda el primer alumno en `checkinStudentId`. Contrato en `docs/checkin-api.md`.",
+      "item": [
+        {
+          "name": "Sesiones de hoy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/today",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "today"
+              ]
+            },
+            "description": "Sesiones del día del dojo en orden de inicio. `currentSessionId` es la que está en curso, si no la siguiente de hoy, o `null`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae sesiones de hoy\", () => {",
+                  "  pm.expect(body.date).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+                  "  pm.expect(body.sessions).to.be.an(\"array\");",
+                  "});",
+                  "const chosen = body.currentSessionId ?? body.sessions[0]?.id;",
+                  "if (chosen) {",
+                  "  const [scheduleId, date] = chosen.split(\"/\");",
+                  "  pm.collectionVariables.set(\"scheduleId\", scheduleId);",
+                  "  pm.collectionVariables.set(\"sessionDate\", date);",
+                  "} else {",
+                  "  // Sin clases hoy: lunes más reciente con el horario de karate del seed.",
+                  "  const d = new Date(`${body.date}T00:00:00Z`);",
+                  "  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7 || 7));",
+                  "  pm.collectionVariables.set(\"scheduleId\", \"mon-wed-1730\");",
+                  "  pm.collectionVariables.set(\"sessionDate\", d.toISOString().slice(0, 10));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sesiones de hoy · sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/today",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "today"
+              ]
+            },
+            "description": "Sin `Authorization` responde 401 `MISSING_TOKEN`.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Roster de la sesión",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                }
+              ]
+            },
+            "description": "Sesión y roster completo (sin paginar) en orden alfabético, con `summary`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae sesión, resumen y alumnos\", () => {",
+                  "  pm.expect(body.session.id).to.eql(`${pm.collectionVariables.get(\"scheduleId\")}/${pm.collectionVariables.get(\"sessionDate\")}`);",
+                  "  pm.expect(body.summary.total).to.eql(body.students.length);",
+                  "});",
+                  "if (body.students.length) pm.collectionVariables.set(\"checkinStudentId\", body.students[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Roster · fecha sin clase (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{noClassDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                }
+              ]
+            },
+            "description": "Una fecha que no cae en los días del horario responde 404 `SESSION_NOT_FOUND`."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date(`${pm.collectionVariables.get(\"sessionDate\")}T00:00:00Z`);",
+                  "d.setUTCDate(d.getUTCDate() + (1));",
+                  "pm.collectionVariables.set(\"noClassDate\", d.toISOString().slice(0, 10));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"SESSION_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"SESSION_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Marcar presente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{checkinStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "Idempotente: reenviarlo conserva `checkedInAt`. Si la clase de hoy todavía no ocurre en la zona del dojo, igual se puede marcar (llegadas tempranas).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PRESENT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"queda presente con hora de llegada\", () => {",
+                  "  pm.expect(body.student.status).to.eql(\"PRESENT\");",
+                  "  pm.expect(body.student.checkedInAt).to.be.a(\"string\");",
+                  "  pm.expect(body.summary.present).to.be.at.least(1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Justificar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{checkinStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "`note` (hasta 200) solo se guarda con `EXCUSED`. El justificado suma al conteo del examen, no a la racha ni a las horas.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"EXCUSED\",\n  \"note\": \"Aviso de enfermedad del tutor\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"queda justificado con nota\", () => {",
+                  "  const { student } = pm.response.json();",
+                  "  pm.expect(student.status).to.eql(\"EXCUSED\");",
+                  "  pm.expect(student.note).to.eql(\"Aviso de enfermedad del tutor\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Deshacer marca",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{checkinStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "`PENDING` borra la marca. Si la clase ya terminó, el alumno se muestra como `ABSENT`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PENDING\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sin marca\", () => pm.expect(pm.response.json().student.status).to.be.oneOf([\"PENDING\", \"ABSENT\"]));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Marcar · fecha futura (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{futureSessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{checkinStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "Una sesión de una fecha futura es de solo lectura: 409 `SESSION_NOT_STARTED`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PRESENT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date(`${pm.collectionVariables.get(\"sessionDate\")}T00:00:00Z`);",
+                  "d.setUTCDate(d.getUTCDate() + (14));",
+                  "pm.collectionVariables.set(\"futureSessionDate\", d.toISOString().slice(0, 10));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"SESSION_NOT_STARTED\", () => pm.expect(pm.response.json().code).to.eql(\"SESSION_NOT_STARTED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Marcar · fuera de la ventana de 30 días (409)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{lockedSessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{checkinStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "Solo se corrigen los últimos 30 días: 409 `SESSION_LOCKED`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PRESENT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date(`${pm.collectionVariables.get(\"sessionDate\")}T00:00:00Z`);",
+                  "d.setUTCDate(d.getUTCDate() + (-35));",
+                  "pm.collectionVariables.set(\"lockedSessionDate\", d.toISOString().slice(0, 10));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"SESSION_LOCKED\", () => pm.expect(pm.response.json().code).to.eql(\"SESSION_LOCKED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Marcar · alumno de otro dojo (404)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{otherDojoStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "Un alumno que no está en el roster (o es de otro dojo) responde 404 `STUDENT_NOT_IN_SESSION`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PRESENT\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"STUDENT_NOT_IN_SESSION\", () => pm.expect(pm.response.json().code).to.eql(\"STUDENT_NOT_IN_SESSION\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Marcar · estado inválido (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{checkinStudentId}}",
+                  "description": "`id` de un alumno del roster"
+                }
+              ]
+            },
+            "description": "`status` debe ser `PRESENT`, `ABSENT`, `EXCUSED` o `PENDING`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"LATE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"marca status\", () => pm.expect(pm.response.json().fields).to.deep.include({ field: \"status\", code: \"INVALID_FORMAT\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Completar pase de lista",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/attendance/sessions/:scheduleId/:date/close",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "attendance",
+                "sessions",
+                ":scheduleId",
+                ":date",
+                "close"
+              ],
+              "variable": [
+                {
+                  "key": "scheduleId",
+                  "value": "{{scheduleId}}",
+                  "description": "`scheduleId` de GET /attendance/today"
+                },
+                {
+                  "key": "date",
+                  "value": "{{sessionDate}}",
+                  "description": "Fecha de la sesión (`YYYY-MM-DD`)"
+                }
+              ]
+            },
+            "description": "Sin cuerpo. Deja `ABSENT` a los no marcados y fija `closedAt`; repetirlo conserva el primer cierre. Si la clase de hoy todavía no empieza responde 409 `SESSION_NOT_STARTED`. **Ojo:** en la BD local marca ausentes de verdad; `npm run db:seed` los limpia."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 (o 409 si la clase aún no empieza)\", () => pm.expect(pm.response.code).to.be.oneOf([200, 409]));",
+                  "if (pm.response.code === 200) {",
+                  "  const body = pm.response.json();",
+                  "  pm.test(\"queda cerrada sin pendientes\", () => {",
+                  "    pm.expect(body.session.status).to.eql(\"CLOSED\");",
+                  "    pm.expect(body.session.closedAt).to.be.a(\"string\");",
+                  "    pm.expect(body.summary.pending).to.eql(0);",
+                  "  });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pagos",
+      "description": "Ejecuta las peticiones en orden. **Cargos pendientes** guarda el primero en `chargeId`; **Registrar cobro** genera `paymentKey` (Idempotency-Key) y guarda `paymentId`; **Crear examen** guarda `eventId`. Las mensualidades del mes se generan al leer Pagos. **Ojo:** en la BD local los cobros y el examen se guardan de verdad (`npm run db:seed` los limpia). Contrato en `docs/payments-api.md`.",
+      "item": [
+        {
+          "name": "Resumen del mes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "summary"
+              ]
+            },
+            "description": "Flujo de caja del mes (por defecto el de hoy en la zona del dojo; `?month=YYYY-MM` para otro), lo pendiente (incluidos adeudos de meses anteriores) y el examen o evento con cuota más próximo. Todo en centavos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae los montos del mes\", () => {",
+                  "  pm.expect(body.month).to.match(/^\\d{4}-\\d{2}$/);",
+                  "  [\"collectedCents\", \"expectedCents\", \"previousCollectedCents\", \"pendingCents\", \"studentsWithPending\", \"otherCollectedCents\"]",
+                  "    .forEach((k) => pm.expect(body[k]).to.be.a(\"number\"));",
+                  "  pm.expect(body.currency).to.match(/^[A-Z]{3}$/);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resumen · mes inválido (422)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/summary?month=2026-13",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "summary"
+              ],
+              "query": [
+                {
+                  "key": "month",
+                  "value": "2026-13"
+                }
+              ]
+            },
+            "description": "`month` debe ser `YYYY-MM`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"VALIDATION_FAILED\", () => pm.expect(pm.response.json().code).to.eql(\"VALIDATION_FAILED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resumen · sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/summary",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "summary"
+              ]
+            },
+            "description": "Sin `Authorization` responde 401 `MISSING_TOKEN`.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"MISSING_TOKEN\", () => pm.expect(pm.response.json().code).to.eql(\"MISSING_TOKEN\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cargos pendientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges?status=PENDING&status=OVERDUE&limit=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PENDING"
+                },
+                {
+                  "key": "status",
+                  "value": "OVERDUE"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Filtro \"Pendientes\" (`status` se repite). Más recientes primero; `nextCursor` es `null` en la última página. Otros filtros: `category` (`MONTHLY`, `ENROLLMENT`, `EXAM`, `EVENT`), `studentId`, `limit` (1-100)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"solo pendientes o vencidos\", () => body.items.forEach((c) => pm.expect(c.status).to.be.oneOf([\"PENDING\", \"OVERDUE\"])));",
+                  "if (body.items.length) pm.collectionVariables.set(\"chargeId\", body.items[0].id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cargos · filtro inválido (422)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges?status=LATE",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "LATE"
+                }
+              ]
+            },
+            "description": "Un `status` o `category` fuera del catálogo responde 422 con el campo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"marca status\", () => pm.expect(pm.response.json().fields).to.deep.include({ field: \"status\", code: \"INVALID_FORMAT\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle del cargo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "Desglose (con la línea de recargo del 5% si la mensualidad venció), alumno, tutor, últimos 5 pagos del alumno y, si está pagado, `receipt` para compartir."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const { charge } = pm.response.json();",
+                  "pm.test(\"el monto es la suma del desglose\", () =>",
+                  "  pm.expect(charge.amountCents).to.eql(charge.lines.reduce((t, l) => t + l.amountCents, 0)));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle · cargo inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "ch-no-existe",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "Un cargo que no existe o es de otro dojo responde 404 `CHARGE_NOT_FOUND`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"CHARGE_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"CHARGE_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar cobro · tarjeta guardada (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId",
+                "payments"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "Sin pasarela no hay tarjeta guardada: `method` responde `NOT_AVAILABLE`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": \"SAVED_CARD\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"method no disponible\", () => pm.expect(pm.response.json().fields).to.deep.include({ field: \"method\", code: \"NOT_AVAILABLE\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar cobro",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{paymentKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId",
+                "payments"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "Registra un cobro hecho fuera de la app (`CASH`, `TRANSFER` o `CARD` = terminal). `Idempotency-Key` es un UUID por intento de cobro. Responde el pago y `receipt` (texto y enlaces `wa.me` / `sms:` al teléfono de contacto) para compartir desde el teléfono; `null` si el alumno no tiene teléfono.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": \"CASH\",\n  \"note\": \"Entregado en efectivo al sensei (clase 5:30)\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"paymentKey\", pm.variables.replaceIn(\"{{$guid}}\"));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"queda registrado\", () => {",
+                  "  pm.expect(body.payment.chargeId).to.eql(pm.collectionVariables.get(\"chargeId\"));",
+                  "  pm.expect(body.payment.method).to.eql(\"CASH\");",
+                  "});",
+                  "pm.collectionVariables.set(\"paymentId\", body.payment.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar cobro · reintento con la misma llave (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{paymentKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId",
+                "payments"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "Misma llave y mismo cuerpo (p. ej. tras un timeout): devuelve el mismo pago, no cobra dos veces.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": \"CASH\",\n  \"note\": \"Entregado en efectivo al sensei (clase 5:30)\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"mismo pago\", () => pm.expect(pm.response.json().payment.id).to.eql(pm.collectionVariables.get(\"paymentId\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar cobro · llave con otro cuerpo (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{paymentKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId",
+                "payments"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "La misma llave con otro cuerpo responde 409 `IDEMPOTENCY_KEY_REUSED`: la app genera una llave nueva.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": \"TRANSFER\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"IDEMPOTENCY_KEY_REUSED\", () => pm.expect(pm.response.json().code).to.eql(\"IDEMPOTENCY_KEY_REUSED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Registrar cobro · ya pagado (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{$guid}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId",
+                "payments"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                }
+              ]
+            },
+            "description": "Otro dispositivo ya lo cobró: 409 `CHARGE_ALREADY_PAID`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"method\": \"TRANSFER\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"CHARGE_ALREADY_PAID\", () => pm.expect(pm.response.json().code).to.eql(\"CHARGE_ALREADY_PAID\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Anular cobro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/charges/:chargeId/payments/:paymentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "charges",
+                ":chargeId",
+                "payments",
+                ":paymentId"
+              ],
+              "variable": [
+                {
+                  "key": "chargeId",
+                  "value": "{{chargeId}}",
+                  "description": "`id` de un cargo (GET /payments/charges)"
+                },
+                {
+                  "key": "paymentId",
+                  "value": "{{paymentId}}",
+                  "description": "`payment.id` del cobro"
+                }
+              ]
+            },
+            "description": "Anula un pago registrado por error (queda en la BD con `voided_at`). El cargo vuelve a `PENDING`/`OVERDUE` y responde su detalle. Repetirlo responde 200."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const { charge } = pm.response.json();",
+                  "pm.test(\"vuelve a pendiente\", () => {",
+                  "  pm.expect(charge.status).to.be.oneOf([\"PENDING\", \"OVERDUE\"]);",
+                  "  pm.expect(charge.payment).to.eql(null);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear examen",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events"
+              ]
+            },
+            "description": "Crea un examen (`EXAM`) o evento (`EVENT`) con cuota y un cargo por alumno, que vence en la fecha del evento. Un examen también crea la fila de `exams` y queda como `nextExam` de sus alumnos. `date` no puede ser pasada.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"EXAM\",\n  \"title\": \"Examen de grado\",\n  \"date\": \"{{examDate}}\",\n  \"venue\": \"Tatami Central\",\n  \"lines\": [\n    {\n      \"label\": \"Tasa de evaluación y sinodales\",\n      \"amountCents\": 35000\n    },\n    {\n      \"label\": \"Cinta nueva y certificado\",\n      \"amountCents\": 10000\n    }\n  ],\n  \"studentIds\": [\n    \"{{studentId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date();",
+                  "d.setUTCDate(d.getUTCDate() + 10);",
+                  "pm.collectionVariables.set(\"examDate\", d.toISOString().slice(0, 10));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201\", () => pm.response.to.have.status(201));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"crea el examen con sus candidatos\", () => {",
+                  "  pm.expect(body.event.amountCents).to.eql(45000);",
+                  "  pm.expect(body.event.examId).to.be.a(\"string\");",
+                  "  pm.expect(body.event.candidates).to.eql(1);",
+                  "});",
+                  "pm.collectionVariables.set(\"eventId\", body.event.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Crear evento · alumno de otro dojo (422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events"
+              ]
+            },
+            "description": "Solo alumnos activos del dojo: los demás se marcan como `studentIds[i]` `NOT_AVAILABLE`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"EVENT\",\n  \"title\": \"Torneo\",\n  \"date\": \"{{examDate}}\",\n  \"lines\": [\n    {\n      \"label\": \"Cuota\",\n      \"amountCents\": 30000\n    }\n  ],\n  \"studentIds\": [\n    \"{{otherDojoStudentId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date();",
+                  "d.setUTCDate(d.getUTCDate() + 10);",
+                  "pm.collectionVariables.set(\"examDate\", d.toISOString().slice(0, 10));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"marca el alumno\", () => pm.expect(pm.response.json().fields).to.deep.include({ field: \"studentIds[0]\", code: \"NOT_AVAILABLE\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Exámenes y eventos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events"
+              ]
+            },
+            "description": "`upcoming` (de hoy en adelante, el más próximo primero) y `past` (los 20 más recientes), con candidatos, pagados, recaudado y meta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"incluye el examen creado\", () =>",
+                  "  pm.expect(pm.response.json().upcoming.map((e) => e.id)).to.include(pm.collectionVariables.get(\"eventId\")));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle del evento",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events/:eventId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events",
+                ":eventId"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "{{eventId}}",
+                  "description": "`event.id` de POST /payments/events"
+                }
+              ]
+            },
+            "description": "El evento y sus alumnos (sin los quitados) con el estado de su cargo."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"trae a sus alumnos\", () => pm.expect(pm.response.json().students.length).to.eql(1));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Quitar alumno del evento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events/:eventId/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events",
+                ":eventId",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "{{eventId}}",
+                  "description": "`event.id` de POST /payments/events"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "Alumno del dojo"
+                }
+              ]
+            },
+            "description": "Cancela su cargo (queda en el historial como `CANCELED`) y, si es examen, le quita el próximo examen. Un cargo pagado responde 409 `CHARGE_ALREADY_PAID`: hay que anular el pago antes."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sin candidatos\", () => pm.expect(pm.response.json().event.candidates).to.eql(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Agregar alumno al evento",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events/:eventId/students/:studentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events",
+                ":eventId",
+                "students",
+                ":studentId"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "{{eventId}}",
+                  "description": "`event.id` de POST /payments/events"
+                },
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "Alumno del dojo"
+                }
+              ]
+            },
+            "description": "Crea su cargo, o reactiva el que se había cancelado. Idempotente. Un alumno pausado o de baja responde 409 `STUDENT_NOT_ACTIVE`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"vuelve a estar\", () => pm.expect(pm.response.json().event.candidates).to.eql(1));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Detalle del evento · inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/events/:eventId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                "events",
+                ":eventId"
+              ],
+              "variable": [
+                {
+                  "key": "eventId",
+                  "value": "ev-no-existe",
+                  "description": "Evento inexistente"
+                }
+              ]
+            },
+            "description": "Un evento que no existe o es de otro dojo responde 404 `EVENT_NOT_FOUND`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"EVENT_NOT_FOUND\", () => pm.expect(pm.response.json().code).to.eql(\"EVENT_NOT_FOUND\"));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Perfil del instructor",
+      "description": "Ejecuta las peticiones en orden. **Guardar datos** cambia de verdad el cargo, grado y años del instructor de la cuenta de prueba; **En el tatami** termina apagado. Contrato en `docs/sensei-profile-api.md`.",
+      "item": [
+        {
+          "name": "Perfil",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/me/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "profile"
+              ]
+            },
+            "description": "Todo el perfil del instructor en una llamada: identidad, dojo, ingresos del mes (de Pagos), sedes (hoy una), agenda de 7 días desde el lunes y avisos (`OVERDUE_FEES`, `GRADING_DEADLINE`). Al leerlo se generan las mensualidades que falten, como en Pagos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae identidad, dojo e ingresos\", () => {",
+                  "  pm.expect(body.instructor.name).to.be.a(\"string\");",
+                  "  pm.expect(body.dojo.disciplines).to.be.an(\"array\").that.is.not.empty;",
+                  "  [\"collectedCents\", \"previousFeesCents\", \"activeStudents\", \"pendingCents\", \"pendingStudents\", \"extrasCents\"]",
+                  "    .forEach((k) => pm.expect(body.earnings[k]).to.be.a(\"number\"));",
+                  "});",
+                  "pm.test(\"una sola sede, la activa\", () => {",
+                  "  pm.expect(body.dojos).to.have.lengthOf(1);",
+                  "  pm.expect(body.activeDojoId).to.eql(body.dojos[0].id);",
+                  "});",
+                  "pm.test(\"agenda de 7 días desde el lunes\", () => {",
+                  "  pm.expect(body.week).to.have.lengthOf(7);",
+                  "  pm.expect(new Date(body.week[0].date + \"T00:00:00Z\").getUTCDay()).to.eql(1);",
+                  "  body.week.forEach((d) => d.sessions.forEach((s) => pm.expect(s.status).to.be.oneOf([\"FINISHED\", \"IN_PROGRESS\", \"UPCOMING\"])));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil · sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/me/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "profile"
+              ]
+            },
+            "description": "Sin `Authorization` responde 401 `MISSING_TOKEN`.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"MISSING_TOKEN\", () => pm.expect(pm.response.json().code).to.eql(\"MISSING_TOKEN\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mi cuenta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": "`Me` ampliado: los campos de siempre más `title`, `rank`, `teachingSince` y `onTatami` (todos opcionales; `null` si no se han capturado)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae los campos del instructor\", () => [\"title\", \"rank\", \"teachingSince\", \"onTatami\"].forEach((k) => pm.expect(body).to.have.property(k)));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Guardar datos del instructor",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": "Solo cambian los campos que se mandan; `null` borra el dato. `rank` usa las cintas y sistemas de grado del catálogo (no tiene que estar en la escalera del dojo). `teachingSince` es un año entre 1900 y el actual. Responde el `Me` ampliado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Head Coach\",\n  \"teachingSince\": 2010,\n  \"rank\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"BLACK\",\n    \"grade\": {\n      \"system\": \"DAN\",\n      \"value\": 4\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"queda guardado\", () => {",
+                  "  pm.expect(body.title).to.eql(\"Head Coach\");",
+                  "  pm.expect(body.teachingSince).to.eql(2010);",
+                  "  pm.expect(body.rank).to.eql({ discipline: \"KARATE\", belt: \"BLACK\", grade: { system: \"DAN\", value: 4 } });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Guardar datos · inválidos (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": "Responde 422 `VALIDATION_FAILED` con los campos a marcar; no guarda nada.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teachingSince\": 2999,\n  \"rank\": {\n    \"discipline\": \"KARATE\",\n    \"belt\": \"PINK\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "const { fields } = pm.response.json();",
+                  "pm.test(\"marca los campos\", () => {",
+                  "  pm.expect(fields).to.deep.include({ field: \"teachingSince\", code: \"OUT_OF_RANGE\" });",
+                  "  pm.expect(fields).to.deep.include({ field: \"rank.belt\", code: \"INVALID_FORMAT\" });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "En el tatami · prender",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me/presence",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "presence"
+              ]
+            },
+            "description": "Switch «En el tatami». Responde 204; la app lo aplica de forma optimista y regresa al valor anterior si falla.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onTatami\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Perfil · en el tatami",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/me/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "profile"
+              ]
+            },
+            "description": "El perfil refleja el switch."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"en el tatami\", () => pm.expect(pm.response.json().instructor.onTatami).to.eql(true));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "En el tatami · apagar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me/presence",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "presence"
+              ]
+            },
+            "description": "Apaga el switch (204).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onTatami\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"204\", () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "En el tatami · cuerpo inválido (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/me/presence",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "me",
+                "presence"
+              ]
+            },
+            "description": "`onTatami` debe ser booleano.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"onTatami\": \"si\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"marca onTatami\", () => pm.expect(pm.response.json().fields).to.deep.include({ field: \"onTatami\", code: \"INVALID_FORMAT\" }));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Editar alumno",
+      "description": "Ejecuta las peticiones en orden. Edita, pausa y reactiva de verdad al alumno `{{studentId}}`; la última petición regresa su ficha a como estaba. Contrato en `docs/student-edit-api.md`.",
+      "item": [
+        {
+          "name": "Ficha",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "record"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "Ficha editable: lo capturado en el alta (nacimiento, género, notas médicas, tutor, contacto, emergencia, horario) y los horarios de su disciplina con `available`. `Cache-Control: no-store`. El `ETag` se manda en `If-Match` al editar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sin caché\", () => pm.expect(pm.response.headers.get(\"Cache-Control\")).to.eql(\"no-store\"));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"trae la ficha\", () => {",
+                  "  [\"fullName\", \"birthDate\", \"membership\", \"enrollment\", \"contact\", \"scheduleOptions\"].forEach((k) => pm.expect(body).to.have.property(k));",
+                  "});",
+                  "pm.collectionVariables.set(\"recordEtag\", pm.response.headers.get(\"ETag\"));",
+                  "// Para regresar la ficha a como estaba al final de la carpeta.",
+                  "pm.collectionVariables.set(\"recordRestore\", JSON.stringify({ medicalNotes: body.medicalNotes, emergencyContact: body.emergencyContact }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar ficha",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "If-Match",
+                "value": "{{recordEtag}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "record"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "Solo cambian los campos enviados; `null` borra los opcionales. Mismas reglas que el alta (tutor por edad, teléfonos E.164, horario con cupo, duplicados). Con `If-Match`, falla con 412 si otro dispositivo cambió la ficha.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicalNotes\": \"Asma leve; trae inhalador.\",\n  \"emergencyContact\": {\n    \"name\": \"Yumi Sato\",\n    \"phone\": \"+525598765432\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"queda guardado\", () => {",
+                  "  pm.expect(body.medicalNotes).to.eql(\"Asma leve; trae inhalador.\");",
+                  "  pm.expect(body.emergencyContact).to.eql({ name: \"Yumi Sato\", phone: \"+525598765432\" });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar · If-Match vencido (412)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "If-Match",
+                "value": "{{recordEtag}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "record"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "El `ETag` de **Ficha** ya no es el vigente (lo cambió **Editar ficha**): responde 412 `PRECONDITION_FAILED` y no guarda.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"medicalNotes\": \"No se guarda\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"412\", () => pm.response.to.have.status(412));",
+                  "pm.test(\"PRECONDITION_FAILED\", () => pm.expect(pm.response.json().code).to.eql(\"PRECONDITION_FAILED\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar · inválido (422)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "record"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "Los campos del rango, la disciplina, la primera clase y el estado no se editan aquí (`NOT_EDITABLE`).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact\": {\n    \"phone\": \"5512345678\"\n  },\n  \"enrollment\": {\n    \"belt\": \"BLACK\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "const { fields } = pm.response.json();",
+                  "pm.test(\"marca los campos\", () => {",
+                  "  pm.expect(fields).to.deep.include({ field: \"enrollment\", code: \"NOT_EDITABLE\" });",
+                  "  pm.expect(fields).to.deep.include({ field: \"contact.phone\", code: \"INVALID_FORMAT\" });",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pausar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/membership",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "membership"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "Sale de la lista, del pase de lista y del cupo, y deja de generar mensualidades. Con `cancelUpcomingEvents: true` también cancela sus cargos pendientes de exámenes y eventos futuros (la baja siempre los cancela).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PAUSED\",\n  \"reason\": \"Lesión de rodilla\",\n  \"cancelUpcomingEvents\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const m = pm.response.json().membership;",
+                  "pm.test(\"en pausa con fecha y motivo\", () => {",
+                  "  pm.expect(m.status).to.eql(\"PAUSED\");",
+                  "  pm.expect(m.reason).to.eql(\"Lesión de rodilla\");",
+                  "  pm.expect(m.changedOn).to.match(/^\\d{4}-\\d{2}-\\d{2}$/);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pausar · otra vez (idempotente)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/membership",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "membership"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "El estado actual responde 200 sin cambiar nada (ni la fecha ni el motivo).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PAUSED\",\n  \"reason\": \"Otro motivo\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"conserva el motivo\", () => pm.expect(pm.response.json().membership.reason).to.eql(\"Lesión de rodilla\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Alumnos en pausa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/students?status=PAUSED",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "PAUSED"
+                }
+              ]
+            },
+            "description": "`status` es repetible (`ACTIVE`, `PAUSED`, `INACTIVE`); sin él, solo activos. Cada alumno trae `membership.status`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "const items = pm.response.json().items;",
+                  "pm.test(\"aparece en pausa\", () => {",
+                  "  const s = items.find((i) => i.id === pm.collectionVariables.get(\"studentId\"));",
+                  "  pm.expect(s.membership.status).to.eql(\"PAUSED\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reactivar",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/membership",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "membership"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "Vuelve a la lista desde hoy; la mensualidad de este mes se prorratea desde hoy como un alumno nuevo. Si su horario ya no tiene cupo responde 409 `SCHEDULE_FULL`: se manda `scheduleId` con otro horario.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"ACTIVE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"activo\", () => pm.expect(pm.response.json().membership.status).to.eql(\"ACTIVE\"));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Estado inválido (422)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/membership",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "membership"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "`status` debe ser `ACTIVE`, `PAUSED` o `INACTIVE`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"GONE\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"marca status\", () => pm.expect(pm.response.json().fields).to.deep.include({ field: \"status\", code: \"INVALID_FORMAT\" }));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Restaurar ficha",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/students/:studentId/record",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "students",
+                ":studentId",
+                "record"
+              ],
+              "variable": [
+                {
+                  "key": "studentId",
+                  "value": "{{studentId}}",
+                  "description": "`id` de un alumno del dojo (GET /students)"
+                }
+              ]
+            },
+            "description": "Regresa las notas médicas y el contacto de emergencia a como estaban en **Ficha**.",
+            "body": {
+              "mode": "raw",
+              "raw": "{{recordRestore}}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+# Instrucciones de estilo para GitHub Copilot — Kensho
+# Fuente de verdad: CLAUDE.md y docs/architecture/ (03-standards.md). Si algo aquí
+# contradice esos documentos, mandan ellos.
+language: kotlin
+style:
+  indent: 4
+  max_line_length: 140
+  use_semicolons: false
+  trailing_commas: true
+naming_conventions:
+  classes: PascalCase
+  functions: camelCase
+  variables: camelCase
+  constants: UPPER_SNAKE_CASE
+  composables: "PascalCase con prefijo Tkd (TkdPill, TkdPaymentDetailScreen)"
+  view_models: "Tkd<Feature>ViewModel"
+  ui_state: "Tkd<Feature>UiState"
+  actions: "Tkd<Feature>Actions"
+  repositories: "Tkd<X>Repository / FakeTkd<X>Repository"
+  string_keys: "tkd_<feature>_<descripcion> (accesibilidad: tkd_cd_<descripcion>)"
+  drawables: "ic_tkd_<nombre> (vectores) / img_tkd_<pantalla>_<nombre> (fotos)"
+imports:
+  order: [android, androidx, dev.treecode.kensho, java, javax, kotlin, kotlinx]
+  group: true
+  wildcard: false
+comments:
+  language: es
+  require_docstring_for_public_functions: true
+  require_docstring_for_classes: true
+  style: "KDoc de una línea que diga qué es; comentarios solo para el porqué no obvio"
+patterns:
+  avoid:
+    - "!!"
+    - "var en data classes y UiState"
+    - "lateinit"
+    - "GlobalScope / runBlocking"
+    - "android.util.Log / println / printStackTrace"
+    - "Color(0x…), N.dp, N.sp o TextStyle(...) fuera de ui/theme/"
+    - "Text(\"literal\") — usar stringResource"
+    - "LocalDate.now() / System.currentTimeMillis() en model/ o composables"
+    - "Float/Double para dinero — usar centavos Int"
+    - "ViewModel o NavController como parámetro fuera de Tkd<X>Screen"
+    - "collectAsState() — usar collectAsStateWithLifecycle()"
+    - "contentDescription = null sin comentario que justifique que es decorativo"
+  prefer:
+    - "val"
+    - "@Immutable data class para UiState y modelos"
+    - "sealed interface / enum para estados"
+    - "MutableStateFlow privado + StateFlow público en el ViewModel"
+    - "Screen stateful + Content stateless + Actions"
+    - "modifier: Modifier = Modifier como primer parámetro opcional"
+    - "TkdColors / TkdDimens / TkdTypography / TkdBeltPalette"
+    - "componentes existentes de components/atoms y components/molecules"
+    - "items(list, key = { it.id }) en listas perezosas"
+examples:
+  - description: "ViewModel con estado inmutable hacia fuera"
+    code: |
+      /** ViewModel del detalle de cobro: método de pago, nota y confirmación. */
+      class TkdPaymentDetailViewModel(
+          transactionId: String,
+          repository: TkdPaymentsRepository = FakeTkdPaymentsRepository(),
+      ) : ViewModel() {
+          private val _uiState = MutableStateFlow(TkdPaymentDetailUiState(detail = repository.paymentDetail(transactionId)))
+          val uiState: StateFlow<TkdPaymentDetailUiState> = _uiState.asStateFlow()
+
+          fun onConfirm() = _uiState.update { it.copy(confirmed = true) }
+      }
+  - description: "Componente del sistema de diseño"
+    code: |
+      /** Interruptor 44×24; el llamador hace toggleable la fila completa. */
+      @Composable
+      fun TkdSwitch(checked: Boolean, modifier: Modifier = Modifier) {
+          Box(modifier = modifier.size(width = TkdDimens.SwitchWidth, height = TkdDimens.SwitchHeight)) { … }
+      }
+
+      @Preview
+      @Composable
+      private fun TkdSwitchOnPreview() {
+          TkdSwitch(checked = true)
+      }
