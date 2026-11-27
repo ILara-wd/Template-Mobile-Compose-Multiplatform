@@ -32,7 +32,7 @@
 - [ ] **Docs:** README §4.2 y `docs/ui-catalogo/pantallas.json` actualizados; catálogo regenerado (`generar.py`).
 - [ ] **Changelog:** fragmento en `changelog.d/<id>.<tipo>.md` si cambia `src/main`.
 - [ ] **Sin** `!!`, `Log`/`println`, `runBlocking`/`GlobalScope` ni código comentado.
-- [ ] Si cambió una convención o deuda: `CLAUDE.md` actualizado y `scripts/sync-agents.sh` corrido.
+- [ ] Si cambió una convención o deuda: `CLAUDE.md` actualizado y `python3 .github/scripts/sync_claude_to_copilot.py` corrido.
 
 # Asistencia de IA (si aplica)
 - **Herramienta:** <!-- Claude Code / Copilot / N/A -->

@@ -1,4 +1,4 @@
-<!-- AUTO-GENERADO por scripts/sync-agents.sh desde CLAUDE.md.
+<!-- AUTO-GENERADO por .github/scripts/sync_claude_to_copilot.py desde CLAUDE.md.
      NO EDITAR A MANO. -->
 
 # AGENTS.md
@@ -47,8 +47,11 @@ App Android para que los dos padres lleven la agenda, el progreso y los gastos d
 python3 scripts/ui-catalogo/capturar.py [P14 P15…]   # capturas del emulador para el catálogo
 python3 scripts/ui-catalogo/generar.py               # regenera docs/ui-catalogo/index.html
 ./create_component.sh SkChip                         # esqueleto de un átomo en core:designsystem
-scripts/sync-agents.sh                               # regenera AGENTS.md desde este archivo
+python3 .github/scripts/sync_claude_to_copilot.py   # regenera AGENTS.md y .github/ (Copilot) desde CLAUDE.md y .claude/
 towncrier build --config config/towncrier.toml --version <x.y.z> --draft   # vista previa del changelog
+
+git config core.hooksPath .githooks                  # activar validación de mensajes de commit (una vez)
+./.githooks/tests/test-commit-msg.sh                 # suite del hook commit-msg
 ```
 
 Verificación visual: hay un teléfono físico conectado además del emulador, así que siempre `ANDROID_SERIAL=emulator-5554`. Para abrir una pantalla directo (solo debug):
@@ -127,7 +130,7 @@ fun RaceFormScreen(
 - **Fechas:** "hoy" entra como parámetro (`today: LocalDate = LocalDate.now()` solo como default de la pantalla, nunca dentro de modelos o lógica), para que previews y capturas sean deterministas.
 - **Tamaño:** archivos nuevos ≤ 400 líneas; composables > 60 líneas se dividen en secciones `private`.
 - **Dependencias:** solo vía `gradle/libs.versions.toml`. Cualquier librería nueva (Navigation, Hilt, Room, Retrofit, Firebase…) se discute antes y se registra aquí.
-- **Commits:** `<tipo>(<ámbito>): <descripción en imperativo>` con tipo `feat|fix|refactor|test|docs|chore|build|revert` y ámbito = módulo (`feat(home): …`, `docs(catalogo): …`). Commit solo cuando se pida.
+- **Commits:** `<tipo>(<ámbito>): <descripción imperativa en minúscula> (#<n>)` con tipo `feat|fix|refactor|test|docs|chore|build|revert`, ámbito = módulo (`feat(home): …`, `docs(catalogo): …`) e issue/PR de GitHub opcional al final. Lo valida `.githooks/commit-msg`. Commit solo cuando se pida.
 - **Changelog:** un PR que cambia `src/main` agrega `changelog.d/<id|+slug>.<added|changed|refactored|deprecated|removed|fixed|security>.md` con una línea en español orientada al usuario; `CHANGELOG.md` lo genera towncrier, nunca a mano (`changelog.d/template/TOWNCRIER_README.md`).
 
 ---
@@ -149,12 +152,13 @@ fun RaceFormScreen(
 | TD-SK-001 | Sin tests: solo `ExampleUnitTest`/`ExampleInstrumentedTest` de la plantilla. Faltan Compose UI tests de los holders de estado y screenshots (Roborazzi, README §6.3) | 🟠 Alto |
 | TD-SK-002 | Sin capa de datos: todo sale de `*Samples`; guardar en formularios es `TODO` (32 `TODO` en el código) | 🟠 Alto |
 | TD-SK-003 | Navegación por estado en `MainActivity.kt` (432 líneas, 20 `Destination`); migrar a Navigation Compose con rutas tipadas | 🟡 Medio |
-| TD-SK-004 | ~515 literales `N.dp` en `feature/` y 58 en `core:ui` (README §6.2 pide `LocalSpacing`); 2 `Color(0x…)` fuera de `theme/` | 🟡 Medio |
+| TD-SK-004 | ~515 literales `N.dp` en `feature/` y 58 en `core:ui` (README §6.2 pide `LocalSpacing`); 3 `Color(0x…)` fuera de `theme/` (`BeltUi.kt`, `ThemeScreen.kt` y una preview de `SkChip.kt`) | 🟡 Medio |
 | TD-SK-005 | 19 archivos > 400 líneas (máx. `AthleteProfileScreen.kt`, 726) | 🟡 Medio |
 | TD-SK-006 | 180 `contentDescription = null`; revisar que todos sean decorativos | 🟡 Medio |
 | TD-SK-007 | Restos de plantilla: namespace/applicationId `com.invex.one.template`, `feature/{games,profile,records}` vacíos | 🟢 Bajo |
 | TD-SK-008 | Sin análisis estático en Gradle: `config/detekt/detekt.yml` está listo pero el plugin no está aplicado; sin CI | 🟢 Bajo |
 | TD-SK-009 | Esquema oscuro de Océano sin diseño en Figma (usa Theme Builder); falta `ic_belt` y logo (README §8) | 🟢 Bajo |
+| TD-SK-010 | Lecturas del reloj fuera del default `today` de las pantallas: `LocalDate.now()` en `*Samples`, `Draft.empty()` y `rememberAgendaState`; `System.currentTimeMillis()` en `SettingsScreen` y `SharingModels` (`/sportkid-governance:fitness-functions`, FF-12) | 🟢 Bajo |
 
 **Fortalezas:** 0 `!!` · 0 logs directos · 0 `runBlocking`/`GlobalScope` · reglas de dependencia entre módulos respetadas · catálogo de UI generado desde el código.
 
@@ -179,8 +183,9 @@ fun RaceFormScreen(
 ```
 Cambio de token o componente → README §1–§3 → catálogo (generar.py)
 Pantalla nueva o modificada  → README §4.2 → pantallas.json → capturar.py + generar.py
-Convención o deuda nueva     → CLAUDE.md → scripts/sync-agents.sh (AGENTS.md)
+Convención o deuda nueva     → CLAUDE.md → python3 .github/scripts/sync_claude_to_copilot.py (AGENTS.md y .github/)
+Comando o agente de .claude/ → python3 .github/scripts/sync_claude_to_copilot.py (.github/prompts, .github/agents)
 Cambio visible al usuario    → changelog.d/<fragmento>.md
 ```
 
-- `AGENTS.md` es espejo de `CLAUDE.md` y `docs/ui-catalogo/index.html` se genera: no se editan a mano.
+- `AGENTS.md`, `.github/copilot-instructions.md`, `.github/prompts/` y `.github/agents/` son espejo de `CLAUDE.md` y `.claude/`; `docs/ui-catalogo/index.html` se genera. Ninguno se edita a mano.
