@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo MiniJuegos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=Space+Grotesk:wght@700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF8FF; --surface: #FFFFFF; --surface-2: #F2F3FF; --surface-3: #E2E7FF;
+  --text: #131B2E; --muted: #3D4A3D; --faint: #6D7B6C; --line: #DAE2FD;
+  --primary: #006E2F; --on-primary: #FFFFFF; --primary-soft: #C9F5D5;
+  --tertiary: #855300; --tertiary-soft: #FFDDB8;
+  --atom: #006E2F; --atom-soft: #C9F5D5; --molecule: #00668A; --molecule-soft: #C4E7FF;
+  --organism: #4B3FA8; --organism-soft: #E2DFFF; --base: #3D4A3D; --base-soft: #E2E7E0;
+  --app: #283044; --app-soft: #DAE2FD; --feature: #855300; --feature-soft: #FFDDB8;
+  --local: #6B5778; --local-soft: #F0DCFA;
+  --radius: 14px; --shadow: 0 1px 2px rgb(0 0 0 / .06), 0 2px 8px rgb(0 0 0 / .05);
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11131C; --surface: #191C26; --surface-2: #1F2230; --surface-3: #2A2E3D;
+    --text: #E2E4F2; --muted: #C2CAC0; --faint: #8C978B; --line: #313649;
+    --primary: #4AE176; --on-primary: #002109; --primary-soft: #0E3A1F;
+    --tertiary: #FEA619; --tertiary-soft: #43290A;
+    --atom: #4AE176; --atom-soft: #0E3A1F; --molecule: #7BD0FF; --molecule-soft: #0B3447;
+    --organism: #C4BFFF; --organism-soft: #2D2760; --base: #C2CAC0; --base-soft: #2B302B;
+    --app: #DAE2FD; --app-soft: #283044; --feature: #FEA619; --feature-soft: #43290A;
+    --local: #D8BDE5; --local-soft: #3B2D44;
+    --shadow: 0 1px 2px rgb(0 0 0 / .4); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11131C; --surface: #191C26; --surface-2: #1F2230; --surface-3: #2A2E3D;
+  --text: #E2E4F2; --muted: #C2CAC0; --faint: #8C978B; --line: #313649;
+  --primary: #4AE176; --on-primary: #002109; --primary-soft: #0E3A1F;
+  --tertiary: #FEA619; --tertiary-soft: #43290A;
+  --atom: #4AE176; --atom-soft: #0E3A1F; --molecule: #7BD0FF; --molecule-soft: #0B3447;
+  --organism: #C4BFFF; --organism-soft: #2D2760; --base: #C2CAC0; --base-soft: #2B302B;
+  --app: #DAE2FD; --app-soft: #283044; --feature: #FEA619; --feature-soft: #43290A;
+  --local: #D8BDE5; --local-soft: #3B2D44;
+  --shadow: 0 1px 2px rgb(0 0 0 / .4); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.5 "Plus Jakarta Sans", system-ui, sans-serif; }
+a { color: var(--primary); }
+code, .mono { font-family: var(--mono); font-size: .86em; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 0 16px; }
+
+header { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.top { display: flex; align-items: center; gap: 12px; padding: 14px 0 10px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; margin-right: auto; flex: 1 1 260px; min-width: 0; }
+.brand > div:last-child { min-width: 0; }
+.logo { width: 34px; height: 34px; border-radius: 10px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 700; }
+h1 { font-size: 19px; margin: 0; letter-spacing: -.3px; }
+.meta { font-size: 12px; color: var(--faint); overflow-wrap: anywhere; }
+.meta .warn { color: var(--tertiary); font-weight: 600; }
+.search { flex: 1 1 240px; max-width: 360px; height: 40px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); padding: 0 16px; font: inherit; }
+.search:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+.icon-btn { height: 40px; min-width: 40px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; font: inherit; }
+nav.tabs { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 8px; }
+nav.tabs button { border: 0; background: none; color: var(--muted); font: 600 14px "Plus Jakarta Sans", sans-serif; padding: 8px 14px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+nav.tabs button[aria-selected="true"] { background: var(--primary-soft); color: var(--primary); }
+nav.tabs .n { font-weight: 400; opacity: .75; margin-left: 4px; }
+
+main { padding: 20px 0 64px; }
+.lead { color: var(--muted); margin: 0 0 18px; max-width: 760px; }
+.empty { color: var(--faint); padding: 40px 0; text-align: center; }
+
+/* Pantallas */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 16px; }
+.grid > *, .comp-list > * { min-width: 0; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.shots { display: flex; gap: 8px; overflow-x: auto; padding: 12px; background: var(--surface-2); scroll-snap-type: x mandatory; }
+.shots img { height: 300px; width: auto; border-radius: 10px; border: 1px solid var(--line); cursor: zoom-in; scroll-snap-align: start; background: var(--surface-3); }
+.shots .noimg { height: 300px; width: 140px; border-radius: 10px; border: 1px dashed var(--line); display: grid; place-items: center; text-align: center; color: var(--faint); font-size: 12px; padding: 8px; }
+.card-body { padding: 14px 16px 16px; }
+.card-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.card-title h3 { margin: 0; font-size: 16px; }
+.pid { font: 700 12px var(--mono); color: var(--tertiary); }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; font-size: 13px; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.chip { font: 500 12px var(--mono); padding: 3px 9px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line); color: var(--text); cursor: pointer; }
+.chip:hover { border-color: var(--primary); color: var(--primary); }
+.chip.atom { background: var(--atom-soft); border-color: transparent; color: var(--atom); }
+.chip.molecule { background: var(--molecule-soft); border-color: transparent; color: var(--molecule); }
+.chip.organism { background: var(--organism-soft); border-color: transparent; color: var(--organism); }
+.chip.base { background: var(--base-soft); border-color: transparent; color: var(--base); }
+.chip.app { background: var(--app-soft); border-color: transparent; color: var(--app); }
+.chip.feature { background: var(--feature-soft); border-color: transparent; color: var(--feature); }
+.chip.local { background: var(--local-soft); border-color: transparent; color: var(--local); }
+.sub { font-size: 12px; color: var(--faint); margin-top: 12px; text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); text-decoration: none; font-weight: 600; font-size: 12px; }
+
+/* Componentes */
+.filters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.filters button { border: 1px solid var(--line); background: var(--surface); color: var(--muted); font: 600 13px "Plus Jakarta Sans", sans-serif; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+.tier-h { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 10px; }
+.tier-h h2 { margin: 0; font-size: 17px; }
+.tier-h p { margin: 0; color: var(--faint); font-size: 13px; }
+.comp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(380px, 100%), 1fr)); gap: 12px; }
+.comp { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px 16px; scroll-margin-top: 130px; }
+.comp.flash { outline: 2px solid var(--tertiary); }
+.comp-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-head .name { font: 600 15px var(--mono); }
+.badge { font: 600 11px "Plus Jakarta Sans", sans-serif; padding: 2px 8px; border-radius: 6px; }
+.badge.atom { background: var(--atom-soft); color: var(--atom); }
+.badge.molecule { background: var(--molecule-soft); color: var(--molecule); }
+.badge.organism { background: var(--organism-soft); color: var(--organism); }
+.badge.base { background: var(--base-soft); color: var(--base); }
+.badge.app { background: var(--app-soft); color: var(--app); }
+.badge.feature { background: var(--feature-soft); color: var(--feature); }
+.badge.local { background: var(--local-soft); color: var(--local); }
+.badge.code { background: var(--surface-3); color: var(--muted); font-family: var(--mono); }
+.uses { margin-left: auto; font-size: 12px; color: var(--faint); white-space: nowrap; }
+.doc { margin: 8px 0 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
+.doc.none { color: var(--faint); font-style: italic; }
+.thumbs { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.thumb { display: flex; flex-direction: column; align-items: center; gap: 2px; font: 600 10px var(--mono); color: var(--muted); cursor: pointer; text-decoration: none; }
+.thumb img { width: 46px; height: 92px; object-fit: cover; object-position: top; border-radius: 6px; border: 1px solid var(--line); }
+.thumb .ph { width: 46px; height: 92px; border-radius: 6px; border: 1px dashed var(--line); }
+details { margin-top: 10px; }
+summary { cursor: pointer; font-size: 13px; color: var(--primary); font-weight: 600; }
+pre.sig { margin: 8px 0 0; padding: 10px 12px; background: var(--surface-2); border-radius: 10px; overflow-x: auto; font: 12px/1.6 var(--mono); color: var(--text); }
+.src { margin-top: 6px; font: 12px var(--mono); color: var(--faint); word-break: break-all; }
+
+/* Tokens */
+.tok-section { margin-bottom: 30px; }
+.tok-section h2 { font-size: 17px; margin: 0 0 4px; }
+.tok-section > p { margin: 0 0 12px; color: var(--faint); font-size: 13px; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; }
+.sw { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px; cursor: pointer; }
+.sw .pair { display: flex; flex: none; }
+.sw .pair span { width: 30px; height: 36px; border: 1px solid rgb(0 0 0 / .08); }
+.sw .pair span:first-child { border-radius: 8px 0 0 8px; }
+.sw .pair span:last-child { border-radius: 0 8px 8px 0; }
+.sw .pair span:only-child { border-radius: 8px; width: 40px; }
+.sw .lbl { min-width: 0; }
+.sw .lbl b { display: block; font: 600 12px var(--mono); overflow: hidden; text-overflow: ellipsis; }
+.sw .lbl i { font: 11px var(--mono); color: var(--faint); font-style: normal; }
+.type-row { display: grid; grid-template-columns: 150px 1fr; gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.type-row .k { font: 12px var(--mono); color: var(--faint); }
+.bars { display: grid; gap: 6px; }
+.bar { display: grid; grid-template-columns: 210px 1fr; gap: 10px; align-items: center; font: 12px var(--mono); color: var(--muted); }
+.bar span:last-child { height: 14px; background: var(--primary); border-radius: 3px; display: block; }
+.bar .k { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shapes { display: flex; gap: 14px; flex-wrap: wrap; }
+.shape { width: 104px; text-align: center; font: 12px var(--mono); color: var(--muted); }
+.shape div { height: 72px; background: var(--primary-soft); border: 2px solid var(--primary); margin-bottom: 6px; }
+.elev { display: flex; gap: 18px; flex-wrap: wrap; }
+.elev div { width: 104px; height: 64px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; font: 12px var(--mono); color: var(--muted); }
+.alphas { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.alpha { display: flex; align-items: center; gap: 10px; font: 12px var(--mono); color: var(--muted); }
+.alpha span { width: 36px; height: 36px; border-radius: 8px; flex: none; border: 1px solid var(--line);
+  background-image: linear-gradient(45deg, var(--surface-3) 25%, transparent 25%, transparent 75%, var(--surface-3) 75%), linear-gradient(45deg, var(--surface-3) 25%, transparent 25%, transparent 75%, var(--surface-3) 75%);
+  background-size: 10px 10px; background-position: 0 0, 5px 5px; position: relative; overflow: hidden; }
+.alpha span i { position: absolute; inset: 0; background: var(--primary); }
+
+/* Assets */
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 10px; }
+.asset { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.asset .prev { height: 84px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-2); color: var(--text); cursor: pointer; overflow: hidden;
+  background-image: linear-gradient(45deg, var(--surface-3) 25%, transparent 25%, transparent 75%, var(--surface-3) 75%), linear-gradient(45deg, var(--surface-3) 25%, transparent 25%, transparent 75%, var(--surface-3) 75%);
+  background-size: 12px 12px; background-position: 0 0, 6px 6px; }
+.asset .prev.mono { background-image: none; }
+.asset .prev svg { width: 40px; height: 40px; }
+.asset .prev img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+.asset .nm { font: 600 11.5px var(--mono); overflow-wrap: anywhere; }
+.asset .inf { font-size: 11px; color: var(--faint); display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+.asset .scr { display: flex; flex-wrap: wrap; gap: 4px; }
+.asset .scr a { font: 600 10px var(--mono); color: var(--tertiary); text-decoration: none; }
+.asset.unused .nm { color: var(--faint); }
+.tag-unused { color: var(--tertiary); font-weight: 600; }
+
+/* Visor */
+.lightbox { position: fixed; inset: 0; background: rgb(0 0 0 / .82); display: none; align-items: center; justify-content: center; z-index: 20; padding: 24px; }
+.lightbox.open { display: flex; }
+.lightbox img { max-height: 92vh; max-width: 92vw; border-radius: 12px; }
+.lightbox .cap { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; color: #fff; font-size: 13px; }
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--text); color: var(--bg); padding: 8px 14px; border-radius: 999px; font-size: 13px; opacity: 0; transition: opacity .2s; pointer-events: none; z-index: 30; }
+.toast.show { opacity: 1; }
+
+@media (max-width: 640px) {
+  body { overflow-x: hidden; }
+  .logo { display: none; }
+  .shots img, .shots .noimg { height: 240px; }
+  .type-row { grid-template-columns: 1fr; gap: 2px; }
+  .search { max-width: none; order: 3; flex-basis: 100%; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">M</div>
+        <div><h1>MiniJuegos Hub · Catálogo de UI</h1><div class="meta" id="meta"></div></div>
+      </div>
+      <input class="search" id="q" type="search" placeholder="Buscar pantalla, componente, asset o token…" aria-label="Buscar">
+      <button class="icon-btn" id="theme" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+    </div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </div>
+</header>
+<main class="wrap" id="view"></main>
+<div class="lightbox" id="lightbox" role="dialog" aria-label="Captura ampliada"><img alt=""><div class="cap"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const DATA = /*__DATA__*/null;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const TIERS = {
+  "Átomo": { cls: "atom", desc: "core:designsystem · atom/ — piezas mínimas sin dominio" },
+  "Molécula": { cls: "molecule", desc: "core:designsystem · molecule/ — combinan átomos (campos, filas, encabezados)" },
+  "Organismo": { cls: "organism", desc: "core:designsystem · organism/ — barras y contenedores de pantalla" },
+  "Base": { cls: "base", desc: "core:designsystem fuera de atom/molecule/organism" },
+  "App": { cls: "app", desc: "app · shell, navegación, barra superior y entradas de los juegos (Screen.kt)" },
+  "Feature": { cls: "feature", desc: "Públicos dentro de un feature (incluye los juegos de feature:games/hub)" },
+  "Local": { cls: "local", desc: "private/internal de un feature (component/): candidatos a subir a core:designsystem si otro feature los necesita" },
+};
+const byKey = Object.fromEntries(DATA.components.map(c => [c.key, c]));
+const screenById = Object.fromEntries(DATA.screens.map(s => [s.id, s]));
+let tab = "pantallas", tierFilter = "Todos", query = "";
+
+function figmaUrl(node) { return `https://www.figma.com/design/${DATA.figmaFileKey}/Prototipo-Demo-UiKit?node-id=${node.replace(":", "-")}`; }
+function img(src) { return `img/${src}`; }
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 1400); }
+function matches(...fields) { if (!query) return true; const q = query.toLowerCase(); return fields.some(f => String(f ?? "").toLowerCase().includes(q)); }
+
+function splitParams(p) {
+  const out = []; let depth = 0, cur = "";
+  for (const ch of p) {
+    if ("(<{[".includes(ch)) depth++;
+    if (")>}]".includes(ch)) depth--;
+    if (ch === "," && depth === 0) { out.push(cur.trim()); cur = ""; } else cur += ch;
+  }
+  if (cur.trim()) out.push(cur.trim());
+  return out;
+}
+function signature(c) {
+  const recv = c.receiver ? c.receiver + "." : "";
+  return (c.overloads || [c.params]).map(p => {
+    const ps = splitParams(p);
+    return ps.length ? `${recv}${c.name}(\n  ${ps.join(",\n  ")},\n)` : `${recv}${c.name}()`;
+  }).join("\n\n");
+}
+
+function renderMeta() {
+  const d = DATA;
+  $("#meta").innerHTML = `Generado ${esc(d.generated)} · ${esc(d.branch || "sin rama")} @ ${esc(d.commit || "—")}` +
+    (d.dirty ? ` · <span class="warn">incluye cambios sin commit</span>` : "");
+}
+function renderTabs() {
+  const tabs = [["pantallas", "Pantallas", DATA.screens.length], ["componentes", "Componentes", DATA.components.length], ["assets", "Assets", DATA.assets.length], ["tokens", "Tokens", ""]];
+  $("#tabs").innerHTML = tabs.map(([id, label, n]) =>
+    `<button role="tab" aria-selected="${tab === id}" data-tab="${id}">${label}${n !== "" ? `<span class="n">${n}</span>` : ""}</button>`).join("");
+}
+
+function screenCard(s) {
+  const shots = s.imgs.length
+    ? s.imgs.map((f, i) => `<img src="${img(f)}" alt="${esc(s.id)} ${esc(s.nombre)}, vista ${i + 1}" loading="lazy" data-zoom="${img(f)}" data-cap="${esc(s.id)} · ${esc(s.nombre)} (${i + 1}/${s.imgs.length})">`).join("")
+    : `<div class="noimg">Sin captura.<br>Corre capturar.py ${esc(s.id)}</div>`;
+  const chips = s.components.map(k => { const c = byKey[k]; return `<button class="chip ${TIERS[c.tier].cls}" data-comp="${esc(k)}">${esc(c.name)}</button>`; }).join("");
+  const locals = s.locals.map(k => `<button class="chip local" data-comp="${esc(k)}">${esc(byKey[k].name)}</button>`).join("");
+  return `<article class="card" id="screen-${esc(s.id)}">
+    <div class="shots">${shots}</div>
+    <div class="card-body">
+      <div class="card-title"><span class="pid">${esc(s.id)}</span><h3>${esc(s.nombre)}</h3></div>
+      <div class="row"><code>${esc(s.composable)}</code><span>·</span><span>${esc(s.module)}</span>
+        ${s.figma ? `<a class="btn" href="${figmaUrl(s.figma)}" target="_blank" rel="noopener">Figma ${esc(s.figma)} ↗</a>` : ""}</div>
+      ${chips ? `<div class="sub">Componentes compartidos</div><div class="chips">${chips}</div>` : ""}
+      ${locals ? `<div class="sub">Locales de la pantalla</div><div class="chips">${locals}</div>` : ""}
+    </div></article>`;
+}
+function renderScreens() {
+  const list = DATA.screens.filter(s => matches(s.id, s.nombre, s.composable, s.module, ...s.components.map(k => byKey[k].name), ...s.locals.map(k => byKey[k].name)));
+  return `<p class="lead">Pantallas ya implementadas desde Figma, con su composable, módulo y los componentes que usan. Toca una captura para ampliarla o un componente para ver su ficha.</p>` +
+    (list.length ? `<div class="grid">${list.map(screenCard).join("")}</div>` : `<p class="empty">Nada coincide con «${esc(query)}».</p>`);
+}
+
+function compCard(c) {
+  const t = TIERS[c.tier];
+  const thumbs = c.screens.map(id => { const s = screenById[id]; const f = s?.imgs[0];
+    return `<a class="thumb" href="#screen-${esc(id)}" data-screen="${esc(id)}" title="${esc(s?.nombre)}">${f ? `<img src="${img(f)}" alt="" loading="lazy">` : `<span class="ph"></span>`}${esc(id)}</a>`; }).join("");
+  const where = c.usedIn.filter(m => m !== c.module);
+  return `<article class="comp" id="comp-${esc(c.key)}">
+    <div class="comp-head"><span class="name">${esc(c.name)}</span><span class="badge ${t.cls}">${esc(c.tier === "Local" ? "Local · " + c.module.replace("feature:", "") : c.tier)}</span>
+      ${c.code ? `<span class="badge code">${esc(c.code)}</span>` : ""}
+      <span class="uses">${c.uses} uso${c.uses === 1 ? "" : "s"}</span></div>
+    <p class="doc ${c.doc ? "" : "none"}">${c.doc ? esc(c.doc) : "Sin KDoc."}</p>
+    ${where.length ? `<div class="row">Se usa en ${where.map(m => `<code>${esc(m)}</code>`).join(" ")}</div>` : ""}
+    ${thumbs ? `<div class="thumbs">${thumbs}</div>` : ""}
+    <details><summary>${(c.overloads || []).length > 1 ? `Firmas (${c.overloads.length})` : "Firma"}</summary><pre class="sig">${esc(signature(c))}</pre>
+      <div class="src">${esc(c.file)}:${c.line}</div></details>
+  </article>`;
+}
+function renderComponents() {
+  const tiers = Object.keys(TIERS);
+  const counts = Object.fromEntries(tiers.map(t => [t, DATA.components.filter(c => c.tier === t).length]));
+  const filters = ["Todos", ...tiers.filter(t => counts[t])].map(t =>
+    `<button aria-pressed="${tierFilter === t}" data-tier="${t}">${t}${t === "Todos" ? "" : ` · ${counts[t]}`}</button>`).join("");
+  const list = DATA.components.filter(c => (tierFilter === "Todos" || c.tier === tierFilter) && matches(c.name, c.doc, c.module, c.code, c.params));
+  const groups = tiers.map(t => {
+    const items = list.filter(c => c.tier === t);
+    if (!items.length) return "";
+    return `<div class="tier-h"><h2>${t}</h2><p>${esc(TIERS[t].desc)}</p></div><div class="comp-list">${items.map(compCard).join("")}</div>`;
+  }).join("");
+  return `<p class="lead">Antes de construir una pieza nueva, búscala aquí. Átomos, moléculas y organismos de <code>core:designsystem</code> se reutilizan entre features; un local que se repite en dos features debe subir al design system (los features no dependen entre sí). La descripción es el KDoc del código y la etiqueta gris es la tabla del README que lo documenta.</p>
+    <div class="filters">${filters}</div>${groups || `<p class="empty">Nada coincide con «${esc(query)}».</p>`}`;
+}
+
+function swatches(rows) {
+  return `<div class="swatches">${rows.filter(r => matches(r[0], r[1], r[2])).map(([n, hex, ref]) =>
+    `<div class="sw" data-copy="${esc(n)}" title="Copiar nombre"><div class="pair"><span style="background:${hex}"></span></div>
+     <div class="lbl"><b>${esc(n)}</b><i>${esc(hex)}${ref ? ` · ${esc(ref)}` : ""}</i></div></div>`).join("")}</div>`;
+}
+const FONTS = { Outfit: "'Outfit'", PlusJakartaSans: "'Plus Jakarta Sans'", SpaceGrotesk: "'Space Grotesk'" };
+const WEIGHTS = { Normal: 400, Medium: 500, SemiBold: 600, Bold: 700, ExtraBold: 800 };
+function renderTokens() {
+  const t = DATA.tokens;
+  const type = t.type.filter(r => matches(r[0], r[1])).map(([n, fam, w, s, lh, ls]) =>
+    `<div class="type-row"><div class="k">${esc(n)}<br>${esc(fam)} ${esc(w)} ${s}/${lh}${ls ? ` · ${ls}` : ""}</div><div style="font-family:${FONTS[fam] || "inherit"};font-size:${s}px;line-height:${lh}px;font-weight:${WEIGHTS[w] || 400};letter-spacing:${ls}px">¡Nuevo récord en 2048: 4.096 pts!</div></div>`).join("");
+  const bars = (rows, unit = "dp") => { const max = Math.max(...rows.map(r => r[1])); return rows.filter(r => matches(r[0])).map(([n, v]) =>
+    `<div class="bar"><span class="k">${esc(n)} · ${v}${unit}</span><span style="width:${(v / max) * 100}%"></span></div>`).join(""); };
+  const shapes = t.shape.filter(r => matches(r[0])).map(([n, v]) =>
+    `<div class="shape"><div style="border-radius:${v}px"></div>${esc(n)} · ${v >= 999 ? "círculo" : v + "dp"}</div>`).join("");
+  const elev = t.elevation.filter(r => matches(r[0])).map(([n, v]) =>
+    `<div style="box-shadow:0 ${v}px ${v * 2.5}px rgb(0 0 0 / ${v ? .14 : 0})">${esc(n)} · ${v}dp</div>`).join("");
+  const alpha = t.alpha.filter(r => matches(r[0])).map(([n, v]) =>
+    `<div class="alpha" data-copy="AppAlpha.${esc(n)}"><span><i style="opacity:${v}"></i></span>${esc(n)} · ${v}</div>`).join("");
+  return `<p class="lead">Tokens leídos de <code>core/designsystem/…/token</code>. Solo existe tema claro (Figma no define oscuro). Toca un color para copiar su nombre.</p>
+    <section class="tok-section"><h2>Roles de color</h2><p><code>AppTheme.colors.*</code> (<code>LightAppColors</code>) · el texto gris es el primitivo de <code>ColorPalette</code>.</p>${swatches(t.roles)}</section>
+    <section class="tok-section"><h2>Paleta primitiva</h2><p><code>ColorPalette</code> es <code>internal</code>: los componentes nunca la usan directo.</p>${swatches(t.palette)}</section>
+    <section class="tok-section"><h2>Transparencias</h2><p><code>AppAlpha.*</code> · muestra sobre <code>primary</code>.</p><div class="alphas">${alpha}</div></section>
+    <section class="tok-section"><h2>Tipografía · Outfit, Plus Jakarta Sans, Space Grotesk</h2><p><code>AppTheme.typography.*</code> · tamaño/interlineado en sp y tracking.</p>${type}</section>
+    <section class="tok-section"><h2>Espaciado</h2><p><code>AppTheme.spacing.*</code></p><div class="bars">${bars(t.spacing)}</div></section>
+    <section class="tok-section"><h2>Tamaños fijos</h2><p><code>AppSize.*</code> · alturas, avatares, tiles, área táctil.</p><div class="bars">${bars(t.size)}</div></section>
+    <section class="tok-section"><h2>Formas</h2><p><code>AppTheme.shapes.*</code></p><div class="shapes">${shapes}</div></section>
+    <section class="tok-section"><h2>Elevación</h2><p><code>AppTheme.elevation.*</code></p><div class="elev">${elev}</div></section>`;
+}
+
+let assetFilter = "Todos";
+function assetCard(a) {
+  const prev = a.kind === "Vector"
+    ? `<div class="prev ${a.mono ? "mono" : ""}" data-copy="R.drawable.${esc(a.name)}" title="Copiar R.drawable.${esc(a.name)}">${a.svg}</div>`
+    : `<div class="prev"><img src="${esc(a.src)}" alt="${esc(a.name)}" loading="lazy" data-zoom="${esc(a.src)}" data-cap="${esc(a.name)} · ${esc(a.module)}"></div>`;
+  const scr = a.screens.map(id => `<a href="#screen-${esc(id)}" data-screen="${esc(id)}" title="${esc(screenById[id]?.nombre)}">${esc(id)}</a>`).join("");
+  return `<div class="asset ${a.uses ? "" : "unused"}" title="${esc(a.file)}">${prev}
+    <div class="nm">${esc(a.name)}</div>
+    <div class="inf"><span>${esc(a.size)}</span><span>${a.uses ? `${a.uses} uso${a.uses === 1 ? "" : "s"}` : `<span class="tag-unused">sin uso</span>`}</span></div>
+    ${scr ? `<div class="scr">${scr}</div>` : ""}</div>`;
+}
+function renderAssets() {
+  const kinds = { "Todos": () => true, "Íconos": a => a.kind === "Vector", "Imágenes": a => a.kind === "Imagen", "Sin uso": a => !a.uses };
+  const filters = Object.keys(kinds).map(k => `<button aria-pressed="${assetFilter === k}" data-afilter="${k}">${k} · ${DATA.assets.filter(kinds[k]).length}</button>`).join("");
+  const list = DATA.assets.filter(a => kinds[assetFilter](a) && matches(a.name, a.module, a.file, ...a.screens));
+  const modules = [...new Set(list.map(a => a.module))];
+  const groups = modules.map(m => { const items = list.filter(a => a.module === m);
+    return `<div class="tier-h"><h2>${esc(m)}</h2><p>${items.length} asset${items.length === 1 ? "" : "s"}</p></div><div class="asset-grid">${items.map(assetCard).join("")}</div>`; }).join("");
+  return `<p class="lead">Recursos de <code>res/drawable*</code> de cada módulo. Los íconos de un solo color se muestran con el color del texto (en la app se tiñen con <code>Icon(tint)</code>); los de varios colores, con sus colores originales. Toca un ícono para copiar <code>R.drawable.*</code> o una imagen para ampliarla. Antes de exportar un ícono de Figma, búscalo aquí: si ya existe en <code>core</code>, reutilízalo.</p>
+    <div class="filters">${filters}</div>${groups || `<p class="empty">Nada coincide con «${esc(query)}».</p>`}`;
+}
+
+function render() {
+  renderTabs();
+  $("#view").innerHTML = tab === "pantallas" ? renderScreens() : tab === "componentes" ? renderComponents() : tab === "assets" ? renderAssets() : renderTokens();
+}
+function go(newTab, anchor) {
+  tab = newTab; query = ""; $("#q").value = "";
+  if (newTab === "componentes") tierFilter = "Todos";
+  if (newTab === "assets") assetFilter = "Todos";
+  render();
+  history.replaceState(null, "", "#" + (anchor || newTab));
+  if (anchor) { const el = document.getElementById(anchor); if (el) { el.scrollIntoView({ block: "center" }); el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600); } }
+  else window.scrollTo(0, 0);
+}
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-tab],[data-comp],[data-screen],[data-tier],[data-afilter],[data-zoom],[data-copy]");
+  if (!el) return;
+  if (el.dataset.tab) go(el.dataset.tab);
+  else if (el.dataset.comp) go("componentes", "comp-" + el.dataset.comp);
+  else if (el.dataset.screen) { e.preventDefault(); go("pantallas", "screen-" + el.dataset.screen); }
+  else if (el.dataset.tier) { tierFilter = el.dataset.tier; render(); }
+  else if (el.dataset.afilter) { assetFilter = el.dataset.afilter; render(); }
+  else if (el.dataset.zoom) { const lb = $("#lightbox"); $("img", lb).src = el.dataset.zoom; $(".cap", lb).textContent = el.dataset.cap || ""; lb.classList.add("open"); }
+  else if (el.dataset.copy) { navigator.clipboard?.writeText(el.dataset.copy).then(() => toast(`Copiado: ${el.dataset.copy}`), () => {}); }
+});
+$("#lightbox").addEventListener("click", () => $("#lightbox").classList.remove("open"));
+document.addEventListener("keydown", e => { if (e.key === "Escape") $("#lightbox").classList.remove("open"); });
+$("#q").addEventListener("input", e => { query = e.target.value.trim(); render(); });
+$("#theme").addEventListener("click", () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("mj-catalogo-theme", root.dataset.theme); } catch (_) {}
+});
+try { const saved = localStorage.getItem("mj-catalogo-theme"); if (saved) document.documentElement.dataset.theme = saved; } catch (_) {}
+
+renderMeta();
+const hash = location.hash.slice(1);
+if (hash.startsWith("comp-")) go("componentes", hash);
+else if (hash.startsWith("screen-")) go("pantallas", hash);
+else go(["pantallas", "componentes", "assets", "tokens"].includes(hash) ? hash : "pantallas");
+</script>
+</body>
+</html>
